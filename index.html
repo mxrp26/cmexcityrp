@@ -23,7 +23,8 @@
         }
 
         body {
-            background: url('portada.jpg') no-repeat center center fixed;
+            /* Actualizado con la extensión .png de tu portada */
+            background: url('portada.png') no-repeat center center fixed;
             background-size: cover;
             color: var(--color-blanco);
             min-height: 100vh;
@@ -270,7 +271,7 @@
 
             // Quitar la clase 'active' de todos los botones
             const buttons = document.querySelectorAll('.nav-btn');
-            buttons.forEach(btn => btn.classList.2?.remove('active') || btn.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
 
             // Mostrar la pestaña seleccionada y activar el botón
             document.getElementById(tabId).classList.add('active');
