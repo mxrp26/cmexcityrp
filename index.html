@@ -7,7 +7,6 @@
     <style>
         :root {
             --color-negro: #080808;
-            --color-negro-trans: rgba(8, 8, 8, 0.88);
             --color-verde: #006837;
             --color-verde-brillo: #00a854;
             --color-dorado: #d4af37;
@@ -29,6 +28,86 @@
             color: var(--color-blanco);
             min-height: 100vh;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* --- BARRA SUPERIOR FIJA CON ICONOS --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: rgba(8, 8, 8, 0.95);
+            border-bottom: 2px solid var(--color-dorado);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .logo-img {
+            height: 45px;
+            cursor: pointer;
+            filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.5));
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--color-blanco);
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .nav-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--color-dorado);
+            transition: fill 0.3s;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background-color: rgba(212, 175, 55, 0.1);
+            border-color: var(--color-dorado);
+            color: var(--color-dorado-claro);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active svg, .nav-btn:hover svg {
+            fill: var(--color-verde-brillo);
+        }
+
+        /* Botón de Registro Especial en la barra */
+        .nav-btn.registro-nav {
+            border-color: var(--color-dorado);
+            background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(204,0,0,0.2));
         }
 
         /* --- PORTADA PRINCIPAL --- */
@@ -40,7 +119,9 @@
             background-size: cover;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
+            align-items: center;
+            padding-top: 70px;
         }
 
         .hero-overlay {
@@ -49,80 +130,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(180deg, rgba(8,8,8,0.7) 0%, rgba(8,8,8,0.85) 60%, rgba(8,8,8,0.95) 100%);
+            background: linear-gradient(180deg, rgba(8,8,8,0.75) 0%, rgba(8,8,8,0.65) 50%, rgba(8,8,8,0.92) 100%);
             z-index: 1;
         }
 
-        /* --- BARRA SUPERIOR DE NAVEGACIÓN --- */
-        header {
-            position: relative;
-            z-index: 10;
-            background-color: rgba(8, 8, 8, 0.95);
-            border-bottom: 2px solid var(--color-dorado);
-            box-shadow: 0 4px 20px rgba(0, 104, 55, 0.3);
-            position: sticky;
-            top: 0;
-        }
-
-        .nav-container {
-            max-width: 1500px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 30px;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: var(--color-dorado);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-
-        .logo:hover {
-            color: var(--color-verde-brillo);
-        }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .nav-btn {
-            background: transparent;
-            border: 1px solid var(--color-dorado);
-            color: var(--color-blanco);
-            padding: 7px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-        }
-
-        .nav-btn:hover, .nav-btn.active {
-            background-color: var(--color-verde);
-            border-color: var(--color-verde-brillo);
-            color: var(--color-blanco);
-            box-shadow: 0 0 12px rgba(0, 168, 84, 0.8);
-            transform: translateY(-2px);
-        }
-
-        /* --- CONTENIDO HERO --- */
         .hero-content {
             position: relative;
             z-index: 2;
             max-width: 900px;
-            margin: auto;
             text-align: center;
             padding: 0 20px;
             animation: fadeIn 1s ease-in-out;
@@ -130,118 +145,124 @@
 
         .hero-subtitle {
             font-size: 1.1rem;
-            color: var(--color-dorado);
+            color: var(--color-blanco);
             letter-spacing: 4px;
             text-transform: uppercase;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             font-weight: 600;
         }
 
         .hero-title {
-            font-size: 3.8rem;
+            font-size: 4.5rem;
             font-weight: 900;
-            color: var(--color-blanco);
             letter-spacing: 2px;
-            margin-bottom: 15px;
-            text-shadow: 0 0 20px rgba(204, 0, 0, 0.6);
+            margin-bottom: 10px;
+            text-shadow: 0 0 25px rgba(0, 0, 0, 0.9);
         }
 
-        .hero-title span {
-            color: var(--color-verde-brillo);
-        }
+        .hero-title .mex { color: var(--color-verde-brillo); text-shadow: 0 0 25px rgba(0, 104, 55, 0.8); }
+        .hero-title .city { color: var(--color-blanco); }
+        .hero-title .rp { color: var(--color-rojo); text-shadow: 0 0 25px rgba(204, 0, 0, 0.8); }
 
         .hero-tagline {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: var(--color-dorado-claro);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .hero-desc {
             font-size: 1.05rem;
             color: var(--color-gris);
             line-height: 1.6;
-            margin-bottom: 35px;
-            max-width: 700px;
+            margin-bottom: 30px;
+            max-width: 650px;
             margin-left: auto;
             margin-right: auto;
         }
 
-        .btn-dorado {
+        .btn-dorado-estilo {
             background: linear-gradient(135deg, var(--color-dorado), #b38f27);
             color: var(--color-negro);
-            border: none;
-            padding: 14px 32px;
+            border: 2px solid var(--color-dorado-claro);
+            padding: 14px 35px;
             font-size: 1.1rem;
             font-weight: 900;
             border-radius: 6px;
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 2px;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
             transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .btn-dorado:hover {
+        .btn-dorado-estilo:hover {
             background: linear-gradient(135deg, var(--color-verde-brillo), var(--color-verde));
             color: var(--color-blanco);
-            box-shadow: 0 0 25px rgba(0, 168, 84, 0.8);
+            border-color: var(--color-verde-brillo);
+            box-shadow: 0 0 30px rgba(0, 168, 84, 0.8);
             transform: scale(1.05);
         }
 
-        /* --- SECCIÓN DE CARACTERÍSTICAS (5 BLOQUES) --- */
+        /* --- FRANJA DE 5 CARACTERÍSTICAS INFERIOR --- */
         .features-strip {
             position: relative;
             z-index: 5;
-            background-color: var(--color-dorado);
+            background-color: var(--color-negro);
+            border-top: 2px solid var(--color-dorado);
+            border-bottom: 2px solid var(--color-dorado);
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(5, 1fr);
             gap: 1px;
+            background-color: var(--color-dorado);
         }
 
         .feature-card {
-            background: #0f0f0f;
-            padding: 30px 20px;
+            background: #0d0d0d;
+            padding: 25px 15px;
             text-align: center;
             transition: all 0.3s ease;
         }
 
         .feature-card:hover {
             background: #161616;
-            transform: translateY(-5px);
         }
 
         .feature-icon {
-            font-size: 2rem;
-            margin-bottom: 12px;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
         }
 
         .feature-card h3 {
             color: var(--color-dorado);
-            font-size: 1rem;
-            margin-bottom: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         .feature-card p {
             color: var(--color-gris);
-            font-size: 0.9rem;
-            line-height: 1.4;
+            font-size: 0.8rem;
+            line-height: 1.3;
         }
 
-        /* --- CONTENEDOR DE SECCIONES INTERACTIVAS --- */
+        /* --- CONTENEDORES DE SECCIONES INTERACTIVAS --- */
         .content-container {
-            max-width: 1000px;
-            margin: 60px auto;
+            max-width: 900px;
+            margin: 100px auto 40px auto;
             padding: 40px;
-            background: rgba(15, 15, 15, 0.92);
+            background: rgba(15, 15, 15, 0.95);
             border: 1px solid var(--color-dorado);
             border-radius: 8px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
             display: none;
-            animation: fadeIn 0.5s ease-in-out;
+            animation: fadeIn 0.4s ease-in-out;
         }
 
         .content-container.active {
@@ -250,8 +271,8 @@
 
         h2 {
             color: var(--color-dorado);
-            margin-bottom: 25px;
-            font-size: 2.2rem;
+            margin-bottom: 20px;
+            font-size: 2rem;
             border-bottom: 2px solid var(--color-rojo);
             padding-bottom: 10px;
             text-transform: uppercase;
@@ -262,7 +283,7 @@
             color: var(--color-gris);
             line-height: 1.7;
             margin-bottom: 15px;
-            font-size: 1.05rem;
+            font-size: 1rem;
         }
 
         ul { margin-left: 20px; }
@@ -277,7 +298,7 @@
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: flex;
             flex-direction: column;
         }
@@ -288,31 +309,31 @@
 
         label {
             color: var(--color-dorado-claro);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             text-transform: uppercase;
         }
 
-        input[type="email"], input[type="password"], input[type="text"], textarea {
+        input[type="email"], input[type="password"], input[type="text"] {
             background: #1a1a1a;
             border: 1px solid var(--color-dorado);
             color: var(--color-blanco);
-            padding: 12px;
+            padding: 11px;
             border-radius: 4px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             outline: none;
             transition: border-color 0.3s;
         }
 
-        input:focus, textarea:focus {
+        input:focus {
             border-color: var(--color-verde-brillo);
             box-shadow: 0 0 8px rgba(0, 168, 84, 0.4);
         }
 
         .file-upload-box {
             border: 2px dashed var(--color-dorado);
-            padding: 15px;
+            padding: 12px;
             text-align: center;
             border-radius: 4px;
             background: #141414;
@@ -322,6 +343,7 @@
 
         .file-upload-box:hover {
             background: #1f1f1f;
+            border-color: var(--color-verde-brillo);
         }
 
         .file-upload-box input {
@@ -330,100 +352,145 @@
 
         .file-label {
             color: var(--color-gris);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         /* --- PIE DE PÁGINA --- */
         footer {
             text-align: center;
-            padding: 25px;
+            padding: 20px;
             background-color: rgba(8, 8, 8, 0.95);
             border-top: 1px solid var(--color-dorado);
             color: var(--color-dorado-claro);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             letter-spacing: 1px;
-            margin-top: auto;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        @media (max-width: 1024px) {
+            .features-strip { grid-template-columns: repeat(3, 1fr); }
+            .hero-title { font-size: 3.2rem; }
+        }
+
         @media (max-width: 768px) {
-            .nav-container { flex-direction: column; gap: 15px; }
-            .hero-title { font-size: 2.5rem; }
+            .nav-container { flex-direction: column; gap: 10px; }
+            .features-strip { grid-template-columns: 1fr; }
             .registro-grid { grid-template-columns: 1fr; }
             .form-group.full { grid-column: span 1; }
+            .hero-title { font-size: 2.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- PORTADA Y BARRA SUPERIOR -->
+    <!-- BARRA SUPERIOR DE NAVEGACIÓN CON ICONOS -->
+    <header>
+        <div class="nav-container">
+            <img src="portada.png" alt="Mex City Logo" class="logo-img" onclick="switchSection('inicio')" style="object-fit: cover; width: 45px; border-radius: 50%;">
+            
+            <ul class="nav-menu">
+                <li>
+                    <button class="nav-btn active" id="btn-que-es" onclick="switchSection('que-es')">
+                        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                        ¿Qué es MexCity?
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-btn" id="btn-comunidad" onclick="switchSection('comunidad')">
+                        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                        Nuestra Comunidad
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-btn" id="btn-rol" onclick="switchSection('rol')">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.03-.42 1.98-1.03 2.75z"/></svg>
+                        Cómo Funciona
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-btn" id="btn-privacidad" onclick="switchSection('privacidad')">
+                        <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                        Política y Privacidad
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-btn" id="btn-reglas" onclick="switchSection('reglas')">
+                        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                        Reglas y Convivencia
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-btn registro-nav" id="btn-registro" onclick="switchSection('registro')">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                        Registro
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-btn" id="btn-soporte" onclick="switchSection('soporte')">
+                        <svg viewBox="0 0 24 24"><path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9-4.03 9-9 9zm1-14h-2v5h5v-2h-3z"/></svg>
+                        Soporte
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-btn" id="btn-staff" onclick="switchSection('staff')">
+                        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                        Staff
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- PORTADA PRINCIPAL -->
     <div id="hero-wrapper" class="hero-section">
         <div class="hero-overlay"></div>
 
-        <header>
-            <div class="nav-container">
-                <div class="logo" onclick="switchSection('inicio')">Mex City RP</div>
-                <ul class="nav-menu">
-                    <li><button class="nav-btn active" id="btn-inicio" onclick="switchSection('inicio')">Inicio</button></li>
-                    <li><button class="nav-btn" id="btn-que-es" onclick="switchSection('que-es')">¿Qué es MexCity?</button></li>
-                    <li><button class="nav-btn" id="btn-comunidad" onclick="switchSection('comunidad')">Nuestra Comunidad</button></li>
-                    <li><button class="nav-btn" id="btn-rol" onclick="switchSection('rol')">Cómo funciona el Roleplay</button></li>
-                    <li><button class="nav-btn" id="btn-privacidad" onclick="switchSection('privacidad')">Política y Privacidad</button></li>
-                    <li><button class="nav-btn" id="btn-reglas" onclick="switchSection('reglas')">Reglas y Convivencia</button></li>
-                    <li><button class="nav-btn" id="btn-soporte" onclick="switchSection('soporte')">Soporte</button></li>
-                    <li><button class="nav-btn" id="btn-staff" onclick="switchSection('staff')">Staff</button></li>
-                    <li><button class="nav-btn" id="btn-registro" onclick="switchSection('registro')" style="border-color: var(--color-rojo); color: var(--color-blanco);">Registro</button></li>
-                </ul>
-            </div>
-        </header>
-
-        <!-- CONTENIDO PRINCIPAL DE LA PORTADA -->
         <div id="sec-inicio" class="hero-content">
-            <p class="hero-subtitle">Bienvenido a</p>
-            <h1 class="hero-title">MEXCITY <span>RP</span></h1>
-            <p class="hero-tagline">La ciudad donde tu historia comienza</p>
+            <p class="hero-subtitle">BIENVENIDO A</p>
+            <h1 class="hero-title"><span class="mex">MEX</span><span class="city">CITY</span> <span class="rp">RP</span></h1>
+            <p class="hero-tagline">LA CIUDAD DONDE TU HISTORIA COMIENZA</p>
             <p class="hero-desc">Crea tu personaje, construye tu historia y vive experiencias únicas en la comunidad de roleplay más completa inspirada en México.</p>
-            <button class="btn-dorado" onclick="switchSection('registro')">Únete a la Ciudad</button>
+            <button class="btn-dorado-estilo" onclick="switchSection('registro')">
+                ⭐ ÚNETE A LA CIUDAD ⭐
+            </button>
         </div>
-
-        <div></div>
     </div>
 
-    <!-- SECCIÓN DE CARACTERÍSTICAS (5 BLOQUES) -->
+    <!-- SECCIÓN DE CARACTERÍSTICAS (5 BLOQUES INFERIORES EXACTOS) -->
     <div class="features-strip">
         <div class="feature-card">
             <div class="feature-icon" style="color: var(--color-verde-brillo);">👥</div>
             <h3>Comunidad Activa</h3>
-            <p>Miles de historias cada día con jugadores apasionados.</p>
+            <p>Miles de historias cada día.</p>
         </div>
         <div class="feature-card">
             <div class="feature-icon" style="color: var(--color-dorado);">⚖️</div>
             <h3>Ambiente Realista</h3>
-            <p>Un roleplay serio, inmersivo y perfectamente organizado.</p>
+            <p>Un roleplay serio y organizado.</p>
         </div>
         <div class="feature-card">
             <div class="feature-icon" style="color: var(--color-rojo);">🏙️</div>
             <h3>Infinitas Posibilidades</h3>
-            <p>Crea, trabaja, emprende e interactúa sin límites.</p>
+            <p>Crea, trabaja, emprende e interactúa.</p>
         </div>
         <div class="feature-card">
             <div class="feature-icon" style="color: var(--color-dorado-claro);">🌟</div>
             <h3>Eventos Exclusivos</h3>
-            <p>Participa en acontecimientos dinámicos en toda la ciudad.</p>
+            <p>Participa en eventos de toda la ciudad.</p>
         </div>
         <div class="feature-card">
             <div class="feature-icon" style="color: var(--color-verde-brillo);">🏢</div>
             <h3>Organizaciones</h3>
-            <p>Empresas, corporaciones, gobierno, fuerzas y más.</p>
+            <p>Empresas, gobierno, fuerzas y más.</p>
         </div>
     </div>
 
     <!-- CONTENEDORES DE LAS SECCIONES DE NAVEGACIÓN -->
-    <div style="max-width: 1000px; margin: 0 auto;">
+    <div style="max-width: 900px; margin: 0 auto; width: 100%;">
 
         <!-- ¿Qué es MexCity? -->
         <div id="sec-que-es" class="content-container">
@@ -468,6 +535,74 @@
             </ul>
         </div>
 
+        <!-- REGISTRO (SISTEMA INTERACTIVO DE EXPEDIENTE) -->
+        <div id="sec-registro" class="content-container">
+            <h2>Registro en la Ciudad</h2>
+            <p>Completa tus credenciales de acceso y detalla los datos de tu personaje para dar inicio a tu historia en MexCity.</p>
+            
+            <form onsubmit="event.preventDefault(); alert('¡Expediente enviado con éxito! Bienvenido a Republic Mex City.');">
+                <div class="registro-grid">
+                    <!-- Credenciales -->
+                    <div class="form-group">
+                        <label>Correo Electrónico Válido</label>
+                        <input type="email" placeholder="tucorreo@dominio.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Crear Contraseña</label>
+                        <input type="password" placeholder="••••••••••••" required>
+                    </div>
+                    <div class="form-group full">
+                        <label>Confirmar Contraseña</label>
+                        <input type="password" placeholder="••••••••••••" required>
+                    </div>
+
+                    <!-- Registros de Personaje -->
+                    <div class="form-group">
+                        <label>Registro de Personaje 1</label>
+                        <input type="text" placeholder="Nombre / Alias del Personaje 1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Registro de Personaje 2 (Opcional)</label>
+                        <input type="text" placeholder="Nombre / Alias del Personaje 2">
+                    </div>
+
+                    <!-- Carga de Imágenes de Expediente -->
+                    <div class="form-group">
+                        <label>Cargar Imagen de Avatar</label>
+                        <div class="file-upload-box" onclick="this.querySelector('input').click()">
+                            <span class="file-label">📂 Subir archivo de Avatar</span>
+                            <input type="file" accept="image/*">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Cargar Imagen de Hogar</label>
+                        <div class="file-upload-box" onclick="this.querySelector('input').click()">
+                            <span class="file-label">📂 Subir archivo de Hogar</span>
+                            <input type="file" accept="image/*">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Cargar Imagen de Empresa</label>
+                        <div class="file-upload-box" onclick="this.querySelector('input').click()">
+                            <span class="file-label">📂 Subir archivo de Empresa</span>
+                            <input type="file" accept="image/*">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Cargar Imagen de Familia</label>
+                        <div class="file-upload-box" onclick="this.querySelector('input').click()">
+                            <span class="file-label">📂 Subir archivo de Familia</span>
+                            <input type="file" accept="image/*">
+                        </div>
+                    </div>
+
+                    <div class="form-group full" style="text-align: center; margin-top: 15px;">
+                        <button type="submit" class="btn-dorado-estilo" style="width: 100%; justify-content: center;">Enviar Expediente de Registro</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         <!-- Soporte -->
         <div id="sec-soporte" class="content-container">
             <h2>Soporte</h2>
@@ -483,75 +618,6 @@
             <p>Acércate con confianza a cualquier miembro activo del equipo de staff si requieres asistencia.</p>
         </div>
 
-        <!-- REGISTRO (SISTEMA INTERACTIVO DE EXPEDIENTE) -->
-        <div id="sec-registro" class="content-container">
-            <h2>Registro en la Ciudad</h2>
-            <p>Completa tus credenciales de acceso y detalla los datos de tu personaje para dar inicio a tu historia en MexCity.</p>
-            
-            <form onsubmit="event.preventDefault(); alert('¡Expediente enviado con éxito! Bienvenido a Republic Mex City.');">
-                <div class="registro-grid">
-                    <!-- Credenciales -->
-                    <div class="form-group">
-                        <label>Correo Electrónico Válido</label>
-                        <input type="email" placeholder="tucorreo@dominio.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Contraseña</label>
-                        <input type="password" placeholder="••••••••••••" required>
-                    </div>
-                    <div class="form-group full">
-                        <label>Confirmar Contraseña</label>
-                        <input type="password" placeholder="••••••••••••" required>
-                    </div>
-
-                    <!-- Datos de Personaje 1 -->
-                    <div class="form-group">
-                        <label>Registro de Personaje 1 (Nombre / Alias)</label>
-                        <input type="text" placeholder="Ej. Alex Vance" required>
-                    </div>
-                    <!-- Datos de Personaje 2 -->
-                    <div class="form-group">
-                        <label>Registro de Personaje 2 (Secundario / Opcional)</label>
-                        <input type="text" placeholder="Ej. Victoria Blake">
-                    </div>
-
-                    <!-- Carga de Imágenes de Expediente -->
-                    <div class="form-group">
-                        <label>Cargar Imagen de Avatar</label>
-                        <div class="file-upload-box" onclick="this.querySelector('input').click()">
-                            <span class="file-label">📂 Subir archivo de Avatar (PNG/JPG)</span>
-                            <input type="file" accept="image/*">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Cargar Imagen de Hogar</label>
-                        <div class="file-upload-box" onclick="this.querySelector('input').click()">
-                            <span class="file-label">📂 Subir archivo de Hogar/Residencia</span>
-                            <input type="file" accept="image/*">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Cargar Imagen de Empresa</label>
-                        <div class="file-upload-box" onclick="this.querySelector('input').click()">
-                            <span class="file-label">📂 Subir archivo de Negocio/Empresa</span>
-                            <input type="file" accept="image/*">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Cargar Imagen de Familia / Alianza</label>
-                        <div class="file-upload-box" onclick="this.querySelector('input').click()">
-                            <span class="file-label">📂 Subir archivo de Grupo/Familia</span>
-                            <input type="file" accept="image/*">
-                        </div>
-                    </div>
-
-                    <div class="form-group full" style="text-align: center; margin-top: 15px;">
-                        <button type="submit" class="btn-dorado" style="width: 100%;">Finalizar Registro e Ingresar</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
     </div>
 
     <footer>
@@ -560,33 +626,28 @@
 
     <script>
         function switchSection(sectionId) {
-            // Ocultar todas las secciones de contenido
             const containers = document.querySelectorAll('.content-container');
             containers.forEach(c => c.classList.remove('active'));
 
             const heroWrapper = document.getElementById('hero-wrapper');
             const heroContent = document.getElementById('sec-inicio');
 
-            // Quitar clase active de todos los botones de navegación
             const buttons = document.querySelectorAll('.nav-btn');
             buttons.forEach(b => b.classList.remove('active'));
 
             if (sectionId === 'inicio') {
                 heroWrapper.style.display = 'flex';
                 heroContent.style.display = 'block';
-                document.getElementById('btn-inicio').classList.add('active');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
                 heroWrapper.style.display = 'none';
                 heroContent.style.display = 'none';
                 
-                // Mostrar la sección seleccionada
                 const targetSec = document.getElementById('sec-' + sectionId);
                 if (targetSec) {
                     targetSec.classList.add('active');
                 }
 
-                // Activar el botón correspondiente
                 const targetBtn = document.getElementById('btn-' + sectionId);
                 if (targetBtn) {
                     targetBtn.classList.add('active');
