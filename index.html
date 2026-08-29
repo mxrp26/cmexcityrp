@@ -3,840 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Republic Mex City | Rol Oficial</title>
-    <!-- SDK de EmailJS -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-        (function() {
-            // Inicialización con tu Clave Pública de EmailJS
-            emailjs.init("zB_VYBsKxGCESl2F0");
-        })();
-    </script>
+    <title>Acceso / Registro</title>
     <style>
         :root {
-            --color-negro: #080808;
-            --color-verde: #006837;
-            --color-verde-brillo: #00a854;
-            --color-dorado: #d4af37;
-            --color-dorado-claro: #f3e5ab;
-            --color-rojo: #cc0000;
-            --color-blanco: #ffffff;
-            --color-gris: #b0b0b0;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --border: #334155;
         }
 
         body {
-            background-color: var(--color-negro);
-            color: var(--color-blanco);
-            min-height: 100vh;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        /* --- BARRA SUPERIOR FIJA CON ICONOS --- */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            background-color: rgba(8, 8, 8, 0.95);
-            border-bottom: 2px solid var(--color-dorado);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
-        }
-
-        .nav-container {
-            max-width: 1600px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-        }
-
-        .logo-img {
-            height: 45px;
-            cursor: pointer;
-            filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.5));
-            object-fit: cover;
-            width: 45px;
-            border-radius: 50%;
-        }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 6px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .nav-btn {
-            background: transparent;
-            border: 1px solid transparent;
-            color: var(--color-blanco);
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .nav-btn svg {
-            width: 20px;
-            height: 20px;
-            fill: var(--color-dorado);
-            transition: fill 0.3s;
-        }
-
-        .nav-btn:hover, .nav-btn.active {
-            background-color: rgba(212, 175, 55, 0.1);
-            border-color: var(--color-dorado);
-            color: var(--color-dorado-claro);
-            transform: translateY(-2px);
-        }
-
-        .nav-btn.active svg, .nav-btn:hover svg {
-            fill: var(--color-verde-brillo);
-        }
-
-        /* --- VISTAS / DASHBOARDS --- */
-        .page-view {
-            display: none;
-            width: 100%;
-            min-height: 100vh;
-        }
-
-        .page-view.active {
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* --- PORTADA PRINCIPAL --- */
-        .hero-section {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            background: url('portada.png') no-repeat center center fixed;
-            background-size: cover;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding-top: 70px;
-        }
-
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, rgba(8,8,8,0.75) 0%, rgba(8,8,8,0.65) 50%, rgba(8,8,8,0.92) 100%);
-            z-index: 1;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 900px;
-            text-align: center;
-            padding: 0 20px;
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        .hero-subtitle {
-            font-size: 1.1rem;
-            color: var(--color-blanco);
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        .hero-title {
-            font-size: 4.5rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            text-shadow: 0 0 25px rgba(0, 0, 0, 0.9);
-        }
-
-        .hero-title .mex { color: var(--color-verde-brillo); text-shadow: 0 0 25px rgba(0, 104, 55, 0.8); }
-        .hero-title .city { color: var(--color-blanco); }
-        .hero-title .rp { color: var(--color-rojo); text-shadow: 0 0 25px rgba(204, 0, 0, 0.8); }
-
-        .hero-tagline {
-            font-size: 1.2rem;
-            color: var(--color-dorado-claro);
-            margin-bottom: 15px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .hero-desc {
-            font-size: 1.05rem;
-            color: var(--color-gris);
-            line-height: 1.6;
-            margin-bottom: 30px;
-            max-width: 650px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .btn-dorado-estilo {
-            background: linear-gradient(135deg, var(--color-dorado), #b38f27);
-            color: var(--color-negro);
-            border: 2px solid var(--color-dorado-claro);
-            padding: 14px 35px;
-            font-size: 1.1rem;
-            font-weight: 900;
-            border-radius: 6px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-dorado-estilo:hover {
-            background: linear-gradient(135deg, var(--color-verde-brillo), var(--color-verde));
-            color: var(--color-blanco);
-            border-color: var(--color-verde-brillo);
-            box-shadow: 0 0 30px rgba(0, 168, 84, 0.8);
-            transform: scale(1.05);
-        }
-
-        .btn-regresar {
-            background: transparent;
-            border: 1px solid var(--color-dorado);
-            color: var(--color-dorado);
-            padding: 8px 18px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            transition: all 0.3s;
-        }
-
-        .btn-regresar:hover {
-            background: var(--color-dorado);
-            color: var(--color-negro);
-        }
-
-        /* --- FRANJA DE CARACTERÍSTICAS --- */
-        .features-strip {
-            position: relative;
-            z-index: 5;
-            background-color: var(--color-negro);
-            border-top: 2px solid var(--color-dorado);
-            border-bottom: 2px solid var(--color-dorado);
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 1px;
-            background-color: var(--color-dorado);
-        }
-
-        .feature-card {
-            background: #0d0d0d;
-            padding: 25px 15px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover { background: #161616; }
-
-        .feature-icon {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-
-        .feature-card h3 {
-            color: var(--color-dorado);
-            font-size: 0.85rem;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .feature-card p {
-            color: var(--color-gris);
-            font-size: 0.8rem;
-            line-height: 1.3;
-        }
-
-        /* --- MODALES TRANSPARENTES --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(8, 8, 8, 0.82);
-            backdrop-filter: blur(8px);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
             padding: 20px;
-            animation: fadeIn 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
         }
 
-        .modal-overlay.active { display: flex; }
-
-        .modal-content {
-            background: rgba(18, 18, 18, 0.88);
-            border: 2px solid var(--color-dorado);
-            border-radius: 10px;
-            padding: 40px;
-            max-width: 650px;
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
             width: 100%;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9);
-            position: relative;
-            animation: scaleUp 0.3s ease-in-out;
+            max-width: 900px;
         }
 
-        .modal-content h2 {
-            color: var(--color-dorado);
+        .auth-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
+        }
+
+        h2 {
+            margin-top: 0;
             margin-bottom: 20px;
-            font-size: 2rem;
-            border-bottom: 2px solid var(--color-rojo);
-            padding-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .modal-content p, .modal-content li {
-            color: var(--color-gris);
-            line-height: 1.7;
-            margin-bottom: 15px;
-            font-size: 1rem;
-        }
-
-        .modal-content ul { margin-left: 20px; }
-        .modal-content strong { color: var(--color-blanco); }
-
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            background: transparent;
-            border: none;
-            color: var(--color-dorado);
-            font-size: 1.8rem;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-
-        .close-modal:hover { color: var(--color-rojo); }
-
-        /* --- DASHBOARDS --- */
-        .dashboard-container {
-            max-width: 850px;
-            margin: 120px auto 50px auto;
-            padding: 40px;
-            background: rgba(15, 15, 15, 0.95);
-            border: 1px solid var(--color-dorado);
-            border-radius: 8px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
-        }
-
-        .dashboard-container h2 {
-            color: var(--color-dorado);
-            margin-bottom: 20px;
-            font-size: 2rem;
-            border-bottom: 2px solid var(--color-rojo);
-            padding-bottom: 10px;
-            text-transform: uppercase;
+            font-size: 1.5rem;
+            text-align: center;
+            color: var(--text-color);
         }
 
         .form-group {
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group.full { grid-column: span 2; }
-
-        .registro-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 20px;
+            margin-bottom: 16px;
         }
 
         label {
-            color: var(--color-dorado-claro);
-            font-size: 0.85rem;
-            font-weight: 700;
+            display: block;
             margin-bottom: 6px;
-            text-transform: uppercase;
+            font-size: 0.875rem;
+            color: var(--text-muted);
         }
 
-        input[type="email"], input[type="password"], input[type="text"] {
-            background: #1a1a1a;
-            border: 1px solid var(--color-dorado);
-            color: var(--color-blanco);
-            padding: 12px;
-            border-radius: 4px;
-            font-size: 0.95rem;
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-color);
+            font-size: 1rem;
+            box-sizing: border-box;
             outline: none;
+            transition: border-color 0.2s;
         }
 
         input:focus {
-            border-color: var(--color-verde-brillo);
-            box-shadow: 0 0 8px rgba(0, 168, 84, 0.4);
+            border-color: var(--accent);
         }
 
-        .file-upload-box {
-            border: 2px dashed var(--color-dorado);
-            padding: 12px;
-            text-align: center;
-            border-radius: 4px;
-            background: #141414;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .file-upload-box:hover {
-            background: #1f1f1f;
-            border-color: var(--color-verde-brillo);
-        }
-
-        .file-upload-box input { display: none; }
-        .file-label { color: var(--color-gris); font-size: 0.85rem; }
-
-        .welcome-alert {
-            background: rgba(0, 104, 55, 0.3);
-            border: 1px solid var(--color-verde-brillo);
-            padding: 18px;
+        .btn {
+            width: 100%;
+            padding: 11px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
             border-radius: 6px;
-            color: var(--color-blanco);
-            margin-bottom: 20px;
-            display: none;
-            animation: fadeIn 0.5s;
-            line-height: 1.5;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
         }
 
-        footer {
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .forgot-password {
+            display: block;
             text-align: center;
-            padding: 20px;
-            background-color: rgba(8, 8, 8, 0.95);
-            border-top: 1px solid var(--color-dorado);
-            color: var(--color-dorado-claro);
-            font-size: 0.85rem;
-            letter-spacing: 1px;
+            margin-top: 14px;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes scaleUp {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        @media (max-width: 1024px) {
-            .features-strip { grid-template-columns: repeat(3, 1fr); }
-            .hero-title { font-size: 3.2rem; }
-        }
-
-        @media (max-width: 768px) {
-            .nav-container { flex-direction: column; gap: 10px; }
-            .features-strip { grid-template-columns: 1fr; }
-            .registro-grid { grid-template-columns: 1fr; }
-            .form-group.full { grid-column: span 1; }
-            .hero-title { font-size: 2.5rem; }
+        .forgot-password:hover {
+            color: var(--accent);
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-    <!-- BARRA SUPERIOR DE NAVEGACIÓN -->
-    <header>
-        <div class="nav-container">
-            <img src="portada.png" alt="Mex City Logo" class="logo-img" onclick="switchView('view-home')">
-            
-            <ul class="nav-menu">
-                <li>
-                    <button class="nav-btn" onclick="openModal('modal-que-es')">
-                        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                        ¿Qué es MexCity?
-                    </button>
-                </li>
-                <li>
-                    <button class="nav-btn" onclick="openModal('modal-comunidad')">
-                        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-                        Nuestra Comunidad
-                    </button>
-                </li>
-                <li>
-                    <button class="nav-btn" onclick="openModal('modal-rol')">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.03-.42 1.98-1.03 2.75z"/></svg>
-                        Cómo Funciona
-                    </button>
-                </li>
-                <li>
-                    <button class="nav-btn" onclick="openModal('modal-privacidad')">
-                        <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-                        Política y Privacidad
-                    </button>
-                </li>
-                <li>
-                    <button class="nav-btn" onclick="openModal('modal-reglas')">
-                        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-                        Reglas y Convivencia
-                    </button>
-                </li>
-                <li>
-                    <button class="nav-btn" onclick="handleSoporte()">
-                        <svg viewBox="0 0 24 24"><path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9-4.03 9-9 9zm1-14h-2v5h5v-2h-3z"/></svg>
-                        Soporte
-                    </button>
-                </li>
-                <li>
-                    <button class="nav-btn" onclick="handleStaff()">
-                        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                        Staff
-                    </button>
-                </li>
-            </ul>
-        </div>
-    </header>
-
-    <!-- ==================== VISTA 1: INICIO ==================== -->
-    <div id="view-home" class="page-view active">
-        <div class="hero-section">
-            <div class="hero-overlay"></div>
-            <div class="hero-content">
-                <p class="hero-subtitle">BIENVENIDO A</p>
-                <h1 class="hero-title"><span class="mex">MEX</span><span class="city">CITY</span> <span class="rp">RP</span></h1>
-                <p class="hero-tagline">LA CIUDAD DONDE TU HISTORIA COMIENZA</p>
-                <p class="hero-desc">Crea tu personaje, construye tu historia y vive experiencias únicas en la comunidad de roleplay más completa inspirada en México.</p>
-                <button class="btn-dorado-estilo" onclick="switchView('view-registro-credenciales')">
-                    ⭐ ÚNETE A LA CIUDAD ⭐
-                </button>
-            </div>
-        </div>
-
-        <div class="features-strip">
-            <div class="feature-card">
-                <div class="feature-icon" style="color: var(--color-verde-brillo);">👥</div>
-                <h3>Comunidad Activa</h3>
-                <p>Miles de historias cada día.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon" style="color: var(--color-dorado);">⚖️</div>
-                <h3>Ambiente Realista</h3>
-                <p>Un roleplay serio y organizado.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon" style="color: var(--color-rojo);">🏙️</div>
-                <h3>Infinitas Posibilidades</h3>
-                <p>Crea, trabaja, emprende e interactúa.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon" style="color: var(--color-dorado-claro);">🌟</div>
-                <h3>Eventos Exclusivos</h3>
-                <p>Participa en eventos de toda la ciudad.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon" style="color: var(--color-verde-brillo);">🏢</div>
-                <h3>Organizaciones</h3>
-                <p>Empresas, gobierno, fuerzas y más.</p>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- ==================== VISTA 2: REGISTRO DE CREDENCIALES ==================== -->
-    <div id="view-registro-credenciales" class="page-view">
-        <div class="dashboard-container">
-            <button class="btn-regresar" onclick="switchView('view-home')">⬅ Regresar al Inicio</button>
-            <h2>Paso 1: Registro de Cuenta</h2>
-            <p>Ingresa tu correo válido y crea tu contraseña para darte de alta en la red de Republic Mex City.</p>
-
-            <div id="alert-bienvenida" class="welcome-alert">
-                <strong>¡Correo enviado con éxito!</strong> Se ha enviado el mensaje de bienvenida y confirmación a <strong id="correo-destino"></strong>. Redirigiendo a tu expediente...
-            </div>
-            
-            <form id="form-credenciales" onsubmit="procesarCredenciales(event)">
+    <div class="container">
+        <!-- Cuadro 1: Registro -->
+        <div class="auth-card">
+            <h2>Crear Cuenta</h2>
+            <form id="register-form">
                 <div class="form-group">
-                    <label>Correo Electrónico Válido</label>
-                    <input type="email" id="reg-correo" placeholder="tucorreo@dominio.com" required>
+                    <label for="reg-email">Correo Electrónico</label>
+                    <input type="email" id="reg-email" required placeholder="tu@correo.com">
                 </div>
                 <div class="form-group">
-                    <label>Crear Contraseña</label>
-                    <input type="password" id="reg-pass1" placeholder="••••••••••••" required>
+                    <label for="reg-password">Contraseña</label>
+                    <input type="password" id="reg-password" required placeholder="••••••••">
                 </div>
                 <div class="form-group">
-                    <label>Confirmar Contraseña</label>
-                    <input type="password" id="reg-pass2" placeholder="••••••••••••" required>
+                    <label for="reg-confirm-password">Confirmar Contraseña</label>
+                    <input type="password" id="reg-confirm-password" required placeholder="••••••••">
                 </div>
-                <div class="form-group" style="margin-top: 10px;">
-                    <button type="submit" id="btn-enviar-correo" class="btn-dorado-estilo" style="width: 100%; justify-content: center;">Continuar y Enviar Correo</button>
+                <button type="submit" class="btn">Registrarse</button>
+            </form>
+        </div>
+
+        <!-- Cuadro 2: Inicio de Sesión -->
+        <div class="auth-card">
+            <h2>Iniciar Sesión</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Correo Electrónico</label>
+                    <input type="email" id="login-email" required placeholder="tu@correo.com">
                 </div>
+                <div class="form-group">
+                    <label for="login-password">Contraseña</label>
+                    <input type="password" id="login-password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn">Entrar</button>
+                <a href="#" class="forgot-password" id="recover-link">¿Olvidaste tu contraseña?</a>
             </form>
         </div>
     </div>
 
-
-    <!-- ==================== VISTA 3: REGISTRO DE EXPEDIENTE / PERSONAJE ==================== -->
-    <div id="view-registro-personaje" class="page-view">
-        <div class="dashboard-container">
-            <button class="btn-regresar" onclick="switchView('view-home')">⬅ Regresar al Inicio</button>
-            <h2>Paso 2: Registro de Personaje y Expediente</h2>
-            <p>Configura la identidad y propiedades de tu personaje dentro de la metrópoli.</p>
-            
-            <form onsubmit="finalizarExpediente(event)">
-                <div class="registro-grid">
-                    <div class="form-group">
-                        <label>Registro de Personaje 1</label>
-                        <input type="text" placeholder="Nombre / Alias del Personaje 1" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Registro de Personaje 2 (Opcional)</label>
-                        <input type="text" placeholder="Nombre / Alias del Personaje 2">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Cargar Imagen de Avatar</label>
-                        <div class="file-upload-box" onclick="this.querySelector('input').click()">
-                            <span class="file-label">📂 Subir archivo de Avatar</span>
-                            <input type="file" accept="image/*">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Cargar Imagen de Hogar</label>
-                        <div class="file-upload-box" onclick="this.querySelector('input').click()">
-                            <span class="file-label">📂 Subir archivo de Hogar</span>
-                            <input type="file" accept="image/*">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Cargar Imagen de Empresa</label>
-                        <div class="file-upload-box" onclick="this.querySelector('input').click()">
-                            <span class="file-label">📂 Subir archivo de Empresa</span>
-                            <input type="file" accept="image/*">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Cargar Imagen de Familia</label>
-                        <div class="file-upload-box" onclick="this.querySelector('input').click()">
-                            <span class="file-label">📂 Subir archivo de Familia</span>
-                            <input type="file" accept="image/*">
-                        </div>
-                    </div>
-
-                    <div class="form-group full" style="text-align: center; margin-top: 15px;">
-                        <button type="submit" class="btn-dorado-estilo" style="width: 100%; justify-content: center;">Finalizar e Ingresar a MexCity</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-
-    <!-- ==================== VENTANAS MODALES TRANSPARENTES ==================== -->
-    <div id="modal-que-es" class="modal-overlay" onclick="closeModalOutside(event, 'modal-que-es')">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal('modal-que-es')">&times;</button>
-            <h2>¿Qué es MexCity?</h2>
-            <p><strong>Republic Mex City</strong> es una experiencia de rol inmersiva diseñada para ofrecer un espacio dinámico, realista y exclusivo. Aquí cada usuario da vida a un personaje único, construyendo historias, alianzas y negocios dentro de una metrópoli vibrante.</p>
-            <p>Nuestro objetivo es fusionar la creatividad estética con una comunidad organizada y apasionada por la simulación social y urbana.</p>
-            <div style="text-align: right; margin-top: 20px;">
-                <button class="btn-regresar" onclick="closeModal('modal-que-es')">Cerrar</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-comunidad" class="modal-overlay" onclick="closeModalOutside(event, 'modal-comunidad')">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal('modal-comunidad')">&times;</button>
-            <h2>Nuestra Comunidad</h2>
-            <p>Somos una comunidad exclusiva enfocada en la calidad y el respeto mutuo. Respaldados por nuestra experiencia en gestión de marcas de modelaje y entornos virtuales, promovemos un ambiente seguro y de alto nivel creativo.</p>
-            <p>Aquí encontrarás un espacio donde tus ideas de rol, eventos y proyectos artísticos cobran vida con el respaldo de todos los miembros.</p>
-            <div style="text-align: right; margin-top: 20px;">
-                <button class="btn-regresar" onclick="closeModal('modal-comunidad')">Cerrar</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-rol" class="modal-overlay" onclick="closeModalOutside(event, 'modal-rol')">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal('modal-rol')">&times;</button>
-            <h2>Cómo Funciona el Roleplay</h2>
-            <p>El roleplay consiste en interpretar a un personaje ficticio con su propia personalidad, metas y estilo de vida dentro de nuestra metrópoli.</p>
-            <ul>
-                <li><strong>IC (In Character):</strong> Todo lo que hace, dice o piensa tu personaje dentro de la ciudad.</li>
-                <li><strong>OOC (Out Of Character):</strong> Conversaciones fuera del personaje cuando hablas directamente como usuario.</li>
-                <li><strong>Dinámicas:</strong> Respeta la normativa de entorno, fomenta historias memorables y evita acciones irreales.</li>
-            </ul>
-            <div style="text-align: right; margin-top: 20px;">
-                <button class="btn-regresar" onclick="closeModal('modal-rol')">Cerrar</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-privacidad" class="modal-overlay" onclick="closeModalOutside(event, 'modal-privacidad')">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal('modal-privacidad')">&times;</button>
-            <h2>Política y Privacidad</h2>
-            <p>En Republic Mex City nos tomamos en serio la privacidad de nuestros usuarios. Los datos e información compartidos dentro de nuestras plataformas de rol y registros web se utilizan exclusivamente para la gestión interna de la comunidad.</p>
-            <p>Garantizamos un entorno seguro, confidencial y protegido para todos los participantes.</p>
-            <div style="text-align: right; margin-top: 20px;">
-                <button class="btn-regresar" onclick="closeModal('modal-privacidad')">Cerrar</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-reglas" class="modal-overlay" onclick="closeModalOutside(event, 'modal-reglas')">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal('modal-reglas')">&times;</button>
-            <h2>Reglas y Convivencia</h2>
-            <p>Para garantizar una convivencia sana y un rol limpio, se deben seguir estrictamente las siguientes normas básicas:</p>
-            <ul>
-                <li><strong>Respeto absoluto:</strong> No se tolera el acoso, la discriminación ni la toxicidad personal.</li>
-                <li><strong>Cero Troleo:</strong> Las acciones sin sentido o que arruinen la experiencia ajena serán sancionadas de inmediato.</li>
-                <li><strong>Coherencia urbana:</strong> Mantén las acciones de tu personaje alineadas al contexto estético de la ciudad.</li>
-            </ul>
-            <div style="text-align: right; margin-top: 20px;">
-                <button class="btn-regresar" onclick="closeModal('modal-reglas')">Cerrar</button>
-            </div>
-        </div>
-    </div>
-
-
-    <footer>
-        <p>&copy; 2026 Republic Mex City. Todos los derechos reservados.</p>
-    </footer>
-
-    <script>
-        function switchView(viewId) {
-            const views = document.querySelectorAll('.page-view');
-            views.forEach(v => v.classList.remove('active'));
-
-            const target = document.getElementById(viewId);
-            if (target) {
-                target.classList.add('active');
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-
-        function closeModalOutside(event, modalId) {
-            if (event.target.id === modalId) {
-                closeModal(modalId);
-            }
-        }
-
-        function handleSoporte() {
-            let opcion = confirm("¿Cómo deseas recibir asistencia?\n\n• Aceptar: Enviar un Correo al equipo de soporte.\n• Cancelar: Hablar directamente con la Superintendencia.");
-            if (opcion) {
-                window.location.href = "mailto:soporte@republicmexcity.com?subject=Solicitud%20de%20Soporte%20MexCity";
-            } else {
-                alert("Redirigiendo al canal directo con la Superintendencia General (Cartsh)...");
-            }
-        }
-
-        function handleStaff() {
-            let adminName = prompt("Acceso Restringido al Staff\n\nIngresa tu Nombre de Administrador:");
-            if (adminName) {
-                let adminCode = prompt("Ingresa tu Código de Acceso Administrativo:");
-                if (adminCode) {
-                    alert("¡Bienvenido, " + adminName + "!\nCredenciales verificadas con éxito. Accediendo al panel interno del Staff.");
-                } else {
-                    alert("Acceso denegado: Código de acceso faltante o incorrecto.");
-                }
-            }
-        }
-
-        /* --- PROCESAR CREDENCIALES Y DISPARAR CORREO REAL DE BIENVENIDA --- */
-        function procesarCredenciales(event) {
-            event.preventDefault();
-            let p1 = document.getElementById('reg-pass1').value;
-            let p2 = document.getElementById('reg-pass2').value;
-            let correo = document.getElementById('reg-correo').value;
-            let btnEnviar = document.getElementById('btn-enviar-correo');
-
-            if (p1 !== p2) {
-                alert("Las contraseñas no coinciden. Por favor, revísalas.");
-                return;
-            }
-
-            btnEnviar.innerText = "Enviando correo de bienvenida...";
-            btnEnviar.disabled = true;
-
-            // Parámetros personalizados para tu plantilla en EmailJS
-            let templateParams = {
-                user_email: correo,
-                to_email: correo,
-                message: "¡Bienvenido a Republic Mex City! Tu cuenta de acceso ha sido registrada con éxito."
-            };
-
-            // Disparo del correo usando tu Service ID 'service_3pfk0gq'
-            emailjs.send('service_3pfk0gq', 'template_default', templateParams)
-                .then(function(response) {
-                    document.getElementById('correo-destino').innerText = correo;
-                    let alerta = document.getElementById('alert-bienvenida');
-                    alerta.style.display = 'block';
-
-                    setTimeout(() => {
-                        alerta.style.display = 'none';
-                        btnEnviar.innerText = "Continuar y Enviar Correo";
-                        btnEnviar.disabled = false;
-                        switchView('view-registro-personaje');
-                    }, 3000);
-                }, function(error) {
-                    // Si ocurre alguna incidencia con la plantilla, avisa visualmente pero permite continuar de forma fluida
-                    console.log('Error al enviar correo:', error);
-                    document.getElementById('correo-destino').innerText = correo;
-                    let alerta = document.getElementById('alert-bienvenida');
-                    alerta.style.display = 'block';
-
-                    setTimeout(() => {
-                        alerta.style.display = 'none';
-                        btnEnviar.innerText = "Continuar y Enviar Correo";
-                        btnEnviar.disabled = false;
-                        switchView('view-registro-personaje');
-                    }, 3000);
-                });
-        }
-
-        function finalizarExpediente(event) {
-            event.preventDefault();
-            alert("¡Expediente completado con éxito! Tu registro en Republic Mex City está listo.");
-            switchView('view-home');
-        }
-    </script>
 </body>
 </html>
