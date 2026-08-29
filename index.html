@@ -1,1883 +1,2010 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
-    >
+<meta charset="UTF-8">
 
-    <meta
-        name="description"
-        content="MexCity RP - La ciudad donde tu historia comienza."
-    >
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-    <title>MexCity RP | La ciudad donde tu historia comienza</title>
+<title>MexCity RP | La ciudad donde tu historia comienza</title>
 
-    <!-- FUENTES MODERNAS -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta
+name="description"
+content="MexCity RP - La ciudad donde tu historia comienza."
+>
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-        rel="stylesheet"
-    >
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
 
-    <style>
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
 
-        /* =========================================================
-           VARIABLES
-        ========================================================= */
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+rel="stylesheet"
+>
 
-        :root {
-            --negro: #030303;
-            --negro2: #080808;
+<!-- EMAILJS -->
+<script
+src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+</script>
 
-            --verde: #00c832;
-            --verde-brillo: #16ff45;
 
-            --rojo: #e50000;
-            --rojo-brillo: #ff2929;
+<style>
 
-            --dorado: #d9a52b;
-            --dorado-brillo: #ffd45a;
+/* =========================================================
+   VARIABLES
+========================================================= */
 
-            --blanco: #ffffff;
-            --gris: #bcbcbc;
+:root {
 
-            --glass: rgba(5, 5, 5, 0.78);
-            --glass-light: rgba(255,255,255,0.07);
+    --negro:#030303;
+    --negro2:#080808;
 
-            --borde: rgba(218, 166, 43, 0.65);
+    --verde:#00c832;
+    --verde-brillo:#16ff45;
 
-            --sombra:
-                0 20px 70px rgba(0,0,0,0.75);
+    --rojo:#e50000;
+    --rojo-brillo:#ff2929;
 
-            --transicion:
-                all 0.28s ease;
-        }
+    --dorado:#d9a52b;
+    --dorado-brillo:#ffd45a;
 
+    --blanco:#ffffff;
+    --gris:#bcbcbc;
 
-        /* =========================================================
-           RESET
-        ========================================================= */
+    --glass:rgba(5,5,5,.78);
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    --transicion:all .28s ease;
+}
 
-        html {
-            scroll-behavior: smooth;
-        }
 
-        body {
-            min-height: 100vh;
+/* =========================================================
+   RESET
+========================================================= */
 
-            font-family: "Inter", Arial, sans-serif;
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-            color: var(--blanco);
+html {
+    scroll-behavior:smooth;
+}
 
-            background:
-                radial-gradient(
-                    circle at top left,
-                    rgba(0,180,45,0.13),
-                    transparent 35%
-                ),
-                radial-gradient(
-                    circle at top right,
-                    rgba(220,0,0,0.13),
-                    transparent 35%
-                ),
-                #020202;
+body {
 
-            overflow-x: hidden;
-        }
+    min-height:100vh;
 
-        button {
-            font-family: inherit;
-        }
+    font-family:"Inter",Arial,sans-serif;
 
+    color:white;
 
-        /* =========================================================
-           FONDO GENERAL
-        ========================================================= */
+    background:
 
-        body::before {
-            content: "";
+        radial-gradient(
+            circle at top left,
+            rgba(0,180,45,.13),
+            transparent 35%
+        ),
 
-            position: fixed;
-            inset: 0;
+        radial-gradient(
+            circle at top right,
+            rgba(220,0,0,.13),
+            transparent 35%
+        ),
 
-            pointer-events: none;
+        #020202;
 
-            background:
-                linear-gradient(
-                    90deg,
-                    rgba(0,150,40,0.05),
-                    transparent 45%,
-                    rgba(200,0,0,0.05)
-                );
+    overflow-x:hidden;
+}
 
-            z-index: -1;
-        }
+button,
+input {
 
+    font-family:inherit;
+}
 
-        /* =========================================================
-           CONTENEDOR PRINCIPAL
-        ========================================================= */
 
-        .page {
-            width: 100%;
-            min-height: 100vh;
-        }
+/* =========================================================
+   NAVBAR
+========================================================= */
 
+.navbar {
 
-        /* =========================================================
-           NAVBAR
-        ========================================================= */
+    position:fixed;
 
-        .navbar {
-            position: fixed;
+    top:15px;
+    left:50%;
 
-            top: 15px;
-            left: 50%;
+    transform:translateX(-50%);
 
-            transform: translateX(-50%);
+    width:min(1500px,calc(100% - 30px));
 
-            width: min(1500px, calc(100% - 30px));
+    min-height:120px;
 
-            min-height: 120px;
+    display:grid;
 
-            display: grid;
+    grid-template-columns:
+        310px
+        repeat(9,1fr);
 
-            grid-template-columns:
-                310px
-                repeat(7, 1fr);
+    align-items:stretch;
 
-            align-items: stretch;
+    z-index:1000;
 
-            z-index: 1000;
+    background:
 
-            background:
-                linear-gradient(
-                    90deg,
-                    rgba(0, 80, 25, 0.16),
-                    rgba(0,0,0,0.93) 18%,
-                    rgba(0,0,0,0.96) 82%,
-                    rgba(100,0,0,0.18)
-                );
+        linear-gradient(
+            90deg,
+            rgba(0,80,25,.16),
+            rgba(0,0,0,.93) 18%,
+            rgba(0,0,0,.96) 82%,
+            rgba(100,0,0,.18)
+        );
 
-            border: 1px solid rgba(218,166,43,0.7);
+    border:1px solid rgba(218,166,43,.7);
 
-            clip-path: polygon(
-                28px 0,
-                calc(100% - 28px) 0,
-                100% 50%,
-                calc(100% - 28px) 100%,
-                28px 100%,
-                0 50%
-            );
+    clip-path:polygon(
+        28px 0,
+        calc(100% - 28px) 0,
+        100% 50%,
+        calc(100% - 28px) 100%,
+        28px 100%,
+        0 50%
+    );
 
-            box-shadow:
-                0 10px 45px rgba(0,0,0,0.65),
-                0 0 35px rgba(218,166,43,0.08);
+    box-shadow:
+        0 10px 45px rgba(0,0,0,.65);
 
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-        }
+    backdrop-filter:blur(15px);
 
+    -webkit-backdrop-filter:blur(15px);
+}
 
-        /* línea luminosa superior */
 
-        .navbar::before {
-            content: "";
+.navbar::before {
 
-            position: absolute;
+    content:"";
 
-            top: 0;
-            left: 5%;
+    position:absolute;
 
-            width: 90%;
-            height: 2px;
+    top:0;
+    left:5%;
 
-            background:
-                linear-gradient(
-                    90deg,
-                    transparent,
-                    var(--dorado),
-                    transparent
-                );
+    width:90%;
+    height:2px;
 
-            box-shadow:
-                0 0 12px var(--dorado);
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--dorado),
+            transparent
+        );
 
-            pointer-events: none;
-        }
+    box-shadow:
+        0 0 12px var(--dorado);
+}
 
 
-        /* =========================================================
-           LOGO
-        ========================================================= */
+/* =========================================================
+   LOGO
+========================================================= */
 
-        .logo-area {
-            display: flex;
+.logo-area {
 
-            justify-content: center;
-            align-items: center;
+    display:flex;
 
-            padding: 12px 25px;
+    justify-content:center;
+    align-items:center;
 
-            border-right: 1px solid rgba(255,255,255,0.08);
-        }
+    padding:12px 25px;
 
-        .logo-area img {
-            width: 100%;
-            max-width: 250px;
+    border-right:
+        1px solid rgba(255,255,255,.08);
+}
 
-            max-height: 100px;
+.logo-area img {
 
-            object-fit: contain;
+    width:100%;
 
-            transition: var(--transicion);
+    max-width:250px;
 
-            filter:
-                drop-shadow(0 0 7px rgba(255,255,255,0.08));
-        }
+    max-height:100px;
 
-        .logo-area:hover img {
-            transform: scale(1.04);
-            filter:
-                drop-shadow(0 0 16px rgba(218,166,43,0.25));
-        }
+    object-fit:contain;
 
+    transition:var(--transicion);
+}
 
-        /* =========================================================
-           BOTONES NAV
-        ========================================================= */
+.logo-area:hover img {
 
-        .nav-button {
-            position: relative;
+    transform:scale(1.04);
 
-            min-width: 0;
+    filter:
+        drop-shadow(
+            0 0 16px
+            rgba(218,166,43,.25)
+        );
+}
 
-            border: none;
 
-            border-right:
-                1px solid rgba(255,255,255,0.07);
+/* =========================================================
+   BOTONES NAVEGACIÓN
+========================================================= */
 
-            background: transparent;
+.nav-button {
 
-            color: white;
+    position:relative;
 
-            cursor: pointer;
+    min-width:0;
 
-            padding: 16px 8px;
+    border:none;
 
-            display: flex;
+    border-right:
+        1px solid rgba(255,255,255,.07);
 
-            flex-direction: column;
+    background:transparent;
 
-            align-items: center;
+    color:white;
 
-            justify-content: center;
+    cursor:pointer;
 
-            gap: 9px;
+    padding:12px 6px;
 
-            transition: var(--transicion);
-        }
+    display:flex;
 
-        .nav-button:last-child {
-            border-right: none;
-        }
+    flex-direction:column;
 
-        .nav-button:hover {
-            background:
-                linear-gradient(
-                    180deg,
-                    rgba(218,166,43,0.12),
-                    rgba(218,166,43,0.03)
-                );
-        }
+    align-items:center;
 
-        .nav-button::after {
-            content: "";
+    justify-content:center;
 
-            position: absolute;
+    gap:8px;
 
-            left: 15%;
-            right: 15%;
+    transition:var(--transicion);
+}
 
-            bottom: 0;
+.nav-button:hover {
 
-            height: 2px;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(218,166,43,.12),
+            rgba(218,166,43,.03)
+        );
+}
 
-            transform: scaleX(0);
+.nav-button::after {
 
-            background: var(--dorado);
+    content:"";
 
-            box-shadow:
-                0 0 10px var(--dorado);
+    position:absolute;
 
-            transition: var(--transicion);
-        }
+    left:15%;
+    right:15%;
 
-        .nav-button:hover::after,
-        .nav-button.active::after {
-            transform: scaleX(1);
-        }
+    bottom:0;
 
-        .nav-icon {
-            width: 42px;
-            height: 42px;
+    height:2px;
 
-            display: flex;
+    transform:scaleX(0);
 
-            align-items: center;
-            justify-content: center;
+    background:var(--dorado);
 
-            color: var(--dorado);
+    box-shadow:
+        0 0 10px var(--dorado);
 
-            font-size: 28px;
+    transition:var(--transicion);
+}
 
-            line-height: 1;
-        }
+.nav-button:hover::after,
+.nav-button.active::after {
 
-        .nav-button:nth-child(3) .nav-icon {
-            color: white;
-        }
+    transform:scaleX(1);
+}
 
-        .nav-button:nth-child(4) .nav-icon {
-            color: var(--dorado);
-        }
+.nav-icon {
 
-        .nav-button:nth-child(5) .nav-icon {
-            color: var(--verde);
-        }
+    width:40px;
+    height:40px;
 
-        .nav-button:nth-child(6) .nav-icon {
-            color: var(--rojo);
-        }
+    display:flex;
 
-        .nav-button:nth-child(7) .nav-icon {
-            color: var(--dorado);
-        }
+    align-items:center;
+    justify-content:center;
 
-        .nav-button:nth-child(8) .nav-icon {
-            color: white;
-        }
+    font-size:26px;
 
-        .nav-text {
-            font-size: 13px;
+    color:var(--dorado);
+}
 
-            font-weight: 700;
+.nav-text {
 
-            text-align: center;
+    font-size:11px;
 
-            line-height: 1.25;
+    font-weight:700;
 
-            text-transform: uppercase;
+    text-align:center;
 
-            letter-spacing: 0.2px;
-        }
+    line-height:1.25;
 
+    text-transform:uppercase;
+}
 
-        /* =========================================================
-           HERO
-        ========================================================= */
 
-        .hero {
-            position: relative;
+/* COLORES */
 
-            min-height: 100vh;
+.nav-button:nth-child(3) .nav-icon {
+    color:white;
+}
 
-            padding-top: 150px;
+.nav-button:nth-child(4) .nav-icon {
+    color:var(--dorado);
+}
 
-            display: flex;
+.nav-button:nth-child(5) .nav-icon {
+    color:var(--verde);
+}
 
-            align-items: center;
-            justify-content: center;
+.nav-button:nth-child(6) .nav-icon {
+    color:var(--rojo);
+}
 
-            overflow: hidden;
+.nav-button:nth-child(7) .nav-icon {
+    color:var(--dorado);
+}
 
-            background:
-                linear-gradient(
-                    90deg,
-                    rgba(0,90,25,0.38) 0%,
-                    rgba(0,0,0,0.04) 45%,
-                    rgba(110,0,0,0.38) 100%
-                );
-        }
+.nav-button:nth-child(8) .nav-icon {
+    color:white;
+}
 
+.nav-button.register .nav-icon {
+    color:var(--verde);
+}
 
-        /* PORTADA */
+.nav-button.login .nav-icon {
+    color:var(--dorado);
+}
 
-        .hero-background {
-            position: absolute;
 
-            inset: 0;
+/* =========================================================
+   HERO
+========================================================= */
 
-            background-image:
-                linear-gradient(
-                    90deg,
-                    rgba(0,120,35,0.28),
-                    rgba(0,0,0,0.03) 50%,
-                    rgba(130,0,0,0.30)
-                ),
-                url("portada.png");
+.hero {
 
-            background-size: cover;
+    position:relative;
 
-            background-position: center;
+    min-height:100vh;
 
-            background-repeat: no-repeat;
+    padding-top:150px;
 
-            transform: scale(1.01);
+    display:flex;
 
-            z-index: 0;
-        }
+    align-items:center;
+    justify-content:center;
 
+    overflow:hidden;
+}
 
-        /* oscurecimiento */
 
-        .hero-background::after {
-            content: "";
+/* PORTADA ORIGINAL */
 
-            position: absolute;
+.hero-background {
 
-            inset: 0;
+    position:absolute;
 
-            background:
-                linear-gradient(
-                    180deg,
-                    rgba(0,0,0,0.36) 0%,
-                    rgba(0,0,0,0.02) 40%,
-                    rgba(0,0,0,0.55) 100%
-                );
-        }
+    inset:0;
 
+    background-image:
 
-        /* =========================================================
-           CONTENIDO HERO
-        ========================================================= */
+        linear-gradient(
+            90deg,
+            rgba(0,120,35,.28),
+            rgba(0,0,0,.03) 50%,
+            rgba(130,0,0,.30)
+        ),
 
-        .hero-content {
-            position: relative;
+        url("portada.png");
 
-            z-index: 2;
+    background-size:cover;
 
-            width: min(900px, 92%);
+    background-position:center;
 
-            text-align: center;
+    background-repeat:no-repeat;
 
-            margin-top: 80px;
-        }
+    z-index:0;
+}
 
-        .welcome {
-            font-size: clamp(18px, 2vw, 28px);
+.hero-background::after {
 
-            font-weight: 700;
+    content:"";
 
-            letter-spacing: 3px;
+    position:absolute;
 
-            margin-bottom: 12px;
+    inset:0;
 
-            text-shadow:
-                0 3px 12px black;
-        }
+    background:
 
-        .hero-title {
-            font-size: clamp(55px, 9vw, 130px);
+        linear-gradient(
+            180deg,
+            rgba(0,0,0,.36),
+            rgba(0,0,0,.02) 40%,
+            rgba(0,0,0,.55)
+        );
+}
 
-            line-height: 0.95;
 
-            font-weight: 900;
+/* =========================================================
+   CONTENIDO HERO
+========================================================= */
 
-            letter-spacing: -5px;
+.hero-content {
 
-            text-transform: uppercase;
+    position:relative;
 
-            text-shadow:
-                0 8px 30px rgba(0,0,0,0.9);
-        }
+    z-index:2;
 
-        .hero-title .mx {
-            color: var(--verde);
+    width:min(900px,92%);
 
-            text-shadow:
-                0 0 25px rgba(0,220,55,0.28);
-        }
+    text-align:center;
 
-        .hero-title .city {
-            color: white;
-        }
+    margin-top:80px;
+}
 
-        .hero-title .rp {
-            color: var(--rojo);
+.welcome {
 
-            text-shadow:
-                0 0 25px rgba(255,0,0,0.28);
-        }
+    font-size:clamp(18px,2vw,28px);
 
+    font-weight:700;
 
-        /* línea dorada */
+    letter-spacing:3px;
 
-        .hero-divider {
-            display: flex;
+    margin-bottom:12px;
 
-            align-items: center;
-            justify-content: center;
+    text-shadow:
+        0 3px 12px black;
+}
 
-            gap: 15px;
+.hero-title {
 
-            margin: 20px auto;
-        }
+    font-size:clamp(55px,9vw,130px);
 
-        .hero-divider span {
-            height: 2px;
+    line-height:.95;
 
-            width: min(180px, 20vw);
+    font-weight:900;
 
-            background:
-                linear-gradient(
-                    90deg,
-                    transparent,
-                    var(--dorado)
-                );
+    letter-spacing:-5px;
 
-            box-shadow:
-                0 0 9px rgba(218,166,43,0.6);
-        }
+    text-transform:uppercase;
 
-        .hero-divider span:last-child {
-            background:
-                linear-gradient(
-                    90deg,
-                    var(--dorado),
-                    transparent
-                );
-        }
+    text-shadow:
+        0 8px 30px rgba(0,0,0,.9);
+}
 
-        .star {
-            color: var(--dorado);
+.hero-title .mx {
+    color:var(--verde);
+}
 
-            font-size: 23px;
+.hero-title .city {
+    color:white;
+}
 
-            text-shadow:
-                0 0 12px var(--dorado);
-        }
+.hero-title .rp {
+    color:var(--rojo);
+}
 
 
-        .hero-subtitle {
-            font-size: clamp(17px, 2vw, 25px);
+.hero-divider {
 
-            font-weight: 500;
+    display:flex;
 
-            line-height: 1.4;
+    align-items:center;
+    justify-content:center;
 
-            margin-bottom: 14px;
-        }
+    gap:15px;
 
-        .hero-subtitle strong {
-            color: var(--dorado-brillo);
-        }
+    margin:20px auto;
+}
 
-        .hero-description {
-            max-width: 680px;
+.hero-divider span {
 
-            margin: 0 auto 30px;
+    height:2px;
 
-            color: #eeeeee;
+    width:min(180px,20vw);
 
-            font-size: clamp(14px, 1.5vw, 18px);
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--dorado)
+        );
+}
 
-            line-height: 1.7;
+.hero-divider span:last-child {
 
-            text-shadow:
-                0 2px 8px black;
-        }
+    background:
+        linear-gradient(
+            90deg,
+            var(--dorado),
+            transparent
+        );
+}
 
+.star {
 
-        /* =========================================================
-           BOTON PRINCIPAL
-        ========================================================= */
+    color:var(--dorado);
 
-        .join-button {
-            border: 1px solid var(--dorado);
+    font-size:23px;
+}
 
-            background:
-                linear-gradient(
-                    180deg,
-                    rgba(55,42,10,0.95),
-                    rgba(15,12,4,0.95)
-                );
 
-            color: var(--dorado-brillo);
+.hero-subtitle {
 
-            padding: 17px 40px;
+    font-size:clamp(17px,2vw,25px);
 
-            min-width: 300px;
+    font-weight:500;
 
-            border-radius: 5px;
+    line-height:1.4;
 
-            font-size: 17px;
+    margin-bottom:14px;
+}
 
-            font-weight: 800;
+.hero-subtitle strong {
 
-            letter-spacing: 1px;
+    color:var(--dorado-brillo);
+}
 
-            cursor: pointer;
+.hero-description {
 
-            box-shadow:
-                0 0 0 1px rgba(218,166,43,0.15),
-                0 0 25px rgba(218,166,43,0.12);
+    max-width:680px;
 
-            transition: var(--transicion);
-        }
+    margin:0 auto 30px;
 
-        .join-button:hover {
-            transform: translateY(-3px);
+    color:#eee;
 
-            box-shadow:
-                0 0 0 1px rgba(218,166,43,0.35),
-                0 0 35px rgba(218,166,43,0.35);
-        }
+    font-size:clamp(14px,1.5vw,18px);
 
+    line-height:1.7;
+}
 
-        /* =========================================================
-           FEATURES
-        ========================================================= */
 
-        .features {
-            position: absolute;
+/* =========================================================
+   BOTON PRINCIPAL
+========================================================= */
 
-            z-index: 5;
+.join-button {
 
-            bottom: 0;
+    border:1px solid var(--dorado);
 
-            left: 50%;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(55,42,10,.95),
+            rgba(15,12,4,.95)
+        );
 
-            transform: translateX(-50%);
+    color:var(--dorado-brillo);
 
-            width: min(1500px, 100%);
+    padding:17px 40px;
 
-            display: grid;
+    min-width:300px;
 
-            grid-template-columns: repeat(5, 1fr);
+    border-radius:5px;
 
-            background:
-                rgba(0,0,0,0.82);
+    font-size:17px;
 
-            border-top:
-                1px solid rgba(218,166,43,0.65);
+    font-weight:800;
 
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
+    letter-spacing:1px;
 
-        .feature {
-            min-height: 120px;
+    cursor:pointer;
 
-            padding: 20px 18px;
+    transition:var(--transicion);
+}
 
-            display: flex;
+.join-button:hover {
 
-            align-items: center;
+    transform:translateY(-3px);
 
-            gap: 15px;
+    box-shadow:
+        0 0 35px rgba(218,166,43,.35);
+}
 
-            border-right:
-                1px solid rgba(255,255,255,0.07);
-        }
 
-        .feature:last-child {
-            border-right: none;
-        }
+/* =========================================================
+   CARACTERÍSTICAS
+========================================================= */
 
-        .feature-icon {
-            flex-shrink: 0;
+.features {
 
-            width: 54px;
-            height: 54px;
+    position:absolute;
 
-            display: flex;
+    z-index:5;
 
-            align-items: center;
-            justify-content: center;
+    bottom:0;
 
-            font-size: 34px;
-        }
+    left:50%;
 
-        .feature:nth-child(1) .feature-icon {
-            color: #dddddd;
-        }
+    transform:translateX(-50%);
 
-        .feature:nth-child(2) .feature-icon {
-            color: white;
-        }
+    width:min(1500px,100%);
 
-        .feature:nth-child(3) .feature-icon {
-            color: var(--dorado);
-        }
+    display:grid;
 
-        .feature:nth-child(4) .feature-icon {
-            color: var(--rojo);
-        }
+    grid-template-columns:repeat(5,1fr);
 
-        .feature:nth-child(5) .feature-icon {
-            color: var(--verde);
-        }
+    background:rgba(0,0,0,.82);
 
-        .feature-title {
-            font-size: 14px;
+    border-top:
+        1px solid rgba(218,166,43,.65);
 
-            font-weight: 800;
+    backdrop-filter:blur(8px);
+}
 
-            margin-bottom: 6px;
+.feature {
 
-            text-transform: uppercase;
-        }
+    min-height:120px;
 
-        .feature:nth-child(1) .feature-title {
-            color: var(--verde);
-        }
+    padding:20px 18px;
 
-        .feature:nth-child(2) .feature-title {
-            color: white;
-        }
+    display:flex;
 
-        .feature:nth-child(3) .feature-title {
-            color: var(--dorado-brillo);
-        }
+    align-items:center;
 
-        .feature:nth-child(4) .feature-title {
-            color: var(--rojo-brillo);
-        }
+    gap:15px;
 
-        .feature:nth-child(5) .feature-title {
-            color: var(--verde);
-        }
+    border-right:
+        1px solid rgba(255,255,255,.07);
+}
 
-        .feature-text {
-            color: #ddd;
+.feature-icon {
 
-            font-size: 12px;
+    flex-shrink:0;
 
-            line-height: 1.5;
-        }
+    width:54px;
+    height:54px;
 
+    display:flex;
 
-        /* =========================================================
-           MODAL
-        ========================================================= */
+    align-items:center;
+    justify-content:center;
 
-        .modal {
-            position: fixed;
+    font-size:34px;
+}
 
-            inset: 0;
+.feature-title {
 
-            z-index: 3000;
+    font-size:14px;
 
-            display: flex;
+    font-weight:800;
 
-            align-items: center;
-            justify-content: center;
+    margin-bottom:6px;
 
-            padding: 20px;
+    text-transform:uppercase;
+}
 
-            background:
-                rgba(0,0,0,0.72);
+.feature-text {
 
-            backdrop-filter: blur(9px);
-            -webkit-backdrop-filter: blur(9px);
+    color:#ddd;
 
-            opacity: 0;
+    font-size:12px;
 
-            visibility: hidden;
+    line-height:1.5;
+}
 
-            transition:
-                opacity 0.25s ease,
-                visibility 0.25s ease;
-        }
+.feature:nth-child(1) .feature-icon,
+.feature:nth-child(1) .feature-title {
+    color:var(--verde);
+}
 
-        .modal.active {
-            opacity: 1;
+.feature:nth-child(2) .feature-icon,
+.feature:nth-child(2) .feature-title {
+    color:white;
+}
 
-            visibility: visible;
-        }
+.feature:nth-child(3) .feature-icon,
+.feature:nth-child(3) .feature-title {
+    color:var(--dorado);
+}
 
+.feature:nth-child(4) .feature-icon,
+.feature:nth-child(4) .feature-title {
+    color:var(--rojo);
+}
 
-        /* CUADRO TRANSPARENTE */
+.feature:nth-child(5) .feature-icon,
+.feature:nth-child(5) .feature-title {
+    color:var(--verde);
+}
 
-        .modal-box {
-            position: relative;
 
-            width: min(700px, 100%);
+/* =========================================================
+   MODAL GENERAL
+========================================================= */
 
-            max-height: 85vh;
+.modal {
 
-            overflow-y: auto;
+    position:fixed;
 
-            padding: 38px;
+    inset:0;
 
-            border:
-                1px solid rgba(218,166,43,0.75);
+    z-index:3000;
 
-            border-radius: 14px;
+    display:flex;
 
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(17,17,17,0.87),
-                    rgba(3,3,3,0.76)
-                );
+    align-items:center;
+    justify-content:center;
 
-            box-shadow:
-                0 30px 100px rgba(0,0,0,0.85),
-                0 0 35px rgba(218,166,43,0.12);
+    padding:20px;
 
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+    background:rgba(0,0,0,.72);
 
-            transform:
-                translateY(20px)
-                scale(0.97);
+    backdrop-filter:blur(9px);
 
-            transition:
-                transform 0.3s ease;
-        }
+    -webkit-backdrop-filter:blur(9px);
 
-        .modal.active .modal-box {
-            transform:
-                translateY(0)
-                scale(1);
-        }
+    opacity:0;
 
-        .modal-box::before {
-            content: "";
+    visibility:hidden;
 
-            position: absolute;
+    transition:
+        opacity .25s ease,
+        visibility .25s ease;
+}
 
-            top: 0;
-            left: 12%;
+.modal.active {
 
-            width: 76%;
-            height: 2px;
+    opacity:1;
 
-            background:
-                linear-gradient(
-                    90deg,
-                    transparent,
-                    var(--dorado),
-                    transparent
-                );
+    visibility:visible;
+}
 
-            box-shadow:
-                0 0 12px var(--dorado);
-        }
+.modal-box {
 
+    position:relative;
 
-        /* cerrar */
+    width:min(700px,100%);
 
-        .modal-close {
-            position: absolute;
+    max-height:90vh;
 
-            top: 14px;
-            right: 16px;
+    overflow-y:auto;
 
-            width: 40px;
-            height: 40px;
+    padding:38px;
 
-            border-radius: 50%;
+    border:
+        1px solid rgba(218,166,43,.75);
 
-            border:
-                1px solid rgba(255,255,255,0.16);
+    border-radius:14px;
 
-            background:
-                rgba(255,255,255,0.05);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(17,17,17,.87),
+            rgba(3,3,3,.76)
+        );
 
-            color: white;
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.85),
+        0 0 35px rgba(218,166,43,.12);
 
-            font-size: 24px;
+    backdrop-filter:blur(25px);
 
-            cursor: pointer;
+    transform:
+        translateY(20px)
+        scale(.97);
 
-            transition: var(--transicion);
-        }
+    transition:
+        transform .3s ease;
+}
 
-        .modal-close:hover {
-            background:
-                rgba(220,0,0,0.35);
+.modal.active .modal-box {
 
-            border-color:
-                var(--rojo);
-        }
+    transform:
+        translateY(0)
+        scale(1);
+}
 
-        .modal-icon {
-            text-align: center;
+.modal-box::before {
 
-            font-size: 45px;
+    content:"";
 
-            color: var(--dorado);
+    position:absolute;
 
-            margin-bottom: 12px;
-        }
+    top:0;
+    left:12%;
 
-        .modal-title {
-            text-align: center;
+    width:76%;
+    height:2px;
 
-            font-size: clamp(23px, 4vw, 34px);
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--dorado),
+            transparent
+        );
+}
 
-            font-weight: 800;
 
-            margin-bottom: 20px;
+/* =========================================================
+   CERRAR MODAL
+========================================================= */
 
-            text-transform: uppercase;
-        }
+.modal-close {
 
-        .modal-title span {
-            color: var(--dorado-brillo);
-        }
+    position:absolute;
 
-        .modal-content {
-            color: #dedede;
+    top:14px;
+    right:16px;
 
-            line-height: 1.75;
+    width:40px;
+    height:40px;
 
-            font-size: 15px;
-        }
+    border-radius:50%;
 
-        .modal-content p {
-            margin-bottom: 14px;
-        }
+    border:
+        1px solid rgba(255,255,255,.16);
 
-        .modal-content strong {
-            color: white;
-        }
+    background:
+        rgba(255,255,255,.05);
 
+    color:white;
 
-        /* =========================================================
-           TARJETAS DENTRO DEL MODAL
-        ========================================================= */
+    font-size:24px;
 
-        .modal-grid {
-            display: grid;
+    cursor:pointer;
+}
 
-            grid-template-columns:
-                repeat(2, 1fr);
+.modal-close:hover {
 
-            gap: 13px;
+    background:
+        rgba(220,0,0,.35);
 
-            margin-top: 22px;
-        }
+    border-color:
+        var(--rojo);
+}
 
-        .info-card {
-            padding: 18px;
 
-            border:
-                1px solid rgba(255,255,255,0.09);
+/* =========================================================
+   MODAL CONTENIDO
+========================================================= */
 
-            border-radius: 9px;
+.modal-icon {
 
-            background:
-                rgba(255,255,255,0.035);
+    text-align:center;
 
-            transition: var(--transicion);
-        }
+    font-size:45px;
 
-        .info-card:hover {
-            border-color:
-                rgba(218,166,43,0.45);
+    color:var(--dorado);
 
-            background:
-                rgba(218,166,43,0.05);
+    margin-bottom:12px;
+}
 
-            transform:
-                translateY(-2px);
-        }
+.modal-title {
 
-        .info-card h3 {
-            color: var(--dorado-brillo);
+    text-align:center;
 
-            font-size: 15px;
+    font-size:clamp(23px,4vw,34px);
 
-            margin-bottom: 7px;
-        }
+    font-weight:800;
 
-        .info-card p {
-            color: #c8c8c8;
+    margin-bottom:20px;
 
-            font-size: 13px;
+    text-transform:uppercase;
+}
 
-            line-height: 1.5;
+.modal-title span {
+    color:var(--dorado-brillo);
+}
 
-            margin: 0;
-        }
+.modal-content {
 
+    color:#dedede;
 
-        /* =========================================================
-           STAFF
-        ========================================================= */
+    line-height:1.75;
 
-        .staff-list {
-            display: grid;
+    font-size:15px;
+}
 
-            grid-template-columns:
-                repeat(2, 1fr);
+.modal-content p {
+    margin-bottom:14px;
+}
 
-            gap: 15px;
 
-            margin-top: 20px;
-        }
+/* =========================================================
+   FORMULARIOS
+========================================================= */
 
-        .staff-card {
-            padding: 20px;
+.auth-form {
 
-            border:
-                1px solid rgba(218,166,43,0.28);
+    display:flex;
 
-            border-radius: 10px;
+    flex-direction:column;
 
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(255,255,255,0.06),
-                    rgba(255,255,255,0.025)
-                );
-        }
+    gap:15px;
 
-        .staff-role {
-            color: var(--verde);
+    margin-top:20px;
+}
 
-            font-size: 12px;
+.form-group {
 
-            font-weight: 800;
+    display:flex;
 
-            text-transform: uppercase;
+    flex-direction:column;
 
-            letter-spacing: 1px;
+    gap:7px;
+}
 
-            margin-bottom: 6px;
-        }
+.form-group label {
 
-        .staff-name {
-            font-size: 19px;
+    color:#ddd;
 
-            font-weight: 800;
+    font-size:13px;
 
-            margin-bottom: 8px;
-        }
+    font-weight:700;
 
-        .staff-code {
-            display: inline-block;
+    text-transform:uppercase;
+}
 
-            padding: 6px 10px;
+.form-group input {
 
-            border-radius: 5px;
+    width:100%;
 
-            background:
-                rgba(218,166,43,0.10);
+    min-height:52px;
 
-            color: var(--dorado-brillo);
+    padding:13px 15px;
 
-            font-family: monospace;
+    border:
+        1px solid rgba(255,255,255,.14);
 
-            font-size: 13px;
-        }
+    border-radius:8px;
 
+    outline:none;
 
-        /* =========================================================
-           FOOTER
-        ========================================================= */
+    background:
+        rgba(255,255,255,.055);
 
-        footer {
-            min-height: 120px;
+    color:white;
 
-            display: flex;
+    font-size:15px;
 
-            align-items: center;
-            justify-content: center;
+    transition:var(--transicion);
+}
 
-            text-align: center;
+.form-group input:focus {
 
-            padding: 35px 20px;
+    border-color:var(--dorado);
 
-            background: #020202;
+    background:
+        rgba(255,255,255,.08);
 
-            border-top:
-                1px solid rgba(218,166,43,0.35);
-        }
+    box-shadow:
+        0 0 15px rgba(218,166,43,.10);
+}
 
-        footer p {
-            color: #888;
+.form-group input::placeholder {
+    color:#888;
+}
 
-            font-size: 13px;
-        }
 
-        footer strong {
-            color: var(--dorado);
-        }
+/* =========================================================
+   BOTON FORMULARIO
+========================================================= */
 
+.auth-submit {
 
-        /* =========================================================
-           SCROLLBAR
-        ========================================================= */
+    width:100%;
 
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
+    min-height:54px;
 
-        ::-webkit-scrollbar-track {
-            background: #020202;
-        }
+    margin-top:5px;
 
-        ::-webkit-scrollbar-thumb {
-            background:
-                linear-gradient(
-                    var(--verde),
-                    var(--dorado),
-                    var(--rojo)
-                );
+    border:
+        1px solid var(--dorado);
 
-            border-radius: 10px;
-        }
+    border-radius:8px;
 
+    background:
+        linear-gradient(
+            180deg,
+            #332707,
+            #100d03
+        );
 
-        /* =========================================================
-           TABLET
-        ========================================================= */
+    color:var(--dorado-brillo);
 
-        @media (max-width: 1100px) {
+    font-size:15px;
 
-            .navbar {
-                grid-template-columns:
-                    230px
-                    repeat(7, 1fr);
+    font-weight:800;
 
-                min-height: 105px;
-            }
+    cursor:pointer;
 
-            .logo-area img {
-                max-width: 190px;
-            }
+    transition:var(--transicion);
+}
 
-            .nav-text {
-                font-size: 10px;
-            }
+.auth-submit:hover {
 
-            .nav-icon {
-                font-size: 23px;
-            }
+    transform:translateY(-2px);
 
-            .features {
-                grid-template-columns:
-                    repeat(5, 1fr);
-            }
+    box-shadow:
+        0 0 25px rgba(218,166,43,.22);
+}
 
-            .feature {
-                min-height: 105px;
+.auth-submit:disabled {
 
-                padding: 15px 10px;
+    opacity:.55;
 
-                gap: 8px;
-            }
+    cursor:not-allowed;
 
-            .feature-icon {
-                width: 42px;
+    transform:none;
+}
 
-                font-size: 27px;
-            }
 
-            .feature-title {
-                font-size: 11px;
-            }
+/* =========================================================
+   MENSAJES
+========================================================= */
 
-            .feature-text {
-                font-size: 10px;
-            }
-        }
+.form-message {
 
+    display:none;
 
-        /* =========================================================
-           MOVIL
-        ========================================================= */
+    padding:13px;
 
-        @media (max-width: 760px) {
+    margin-top:10px;
 
-            .navbar {
-                top: 8px;
+    border-radius:7px;
 
-                width: calc(100% - 16px);
+    font-size:13px;
 
-                min-height: auto;
+    line-height:1.5;
 
-                display: grid;
+    text-align:center;
+}
 
-                grid-template-columns:
-                    1fr
-                    repeat(4, 1fr);
+.form-message.show {
+    display:block;
+}
 
-                clip-path: none;
+.form-message.success {
 
-                border-radius: 12px;
+    color:#9cffb0;
 
-                overflow: hidden;
+    border:
+        1px solid rgba(0,200,50,.4);
 
-                background:
-                    rgba(3,3,3,0.91);
+    background:
+        rgba(0,200,50,.08);
+}
 
-                backdrop-filter: blur(18px);
-                -webkit-backdrop-filter: blur(18px);
-            }
+.form-message.error {
 
-            .logo-area {
-                grid-column: 1 / -1;
+    color:#ff9b9b;
 
-                min-height: 72px;
+    border:
+        1px solid rgba(230,0,0,.4);
 
-                border-right: none;
+    background:
+        rgba(230,0,0,.08);
+}
 
-                border-bottom:
-                    1px solid rgba(255,255,255,0.08);
-            }
+.auth-note {
 
-            .logo-area img {
-                max-width: 165px;
+    margin-top:15px;
 
-                max-height: 62px;
-            }
+    color:#888;
 
-            .nav-button {
-                min-height: 76px;
+    font-size:12px;
 
-                padding: 7px 3px;
+    text-align:center;
 
-                gap: 4px;
-            }
+    line-height:1.5;
+}
 
-            .nav-icon {
-                width: 30px;
-                height: 30px;
 
-                font-size: 21px;
-            }
+/* =========================================================
+   STAFF
+========================================================= */
 
-            .nav-text {
-                font-size: 8px;
+.staff-list {
 
-                line-height: 1.2;
-            }
+    display:grid;
 
-            /*
-               En celular se muestran los botones principales
-               en una segunda fila.
-            */
+    grid-template-columns:repeat(2,1fr);
 
-            .nav-button:nth-of-type(6),
-            .nav-button:nth-of-type(7) {
-                display: none;
-            }
+    gap:15px;
 
-            .hero {
-                min-height: 100svh;
+    margin-top:20px;
+}
 
-                padding-top: 180px;
+.staff-card {
 
-                padding-bottom: 190px;
+    padding:20px;
 
-                align-items: flex-start;
-            }
+    border:
+        1px solid rgba(218,166,43,.28);
 
-            .hero-content {
-                margin-top: 80px;
-            }
+    border-radius:10px;
 
-            .welcome {
-                font-size: 15px;
+    background:
+        rgba(255,255,255,.035);
+}
 
-                letter-spacing: 2px;
-            }
+.staff-role {
 
-            .hero-title {
-                font-size: clamp(48px, 15vw, 78px);
+    color:var(--verde);
 
-                letter-spacing: -3px;
-            }
+    font-size:12px;
 
-            .hero-subtitle {
-                font-size: 16px;
-            }
+    font-weight:800;
 
-            .hero-description {
-                font-size: 13px;
+    text-transform:uppercase;
 
-                line-height: 1.6;
-            }
+    margin-bottom:6px;
+}
 
-            .join-button {
-                min-width: 0;
+.staff-name {
 
-                width: min(320px, 90%);
+    font-size:19px;
 
-                padding: 15px 20px;
+    font-weight:800;
 
-                font-size: 14px;
-            }
+    margin-bottom:8px;
+}
 
-            .features {
-                position: absolute;
+.staff-code {
 
-                bottom: 0;
+    display:inline-block;
 
-                width: 100%;
+    padding:6px 10px;
 
-                display: grid;
+    border-radius:5px;
 
-                grid-template-columns:
-                    repeat(2, 1fr);
+    background:
+        rgba(218,166,43,.10);
 
-                background:
-                    rgba(0,0,0,0.9);
-            }
+    color:var(--dorado-brillo);
 
-            .feature {
-                min-height: 90px;
+    font-family:monospace;
 
-                padding: 12px;
+    font-size:13px;
+}
 
-                border-bottom:
-                    1px solid rgba(255,255,255,0.06);
-            }
 
-            .feature:nth-child(5) {
-                grid-column: 1 / -1;
-            }
+/* =========================================================
+   MODAL GRID
+========================================================= */
 
-            .feature-icon {
-                width: 38px;
+.modal-grid {
 
-                font-size: 25px;
-            }
+    display:grid;
 
-            .feature-title {
-                font-size: 10px;
-            }
+    grid-template-columns:repeat(2,1fr);
 
-            .feature-text {
-                font-size: 9px;
-            }
+    gap:13px;
 
-            .modal {
-                padding: 12px;
-            }
+    margin-top:22px;
+}
 
-            .modal-box {
-                padding: 30px 20px;
+.info-card {
 
-                max-height: 90vh;
+    padding:18px;
 
-                border-radius: 11px;
-            }
+    border:
+        1px solid rgba(255,255,255,.09);
 
-            .modal-grid,
-            .staff-list {
-                grid-template-columns: 1fr;
-            }
+    border-radius:9px;
 
-            .modal-content {
-                font-size: 14px;
-            }
+    background:
+        rgba(255,255,255,.035);
+}
 
-            footer {
-                padding: 25px 15px;
-            }
-        }
+.info-card h3 {
 
+    color:var(--dorado-brillo);
 
-        /* =========================================================
-           MOVIL MUY PEQUEÑO
-        ========================================================= */
+    font-size:15px;
 
-        @media (max-width: 420px) {
+    margin-bottom:7px;
+}
 
-            .navbar {
-                grid-template-columns:
-                    repeat(4, 1fr);
-            }
+.info-card p {
 
-            .logo-area {
-                grid-column: 1 / -1;
-            }
+    color:#c8c8c8;
 
-            .nav-button:nth-of-type(5) {
-                display: none;
-            }
+    font-size:13px;
 
-            .hero {
-                padding-top: 160px;
+    line-height:1.5;
 
-                padding-bottom: 250px;
-            }
+    margin:0;
+}
 
-            .hero-content {
-                margin-top: 45px;
-            }
 
-            .hero-title {
-                font-size: 45px;
-            }
+/* =========================================================
+   FOOTER
+========================================================= */
 
-            .hero-description {
-                font-size: 12px;
-            }
+footer {
 
-            .features {
-                grid-template-columns:
-                    repeat(2, 1fr);
-            }
-        }
+    min-height:120px;
 
+    display:flex;
 
-        /* =========================================================
-           ANIMACIONES
-        ========================================================= */
+    align-items:center;
+    justify-content:center;
 
-        @keyframes aparecer {
+    text-align:center;
 
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
+    padding:35px 20px;
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+    background:#020202;
 
-        }
+    border-top:
+        1px solid rgba(218,166,43,.35);
+}
 
-        .hero-content > * {
-            animation:
-                aparecer 0.8s ease both;
-        }
+footer p {
 
-        .hero-content .welcome {
-            animation-delay: 0.1s;
-        }
+    color:#888;
 
-        .hero-content .hero-title {
-            animation-delay: 0.2s;
-        }
+    font-size:13px;
+}
 
-        .hero-content .hero-divider {
-            animation-delay: 0.3s;
-        }
+footer strong {
+    color:var(--dorado);
+}
 
-        .hero-content .hero-subtitle {
-            animation-delay: 0.4s;
-        }
 
-        .hero-content .hero-description {
-            animation-delay: 0.5s;
-        }
+/* =========================================================
+   SCROLLBAR
+========================================================= */
 
-        .hero-content .join-button {
-            animation-delay: 0.6s;
-        }
+::-webkit-scrollbar {
+    width:8px;
+}
 
-    </style>
+::-webkit-scrollbar-track {
+    background:#020202;
+}
+
+::-webkit-scrollbar-thumb {
+
+    background:
+        linear-gradient(
+            var(--verde),
+            var(--dorado),
+            var(--rojo)
+        );
+
+    border-radius:10px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media(max-width:1100px) {
+
+    .navbar {
+
+        grid-template-columns:
+            220px
+            repeat(9,1fr);
+
+        min-height:105px;
+    }
+
+    .logo-area img {
+        max-width:180px;
+    }
+
+    .nav-text {
+        font-size:9px;
+    }
+
+    .nav-icon {
+        font-size:22px;
+    }
+
+    .feature {
+
+        padding:15px 10px;
+
+        gap:8px;
+    }
+
+    .feature-icon {
+
+        width:42px;
+
+        font-size:27px;
+    }
+
+    .feature-title {
+        font-size:10px;
+    }
+
+    .feature-text {
+        font-size:9px;
+    }
+}
+
+
+/* =========================================================
+   CELULAR
+========================================================= */
+
+@media(max-width:760px) {
+
+    .navbar {
+
+        top:8px;
+
+        width:calc(100% - 16px);
+
+        min-height:auto;
+
+        display:grid;
+
+        grid-template-columns:
+            repeat(4,1fr);
+
+        clip-path:none;
+
+        border-radius:12px;
+
+        overflow:hidden;
+
+        background:
+            rgba(3,3,3,.94);
+    }
+
+    .logo-area {
+
+        grid-column:1/-1;
+
+        min-height:72px;
+
+        border-right:none;
+
+        border-bottom:
+            1px solid rgba(255,255,255,.08);
+    }
+
+    .logo-area img {
+
+        max-width:165px;
+
+        max-height:62px;
+    }
+
+    .nav-button {
+
+        min-height:76px;
+
+        padding:7px 3px;
+
+        gap:4px;
+    }
+
+    .nav-icon {
+
+        width:30px;
+        height:30px;
+
+        font-size:20px;
+    }
+
+    .nav-text {
+        font-size:7px;
+    }
+
+    /*
+       En móvil mantenemos los botones
+       esenciales accesibles.
+    */
+
+    .nav-button:nth-child(6),
+    .nav-button:nth-child(7) {
+
+        display:none;
+    }
+
+    .hero {
+
+        min-height:100svh;
+
+        padding-top:180px;
+
+        padding-bottom:190px;
+
+        align-items:flex-start;
+    }
+
+    .hero-content {
+
+        margin-top:70px;
+    }
+
+    .hero-title {
+
+        font-size:
+            clamp(46px,14vw,78px);
+
+        letter-spacing:-3px;
+    }
+
+    .hero-description {
+
+        font-size:13px;
+    }
+
+    .join-button {
+
+        width:90%;
+
+        min-width:0;
+
+        padding:15px 20px;
+
+        font-size:14px;
+    }
+
+    .features {
+
+        position:absolute;
+
+        bottom:0;
+
+        width:100%;
+
+        display:grid;
+
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .feature {
+
+        min-height:90px;
+
+        padding:12px;
+    }
+
+    .feature:nth-child(5) {
+
+        grid-column:1/-1;
+    }
+
+    .feature-icon {
+
+        width:38px;
+
+        font-size:24px;
+    }
+
+    .feature-title {
+        font-size:9px;
+    }
+
+    .feature-text {
+        font-size:8px;
+    }
+
+    .modal {
+
+        padding:12px;
+    }
+
+    .modal-box {
+
+        padding:30px 20px;
+
+        max-height:90vh;
+
+        border-radius:11px;
+    }
+
+    .modal-grid,
+    .staff-list {
+
+        grid-template-columns:1fr;
+    }
+
+    .modal-content {
+        font-size:14px;
+    }
+}
+
+
+/* =========================================================
+   CELULAR PEQUEÑO
+========================================================= */
+
+@media(max-width:420px) {
+
+    .navbar {
+
+        grid-template-columns:
+            repeat(4,1fr);
+    }
+
+    .hero {
+
+        padding-top:160px;
+
+        padding-bottom:250px;
+    }
+
+    .hero-title {
+        font-size:45px;
+    }
+
+    .hero-description {
+        font-size:12px;
+    }
+}
+
+</style>
+
 </head>
 
 
 <body>
 
-<div class="page">
+
+<!-- =========================================================
+     NAVBAR
+========================================================= -->
+
+<nav class="navbar">
 
 
-    <!-- =========================================================
-         NAVEGACIÓN
-    ========================================================== -->
+    <!-- LOGO -->
 
-    <nav class="navbar">
+    <div class="logo-area">
 
-        <!-- LOGO -->
-
-        <div class="logo-area">
-
-            <img
-                src="logo.png"
-                alt="MexCity RP"
-            >
-
-        </div>
-
-
-        <!-- QUÉ ES MEXCITY -->
-
-        <button
-            class="nav-button"
-            data-modal="que-es"
+        <img
+            src="logo.png"
+            alt="MexCity RP"
         >
-
-            <div class="nav-icon">🏙</div>
-
-            <div class="nav-text">
-                ¿Qué es<br>MexCity?
-            </div>
-
-        </button>
-
-
-        <!-- COMUNIDAD -->
-
-        <button
-            class="nav-button"
-            data-modal="comunidad"
-        >
-
-            <div class="nav-icon">👥</div>
-
-            <div class="nav-text">
-                Nuestra<br>Comunidad
-            </div>
-
-        </button>
-
-
-        <!-- COMO FUNCIONA -->
-
-        <button
-            class="nav-button"
-            data-modal="funciona"
-        >
-
-            <div class="nav-icon">☆</div>
-
-            <div class="nav-text">
-                Cómo funciona<br>el Roleplay
-            </div>
-
-        </button>
-
-
-        <!-- POLÍTICA -->
-
-        <button
-            class="nav-button"
-            data-modal="politica"
-        >
-
-            <div class="nav-icon">♙</div>
-
-            <div class="nav-text">
-                Política y<br>Privacidad
-            </div>
-
-        </button>
-
-
-        <!-- REGLAS -->
-
-        <button
-            class="nav-button"
-            data-modal="reglas"
-        >
-
-            <div class="nav-icon">♢</div>
-
-            <div class="nav-text">
-                Reglas y<br>Convivencia
-            </div>
-
-        </button>
-
-
-        <!-- STAFF -->
-
-        <button
-            class="nav-button"
-            data-modal="staff"
-        >
-
-            <div class="nav-icon">★</div>
-
-            <div class="nav-text">
-                Staff
-            </div>
-
-        </button>
-
-
-        <!-- SOPORTE -->
-
-        <button
-            class="nav-button"
-            data-modal="soporte"
-        >
-
-            <div class="nav-icon">◉</div>
-
-            <div class="nav-text">
-                Soporte
-            </div>
-
-        </button>
-
-    </nav>
-
-
-
-    <!-- =========================================================
-         PORTADA
-    ========================================================== -->
-
-    <main class="hero">
-
-        <div class="hero-background"></div>
-
-
-        <div class="hero-content">
-
-            <div class="welcome">
-                BIENVENIDO A
-            </div>
-
-
-            <h1 class="hero-title">
-
-                <span class="mx">MEX</span><span class="city">CITY</span><span class="rp"> RP</span>
-
-            </h1>
-
-
-            <div class="hero-divider">
-
-                <span></span>
-
-                <div class="star">★</div>
-
-                <span></span>
-
-            </div>
-
-
-            <div class="hero-subtitle">
-
-                LA CIUDAD DONDE
-                <strong>TU HISTORIA</strong>
-                COMIENZA
-
-            </div>
-
-
-            <p class="hero-description">
-
-                Crea tu personaje, construye tu historia y vive
-                experiencias únicas en la comunidad de roleplay
-                más completa inspirada en México.
-
-            </p>
-
-
-            <button
-                class="join-button"
-                data-modal="comunidad"
-            >
-
-                ★ &nbsp; ÚNETE A LA CIUDAD &nbsp; ★
-
-            </button>
-
-        </div>
-
-
-
-        <!-- =====================================================
-             CARACTERÍSTICAS
-        ====================================================== -->
-
-        <section class="features">
-
-
-            <div class="feature">
-
-                <div class="feature-icon">
-                    ♙
-                </div>
-
-                <div>
-
-                    <div class="feature-title">
-                        Comunidad Activa
-                    </div>
-
-                    <div class="feature-text">
-                        Miles de historias<br>
-                        cada día
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="feature">
-
-                <div class="feature-icon">
-                    ◈
-                </div>
-
-                <div>
-
-                    <div class="feature-title">
-                        Ambiente Realista
-                    </div>
-
-                    <div class="feature-text">
-                        Un roleplay serio<br>
-                        y organizado
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="feature">
-
-                <div class="feature-icon">
-                    ♜
-                </div>
-
-                <div>
-
-                    <div class="feature-title">
-                        Infinitas Posibilidades
-                    </div>
-
-                    <div class="feature-text">
-                        Crea, trabaja,<br>
-                        emprende e interactúa
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="feature">
-
-                <div class="feature-icon">
-                    ☆
-                </div>
-
-                <div>
-
-                    <div class="feature-title">
-                        Eventos Exclusivos
-                    </div>
-
-                    <div class="feature-text">
-                        Participa en eventos<br>
-                        de toda la ciudad
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="feature">
-
-                <div class="feature-icon">
-                    ♜
-                </div>
-
-                <div>
-
-                    <div class="feature-title">
-                        Organizaciones
-                    </div>
-
-                    <div class="feature-text">
-                        Empresas, gobierno,<br>
-                        fuerzas y más
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-
-    <!-- =========================================================
-         FOOTER
-    ========================================================== -->
-
-    <footer>
-
-        <p>
-            © 2026
-            <strong>MexCity RP</strong>.
-            Todos los derechos reservados.
-        </p>
-
-    </footer>
-
-
-
-    <!-- =========================================================
-         MODAL
-    ========================================================== -->
-
-    <div
-        class="modal"
-        id="modal"
-    >
-
-        <div class="modal-box">
-
-            <button
-                class="modal-close"
-                id="closeModal"
-                aria-label="Cerrar"
-            >
-                ×
-            </button>
-
-
-            <div
-                class="modal-icon"
-                id="modalIcon"
-            >
-                ★
-            </div>
-
-
-            <h2
-                class="modal-title"
-                id="modalTitle"
-            >
-                MexCity RP
-            </h2>
-
-
-            <div
-                class="modal-content"
-                id="modalContent"
-            >
-            </div>
-
-        </div>
 
     </div>
 
+
+    <!-- ¿QUÉ ES? -->
+
+    <button
+        class="nav-button"
+        data-modal="que-es"
+    >
+
+        <div class="nav-icon">
+            🏙
+        </div>
+
+        <div class="nav-text">
+            ¿Qué es<br>
+            MexCity?
+        </div>
+
+    </button>
+
+
+    <!-- COMUNIDAD -->
+
+    <button
+        class="nav-button"
+        data-modal="comunidad"
+    >
+
+        <div class="nav-icon">
+            👥
+        </div>
+
+        <div class="nav-text">
+            Nuestra<br>
+            Comunidad
+        </div>
+
+    </button>
+
+
+    <!-- ROLEPLAY -->
+
+    <button
+        class="nav-button"
+        data-modal="funciona"
+    >
+
+        <div class="nav-icon">
+            ☆
+        </div>
+
+        <div class="nav-text">
+            Cómo funciona<br>
+            el Roleplay
+        </div>
+
+    </button>
+
+
+    <!-- PRIVACIDAD -->
+
+    <button
+        class="nav-button"
+        data-modal="politica"
+    >
+
+        <div class="nav-icon">
+            ♙
+        </div>
+
+        <div class="nav-text">
+            Política y<br>
+            Privacidad
+        </div>
+
+    </button>
+
+
+    <!-- REGLAS -->
+
+    <button
+        class="nav-button"
+        data-modal="reglas"
+    >
+
+        <div class="nav-icon">
+            ♢
+        </div>
+
+        <div class="nav-text">
+            Reglas y<br>
+            Convivencia
+        </div>
+
+    </button>
+
+
+    <!-- STAFF -->
+
+    <button
+        class="nav-button"
+        data-modal="staff"
+    >
+
+        <div class="nav-icon">
+            ★
+        </div>
+
+        <div class="nav-text">
+            Staff
+        </div>
+
+    </button>
+
+
+    <!-- SOPORTE -->
+
+    <button
+        class="nav-button"
+        data-modal="soporte"
+    >
+
+        <div class="nav-icon">
+            ◉
+        </div>
+
+        <div class="nav-text">
+            Soporte
+        </div>
+
+    </button>
+
+
+    <!-- =====================================================
+         NUEVO: REGISTRARSE
+    ====================================================== -->
+
+    <button
+        class="nav-button register"
+        data-modal="registro"
+    >
+
+        <div class="nav-icon">
+            ✚
+        </div>
+
+        <div class="nav-text">
+            Registrarse
+        </div>
+
+    </button>
+
+
+    <!-- =====================================================
+         NUEVO: INICIAR SESIÓN
+    ====================================================== -->
+
+    <button
+        class="nav-button login"
+        data-modal="login"
+    >
+
+        <div class="nav-icon">
+            ⇥
+        </div>
+
+        <div class="nav-text">
+            Iniciar<br>
+            sesión
+        </div>
+
+    </button>
+
+</nav>
+
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<main class="hero">
+
+    <div class="hero-background"></div>
+
+
+    <div class="hero-content">
+
+        <div class="welcome">
+            BIENVENIDO A
+        </div>
+
+
+        <h1 class="hero-title">
+
+            <span class="mx">MEX</span><span class="city">CITY</span><span class="rp"> RP</span>
+
+        </h1>
+
+
+        <div class="hero-divider">
+
+            <span></span>
+
+            <div class="star">
+                ★
+            </div>
+
+            <span></span>
+
+        </div>
+
+
+        <div class="hero-subtitle">
+
+            LA CIUDAD DONDE
+            <strong>TU HISTORIA</strong>
+            COMIENZA
+
+        </div>
+
+
+        <p class="hero-description">
+
+            Crea tu personaje, construye tu historia y vive
+            experiencias únicas en la comunidad de roleplay
+            más completa inspirada en México.
+
+        </p>
+
+
+        <button
+            class="join-button"
+            data-modal="registro"
+        >
+
+            ★ &nbsp;
+            ÚNETE A LA CIUDAD
+            &nbsp; ★
+
+        </button>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CARACTERÍSTICAS
+    ====================================================== -->
+
+    <section class="features">
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                ♙
+            </div>
+
+            <div>
+
+                <div class="feature-title">
+                    Comunidad Activa
+                </div>
+
+                <div class="feature-text">
+                    Miles de historias<br>
+                    cada día
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                ◈
+            </div>
+
+            <div>
+
+                <div class="feature-title">
+                    Ambiente Realista
+                </div>
+
+                <div class="feature-text">
+                    Un roleplay serio<br>
+                    y organizado
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                ♜
+            </div>
+
+            <div>
+
+                <div class="feature-title">
+                    Infinitas Posibilidades
+                </div>
+
+                <div class="feature-text">
+                    Crea, trabaja,<br>
+                    emprende e interactúa
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                ☆
+            </div>
+
+            <div>
+
+                <div class="feature-title">
+                    Eventos Exclusivos
+                </div>
+
+                <div class="feature-text">
+                    Participa en eventos<br>
+                    de toda la ciudad
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                ♜
+            </div>
+
+            <div>
+
+                <div class="feature-title">
+                    Organizaciones
+                </div>
+
+                <div class="feature-text">
+                    Empresas, gobierno,<br>
+                    fuerzas y más
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+    <p>
+
+        © 2026
+        <strong>MexCity RP</strong>.
+        Todos los derechos reservados.
+
+    </p>
+
+</footer>
+
+
+
+<!-- =========================================================
+     MODAL GENERAL
+========================================================= -->
+
+<div
+    class="modal"
+    id="modal"
+>
+
+    <div class="modal-box">
+
+
+        <button
+            class="modal-close"
+            id="closeModal"
+        >
+            ×
+        </button>
+
+
+        <div
+            class="modal-icon"
+            id="modalIcon"
+        >
+            ★
+        </div>
+
+
+        <h2
+            class="modal-title"
+            id="modalTitle"
+        >
+            MexCity RP
+        </h2>
+
+
+        <div
+            class="modal-content"
+            id="modalContent"
+        >
+        </div>
+
+    </div>
 
 </div>
 
@@ -1885,581 +2012,1134 @@
 
 <script>
 
-    /* =========================================================
-       INFORMACIÓN DE LAS SECCIONES
-    ========================================================== */
+/* =========================================================
+   EMAILJS
+========================================================= */
 
-    const modalData = {
+/*
+   TU SERVICE ID
+*/
 
-        "que-es": {
+const EMAILJS_SERVICE_ID =
+    "service_3pfk0gq";
 
-            icon: "🏙",
 
-            title: "¿Qué es MexCity?",
+/*
+   IMPORTANTE:
 
-            content: `
+   Aquí necesitas colocar el ID REAL
+   de tu plantilla de EmailJS.
 
-                <p>
-                    <strong>MexCity RP</strong> es una comunidad
-                    de roleplay inspirada en México donde cada
-                    jugador puede crear su propio personaje y
-                    desarrollar una historia dentro de la ciudad.
-                </p>
+   Ejemplo:
+   template_xxxxxxx
+*/
 
-                <p>
-                    La ciudad está diseñada para que diferentes
-                    tipos de personajes puedan convivir,
-                    trabajar, crear negocios, pertenecer a
-                    organizaciones y desarrollar historias.
-                </p>
+const EMAILJS_TEMPLATE_ID =
+    "REEMPLAZA_AQUI_TU_TEMPLATE_ID";
 
-                <div class="modal-grid">
 
-                    <div class="info-card">
-                        <h3>Tu personaje</h3>
-                        <p>
-                            Construye una identidad y desarrolla
-                            una historia propia.
-                        </p>
+/*
+   TU PUBLIC KEY
+*/
+
+const EMAILJS_PUBLIC_KEY =
+    "zB_VYBsKxGCESl2F0";
+
+
+/* Inicializar EmailJS */
+
+emailjs.init({
+
+    publicKey:
+        EMAILJS_PUBLIC_KEY
+
+});
+
+
+
+/* =========================================================
+   INFORMACIÓN DE LOS MODALES
+========================================================= */
+
+const modalData = {
+
+
+    "que-es": {
+
+        icon:"🏙",
+
+        title:"¿Qué es MexCity?",
+
+        content:`
+
+            <p>
+                <strong>MexCity RP</strong> es una comunidad
+                de roleplay inspirada en México donde cada
+                jugador puede crear su propio personaje y
+                desarrollar una historia dentro de la ciudad.
+            </p>
+
+            <p>
+                La ciudad está diseñada para que diferentes
+                tipos de personajes puedan convivir,
+                trabajar, crear negocios, pertenecer a
+                organizaciones y desarrollar historias.
+            </p>
+
+        `
+    },
+
+
+    "comunidad": {
+
+        icon:"👥",
+
+        title:"Nuestra Comunidad",
+
+        content:`
+
+            <p>
+                MexCity RP busca construir una comunidad
+                activa, organizada y respetuosa.
+            </p>
+
+            <div class="modal-grid">
+
+                <div class="info-card">
+
+                    <h3>
+                        Ciudadanos
+                    </h3>
+
+                    <p>
+                        Personajes que forman parte
+                        de la vida cotidiana de MexCity.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>
+                        Empresas
+                    </h3>
+
+                    <p>
+                        Negocios y proyectos creados
+                        dentro de la ciudad.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>
+                        Gobierno
+                    </h3>
+
+                    <p>
+                        Instituciones encargadas de
+                        diferentes funciones de la ciudad.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>
+                        Organizaciones
+                    </h3>
+
+                    <p>
+                        Diferentes grupos con objetivos
+                        específicos.
+                    </p>
+
+                </div>
+
+            </div>
+
+        `
+    },
+
+
+    "funciona": {
+
+        icon:"☆",
+
+        title:"Cómo funciona el Roleplay",
+
+        content:`
+
+            <p>
+                El roleplay consiste en interpretar a un
+                personaje dentro de un universo ficticio,
+                respetando la historia y las situaciones
+                creadas dentro de la comunidad.
+            </p>
+
+            <div class="modal-grid">
+
+                <div class="info-card">
+
+                    <h3>
+                        01 · Crea
+                    </h3>
+
+                    <p>
+                        Diseña tu personaje y define
+                        su identidad.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>
+                        02 · Presenta
+                    </h3>
+
+                    <p>
+                        Presenta tu personaje y establece
+                        el inicio de su historia.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>
+                        03 · Interactúa
+                    </h3>
+
+                    <p>
+                        Convive y desarrolla situaciones
+                        con otros personajes.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>
+                        04 · Construye
+                    </h3>
+
+                    <p>
+                        Haz crecer la historia de tu
+                        personaje dentro de MexCity.
+                    </p>
+
+                </div>
+
+            </div>
+
+        `
+    },
+
+
+    "politica": {
+
+        icon:"♙",
+
+        title:"Política y Privacidad",
+
+        content:`
+
+            <p>
+                La privacidad de los integrantes de la
+                comunidad es una prioridad.
+            </p>
+
+            <p>
+                La información proporcionada para participar
+                en MexCity RP debe manejarse de manera
+                responsable.
+            </p>
+
+        `
+    },
+
+
+    "reglas": {
+
+        icon:"♢",
+
+        title:"Reglas y Convivencia",
+
+        content:`
+
+            <p>
+                Para mantener una comunidad organizada,
+                todos los integrantes deben respetar las
+                normas establecidas por MexCity RP.
+            </p>
+
+            <div class="modal-grid">
+
+                <div class="info-card">
+
+                    <h3>
+                        Respeto
+                    </h3>
+
+                    <p>
+                        Mantén una convivencia respetuosa
+                        con los demás integrantes.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>
+                        Roleplay
+                    </h3>
+
+                    <p>
+                        Respeta la lógica y continuidad
+                        de las historias.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>
+                        Administración
+                    </h3>
+
+                    <p>
+                        Sigue las indicaciones administrativas.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>
+                        Convivencia
+                    </h3>
+
+                    <p>
+                        No utilices la comunidad para generar
+                        conflictos fuera del roleplay.
+                    </p>
+
+                </div>
+
+            </div>
+
+        `
+    },
+
+
+    "staff": {
+
+        icon:"★",
+
+        title:"Staff MexCity RP",
+
+        content:`
+
+            <p>
+                El equipo administrativo es responsable
+                de mantener el orden y supervisar el
+                funcionamiento de la comunidad.
+            </p>
+
+            <div class="staff-list">
+
+                <div class="staff-card">
+
+                    <div class="staff-role">
+                        Administrador
                     </div>
 
-                    <div class="info-card">
-                        <h3>Tu historia</h3>
-                        <p>
-                            Cada decisión puede cambiar el rumbo
-                            de tu personaje.
-                        </p>
+                    <div class="staff-name">
+                        CARTSH
                     </div>
 
-                    <div class="info-card">
-                        <h3>Tu ciudad</h3>
-                        <p>
-                            Interactúa con otros ciudadanos y
-                            organizaciones.
-                        </p>
-                    </div>
-
-                    <div class="info-card">
-                        <h3>Tu experiencia</h3>
-                        <p>
-                            Participa en actividades, eventos y
-                            diferentes situaciones de roleplay.
-                        </p>
+                    <div class="staff-code">
+                        MXC-ADMIN-001
                     </div>
 
                 </div>
 
-            `
-        },
 
+                <div class="staff-card">
 
-        "comunidad": {
-
-            icon: "👥",
-
-            title: "Nuestra Comunidad",
-
-            content: `
-
-                <p>
-                    MexCity RP busca construir una comunidad
-                    activa, organizada y respetuosa.
-                </p>
-
-                <p>
-                    Los jugadores pueden crear historias,
-                    interactuar con otros personajes y participar
-                    en diferentes áreas de la ciudad.
-                </p>
-
-                <div class="modal-grid">
-
-                    <div class="info-card">
-                        <h3>Ciudadanos</h3>
-                        <p>
-                            Personajes que forman parte de la vida
-                            cotidiana de MexCity.
-                        </p>
+                    <div class="staff-role">
+                        Staff
                     </div>
 
-                    <div class="info-card">
-                        <h3>Empresas</h3>
-                        <p>
-                            Negocios y proyectos creados dentro
-                            de la ciudad.
-                        </p>
+                    <div class="staff-name">
+                        NOMBRE DEL ADMINISTRADOR
                     </div>
 
-                    <div class="info-card">
-                        <h3>Gobierno</h3>
-                        <p>
-                            Instituciones encargadas de diferentes
-                            funciones de la ciudad.
-                        </p>
-                    </div>
-
-                    <div class="info-card">
-                        <h3>Organizaciones</h3>
-                        <p>
-                            Diferentes grupos con objetivos y
-                            funciones específicas.
-                        </p>
+                    <div class="staff-code">
+                        MXC-STAFF-002
                     </div>
 
                 </div>
 
-            `
-        },
+            </div>
+
+        `
+    },
 
 
-        "funciona": {
+    "soporte": {
 
-            icon: "☆",
+        icon:"◉",
 
-            title: "Cómo funciona el Roleplay",
+        title:"Soporte",
 
-            content: `
+        content:`
 
-                <p>
-                    El roleplay consiste en interpretar a un
-                    personaje dentro de un universo ficticio,
-                    respetando la historia y las situaciones
-                    creadas dentro de la comunidad.
-                </p>
+            <p>
+                ¿Tienes algún problema o necesitas ayuda?
+                El equipo de soporte puede ayudarte con
+                situaciones relacionadas con MexCity RP.
+            </p>
 
-                <div class="modal-grid">
-
-                    <div class="info-card">
-                        <h3>01 · Crea</h3>
-                        <p>
-                            Diseña tu personaje y define su
-                            identidad.
-                        </p>
-                    </div>
-
-                    <div class="info-card">
-                        <h3>02 · Presenta</h3>
-                        <p>
-                            Presenta tu personaje y establece
-                            el inicio de su historia.
-                        </p>
-                    </div>
-
-                    <div class="info-card">
-                        <h3>03 · Interactúa</h3>
-                        <p>
-                            Convive y desarrolla situaciones con
-                            otros personajes.
-                        </p>
-                    </div>
-
-                    <div class="info-card">
-                        <h3>04 · Construye</h3>
-                        <p>
-                            Haz crecer la historia de tu
-                            personaje dentro de MexCity.
-                        </p>
-                    </div>
-
-                </div>
-
-            `
-        },
+        `
+    },
 
 
-        "politica": {
+    /* =====================================================
+       REGISTRO
+    ====================================================== */
 
-            icon: "♙",
+    "registro": {
 
-            title: "Política y Privacidad",
+        icon:"✚",
 
-            content: `
+        title:"Crear cuenta",
 
-                <p>
-                    La privacidad de los integrantes de la
-                    comunidad es una prioridad.
-                </p>
+        content:`
 
-                <p>
-                    La información proporcionada para participar
-                    en MexCity RP debe utilizarse únicamente
-                    para los fines relacionados con la comunidad
-                    y sus procesos administrativos.
-                </p>
+            <p>
+                Crea tu cuenta para comenzar tu experiencia
+                dentro de <strong>MexCity RP</strong>.
+            </p>
 
-                <div class="modal-grid">
 
-                    <div class="info-card">
-                        <h3>Privacidad</h3>
-                        <p>
-                            La información personal debe manejarse
-                            de manera responsable.
-                        </p>
-                    </div>
+            <form
+                class="auth-form"
+                id="registerForm"
+            >
 
-                    <div class="info-card">
-                        <h3>Administración</h3>
-                        <p>
-                            El equipo administrativo gestiona los
-                            procesos internos de la comunidad.
-                        </p>
-                    </div>
 
-                    <div class="info-card">
-                        <h3>Información</h3>
-                        <p>
-                            Los datos deben proporcionarse de
-                            forma correcta.
-                        </p>
-                    </div>
+                <div class="form-group">
 
-                    <div class="info-card">
-                        <h3>Seguridad</h3>
-                        <p>
-                            Cualquier situación relacionada con
-                            seguridad debe comunicarse al staff.
-                        </p>
-                    </div>
+                    <label>
+                        Correo electrónico
+                    </label>
+
+                    <input
+                        type="email"
+                        id="registerEmail"
+                        name="user_email"
+                        placeholder="tucorreo@ejemplo.com"
+                        autocomplete="email"
+                        required
+                    >
 
                 </div>
 
-            `
-        },
 
+                <div class="form-group">
 
-        "reglas": {
+                    <label>
+                        Crear contraseña
+                    </label>
 
-            icon: "♢",
-
-            title: "Reglas y Convivencia",
-
-            content: `
-
-                <p>
-                    Para mantener una comunidad organizada,
-                    todos los integrantes deben respetar las
-                    normas establecidas por MexCity RP.
-                </p>
-
-                <div class="modal-grid">
-
-                    <div class="info-card">
-                        <h3>Respeto</h3>
-                        <p>
-                            Mantén una convivencia respetuosa con
-                            los demás integrantes.
-                        </p>
-                    </div>
-
-                    <div class="info-card">
-                        <h3>Roleplay</h3>
-                        <p>
-                            Respeta la lógica y continuidad de las
-                            historias.
-                        </p>
-                    </div>
-
-                    <div class="info-card">
-                        <h3>Administración</h3>
-                        <p>
-                            Sigue las indicaciones administrativas
-                            relacionadas con el funcionamiento
-                            del servidor.
-                        </p>
-                    </div>
-
-                    <div class="info-card">
-                        <h3>Convivencia</h3>
-                        <p>
-                            No utilices la comunidad para generar
-                            conflictos fuera del roleplay.
-                        </p>
-                    </div>
+                    <input
+                        type="password"
+                        id="registerPassword"
+                        name="user_password"
+                        placeholder="Mínimo 8 caracteres"
+                        minlength="8"
+                        autocomplete="new-password"
+                        required
+                    >
 
                 </div>
 
-            `
-        },
 
+                <div class="form-group">
 
-        "staff": {
+                    <label>
+                        Confirmar contraseña
+                    </label>
 
-            icon: "★",
-
-            title: "Staff MexCity RP",
-
-            content: `
-
-                <p>
-                    El equipo administrativo es responsable de
-                    mantener el orden, supervisar el roleplay y
-                    atender situaciones relacionadas con la
-                    comunidad.
-                </p>
-
-                <div class="staff-list">
-
-                    <div class="staff-card">
-
-                        <div class="staff-role">
-                            Administrador
-                        </div>
-
-                        <div class="staff-name">
-                            CARTSH
-                        </div>
-
-                        <div class="staff-code">
-                            MXC-ADMIN-001
-                        </div>
-
-                    </div>
-
-
-                    <div class="staff-card">
-
-                        <div class="staff-role">
-                            Director
-                        </div>
-
-                        <div class="staff-name">
-                            NOMBRE DEL ADMINISTRADOR
-                        </div>
-
-                        <div class="staff-code">
-                            MXC-STAFF-002
-                        </div>
-
-                    </div>
+                    <input
+                        type="password"
+                        id="registerConfirmPassword"
+                        placeholder="Repite tu contraseña"
+                        minlength="8"
+                        autocomplete="new-password"
+                        required
+                    >
 
                 </div>
 
-                <p style="margin-top:20px;">
-                    Los nombres y códigos mostrados pueden ser
-                    reemplazados directamente en este archivo
-                    cuando tengas la información definitiva.
-                </p>
 
-            `
-        },
+                <button
+                    type="submit"
+                    class="auth-submit"
+                    id="registerButton"
+                >
+
+                    CREAR CUENTA
+
+                </button>
 
 
-        "soporte": {
+                <div
+                    class="form-message"
+                    id="registerMessage"
+                ></div>
 
-            icon: "◉",
 
-            title: "Soporte",
+                <div class="auth-note">
 
-            content: `
+                    Tu contraseña no se enviará por correo.
 
-                <p>
-                    ¿Tienes algún problema o necesitas ayuda?
-                    El equipo de soporte puede ayudarte con
-                    situaciones relacionadas con MexCity RP.
-                </p>
+                    <br>
 
-                <div class="modal-grid">
-
-                    <div class="info-card">
-                        <h3>Problemas técnicos</h3>
-                        <p>
-                            Reporta errores o problemas relacionados
-                            con la plataforma.
-                        </p>
-                    </div>
-
-                    <div class="info-card">
-                        <h3>Roleplay</h3>
-                        <p>
-                            Solicita orientación sobre situaciones
-                            relacionadas con el roleplay.
-                        </p>
-                    </div>
-
-                    <div class="info-card">
-                        <h3>Administración</h3>
-                        <p>
-                            Contacta al staff cuando necesites
-                            atención administrativa.
-                        </p>
-                    </div>
-
-                    <div class="info-card">
-                        <h3>Reportes</h3>
-                        <p>
-                            Presenta información sobre situaciones
-                            que requieran revisión.
-                        </p>
-                    </div>
+                    Después de registrarte recibirás
+                    un correo de confirmación.
 
                 </div>
 
-            `
-        }
 
-    };
+            </form>
 
-
-    /* =========================================================
-       ELEMENTOS
-    ========================================================== */
-
-    const modal =
-        document.getElementById("modal");
-
-    const modalTitle =
-        document.getElementById("modalTitle");
-
-    const modalContent =
-        document.getElementById("modalContent");
-
-    const modalIcon =
-        document.getElementById("modalIcon");
-
-    const closeModal =
-        document.getElementById("closeModal");
-
-    const navButtons =
-        document.querySelectorAll(".nav-button");
+        `
+    },
 
 
-    /* =========================================================
-       ABRIR MODAL
-    ========================================================== */
+    /* =====================================================
+       LOGIN
+    ====================================================== */
 
-    function openModal(section) {
+    "login": {
 
-        const data =
-            modalData[section];
+        icon:"⇥",
 
-        if (!data) return;
+        title:"Iniciar sesión",
 
-        modalIcon.textContent =
-            data.icon;
+        content:`
 
-        modalTitle.textContent =
-            data.title;
+            <p>
+                Ingresa a tu cuenta de
+                <strong>MexCity RP</strong>.
+            </p>
 
-        modalContent.innerHTML =
-            data.content;
 
-        modal.classList.add("active");
+            <form
+                class="auth-form"
+                id="loginForm"
+            >
 
-        document.body.style.overflow =
-            "hidden";
+
+                <div class="form-group">
+
+                    <label>
+                        Correo electrónico
+                    </label>
+
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        placeholder="tucorreo@ejemplo.com"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Contraseña
+                    </label>
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Tu contraseña"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="auth-submit"
+                >
+
+                    INICIAR SESIÓN
+
+                </button>
+
+
+                <div
+                    class="form-message"
+                    id="loginMessage"
+                ></div>
+
+
+                <div class="auth-note">
+
+                    El inicio de sesión se conectará
+                    al sistema de autenticación de MexCity RP.
+
+                </div>
+
+
+            </form>
+
+        `
+    }
+
+};
+
+
+
+/* =========================================================
+   ELEMENTOS
+========================================================= */
+
+const modal =
+    document.getElementById("modal");
+
+const modalTitle =
+    document.getElementById("modalTitle");
+
+const modalContent =
+    document.getElementById("modalContent");
+
+const modalIcon =
+    document.getElementById("modalIcon");
+
+const closeModal =
+    document.getElementById("closeModal");
+
+
+
+/* =========================================================
+   ABRIR MODAL
+========================================================= */
+
+function openModal(section) {
+
+    const data =
+        modalData[section];
+
+    if(!data) return;
+
+    modalIcon.textContent =
+        data.icon;
+
+    modalTitle.textContent =
+        data.title;
+
+    modalContent.innerHTML =
+        data.content;
+
+    modal.classList.add("active");
+
+    document.body.style.overflow =
+        "hidden";
+
+
+    /*
+       Después de insertar el HTML,
+       conectamos los formularios.
+    */
+
+    if(section === "registro") {
+
+        setupRegister();
 
     }
 
+    if(section === "login") {
 
-    /* =========================================================
-       CERRAR MODAL
-    ========================================================== */
-
-    function closeCurrentModal() {
-
-        modal.classList.remove("active");
-
-        document.body.style.overflow =
-            "";
+        setupLogin();
 
     }
 
-
-    /* =========================================================
-       BOTONES
-    ========================================================== */
-
-    navButtons.forEach(button => {
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                const section =
-                    button.dataset.modal;
-
-                navButtons.forEach(btn =>
-                    btn.classList.remove("active")
-                );
-
-                button.classList.add("active");
-
-                openModal(section);
-
-            }
-        );
-
-    });
+}
 
 
-    /* =========================================================
-       BOTON ÚNETE
-    ========================================================== */
 
-    const joinButton =
-        document.querySelector(".join-button");
+/* =========================================================
+   CERRAR MODAL
+========================================================= */
 
-    joinButton.addEventListener(
+function closeCurrentModal() {
+
+    modal.classList.remove("active");
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+
+/* =========================================================
+   BOTONES DE NAVEGACIÓN
+========================================================= */
+
+document
+.querySelectorAll(".nav-button")
+.forEach(button => {
+
+    button.addEventListener(
         "click",
         () => {
 
-            openModal("comunidad");
+            document
+            .querySelectorAll(".nav-button")
+            .forEach(btn =>
+                btn.classList.remove("active")
+            );
+
+            button.classList.add("active");
+
+            openModal(
+                button.dataset.modal
+            );
 
         }
     );
 
-
-    /* =========================================================
-       CERRAR
-    ========================================================== */
-
-    closeModal.addEventListener(
-        "click",
-        closeCurrentModal
-    );
+});
 
 
-    /* =========================================================
-       CERRAR AL HACER CLICK FUERA
-    ========================================================== */
 
-    modal.addEventListener(
-        "click",
-        event => {
+/* =========================================================
+   BOTON ÚNETE
+========================================================= */
 
-            if (
-                event.target === modal
-            ) {
+document
+.querySelector(".join-button")
+.addEventListener(
+    "click",
+    () => {
 
-                closeCurrentModal();
+        openModal("registro");
+
+    }
+);
+
+
+
+/* =========================================================
+   CERRAR
+========================================================= */
+
+closeModal.addEventListener(
+    "click",
+    closeCurrentModal
+);
+
+
+
+/* =========================================================
+   CERRAR AL CLICK FUERA
+========================================================= */
+
+modal.addEventListener(
+    "click",
+    event => {
+
+        if(event.target === modal) {
+
+            closeCurrentModal();
+
+        }
+
+    }
+);
+
+
+
+/* =========================================================
+   ESC
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if(
+            event.key === "Escape" &&
+            modal.classList.contains("active")
+        ) {
+
+            closeCurrentModal();
+
+        }
+
+    }
+);
+
+
+
+/* =========================================================
+   REGISTRO
+========================================================= */
+
+function setupRegister() {
+
+    const form =
+        document.getElementById(
+            "registerForm"
+        );
+
+    if(!form) return;
+
+
+    form.addEventListener(
+        "submit",
+        async event => {
+
+            event.preventDefault();
+
+
+            const email =
+                document
+                .getElementById(
+                    "registerEmail"
+                )
+                .value
+                .trim();
+
+
+            const password =
+                document
+                .getElementById(
+                    "registerPassword"
+                )
+                .value;
+
+
+            const confirmPassword =
+                document
+                .getElementById(
+                    "registerConfirmPassword"
+                )
+                .value;
+
+
+            const button =
+                document.getElementById(
+                    "registerButton"
+                );
+
+
+            const message =
+                document.getElementById(
+                    "registerMessage"
+                );
+
+
+            /*
+               Validación de correo
+            */
+
+            const emailPattern =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+            if(!emailPattern.test(email)) {
+
+                showMessage(
+                    message,
+                    "Introduce un correo electrónico válido.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            /*
+               Validación contraseña
+            */
+
+            if(password.length < 8) {
+
+                showMessage(
+                    message,
+                    "La contraseña debe tener al menos 8 caracteres.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            /*
+               Confirmación
+            */
+
+            if(password !== confirmPassword) {
+
+                showMessage(
+                    message,
+                    "Las contraseñas no coinciden.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            /*
+               Evitar doble envío
+            */
+
+            button.disabled = true;
+
+            button.textContent =
+                "ENVIANDO...";
+
+
+            try {
+
+
+                /*
+                   =================================================
+                   EMAILJS
+                   =================================================
+
+                   El correo se envía a la dirección
+                   introducida por el jugador.
+
+                   La plantilla debe tener:
+
+                   To Email:
+                   {{user_email}}
+
+                   Y puede utilizar:
+
+                   {{user_email}}
+                   {{user_name}}
+                   {{confirmation_message}}
+
+                */
+
+
+                await emailjs.send(
+
+                    EMAILJS_SERVICE_ID,
+
+                    EMAILJS_TEMPLATE_ID,
+
+                    {
+
+                        user_email:
+                            email,
+
+                        user_name:
+                            email.split("@")[0],
+
+                        confirmation_message:
+                            "Tu registro en MexCity RP ha sido recibido correctamente."
+
+                    }
+
+                );
+
+
+                showMessage(
+
+                    message,
+
+                    "Registro recibido. Revisa tu correo electrónico para confirmar tu cuenta.",
+
+                    "success"
+
+                );
+
+
+                form.reset();
+
+
+                button.textContent =
+                    "CORREO ENVIADO";
+
+
+            }
+
+            catch(error) {
+
+
+                console.error(
+                    "EmailJS:",
+                    error
+                );
+
+
+                showMessage(
+
+                    message,
+
+                    "No fue posible enviar el correo. Revisa la configuración de EmailJS.",
+
+                    "error"
+
+                );
+
+
+                button.disabled = false;
+
+                button.textContent =
+                    "CREAR CUENTA";
 
             }
 
         }
     );
 
+}
 
-    /* =========================================================
-       CERRAR CON ESC
-    ========================================================== */
 
-    document.addEventListener(
-        "keydown",
-        event => {
 
-            if (
-                event.key === "Escape" &&
-                modal.classList.contains("active")
-            ) {
+/* =========================================================
+   LOGIN
+========================================================= */
 
-                closeCurrentModal();
+function setupLogin() {
+
+    const form =
+        document.getElementById(
+            "loginForm"
+        );
+
+    if(!form) return;
+
+
+    form.addEventListener(
+        "submit",
+        async event => {
+
+            event.preventDefault();
+
+
+            const email =
+                document
+                .getElementById(
+                    "loginEmail"
+                )
+                .value
+                .trim();
+
+
+            const password =
+                document
+                .getElementById(
+                    "loginPassword"
+                )
+                .value;
+
+
+            const message =
+                document.getElementById(
+                    "loginMessage"
+                );
+
+
+            if(!email || !password) {
+
+                showMessage(
+
+                    message,
+
+                    "Completa todos los campos.",
+
+                    "error"
+
+                );
+
+                return;
 
             }
 
+
+            /*
+               IMPORTANTE:
+
+               Aquí irá Supabase Auth.
+
+               No utilizamos localStorage para guardar
+               contraseñas y tampoco enviamos contraseñas
+               mediante EmailJS.
+
+               El login seguro requiere un proveedor
+               de autenticación.
+            */
+
+            showMessage(
+
+                message,
+
+                "El sistema de autenticación de la cuenta debe conectarse a Supabase antes de activar el inicio de sesión.",
+
+                "error"
+
+            );
+
         }
     );
+
+}
+
+
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+function showMessage(
+    element,
+    text,
+    type
+) {
+
+    element.textContent =
+        text;
+
+    element.className =
+        "form-message show " +
+        type;
+
+}
 
 </script>
 
 </body>
+
 </html>
