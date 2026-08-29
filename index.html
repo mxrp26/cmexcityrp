@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Republic Mex City | Rol Oficial</title>
+    <title>Republic Mex City | Inicio</title>
     <style>
+        /* Estilos integrados para la página de Republic Mex City */
         * {
             margin: 0;
             padding: 0;
@@ -13,208 +14,106 @@
         }
 
         body {
-            background-color: #080808;
-            color: #f1f1f1;
-            overflow-x: hidden;
+            background-color: #050505;
         }
 
-        /* BARRA DE NAVEGACIÓN SUPERIOR CON ICONOS */
-        header {
-            background: rgba(10, 10, 10, 0.95);
-            border-bottom: 2px solid #d4af37;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 999;
+        .header {
+            background-color: #000000;
+            padding: 15px 20px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            height: 80px;
-        }
-
-        .logo-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-        }
-
-        .logo-container img {
-            height: 35px;
-            margin-bottom: 2px;
-        }
-
-        .logo-container span {
-            font-size: 1.2rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            background: linear-gradient(90deg, #00b140, #ffffff, #ff3b30);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .nav-icons {
-            display: flex;
-            list-style: none;
-            height: 100%;
-        }
-
-        .nav-icons li {
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-icons a {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            text-decoration: none;
-            color: #aaa;
-            padding: 0 15px;
-            height: 100%;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-            border-bottom: 3px solid transparent;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.8);
+            position: relative;
+            z-index: 10;
         }
 
-        .nav-icons a svg {
-            width: 22px;
-            height: 22px;
-            margin-bottom: 5px;
-            fill: #aaa;
-            transition: fill 0.3s;
+        .logo {
+            max-height: 120px;
+            width: auto;
         }
 
-        .nav-icons a:hover, .nav-icons a.active {
-            color: #d4af37;
-            background: rgba(212, 175, 55, 0.05);
-            border-bottom: 3px solid #d4af37;
-        }
-
-        .nav-icons a:hover svg, .nav-icons a.active svg {
-            fill: #d4af37;
-        }
-
-        /* SECCIÓN HERO / PORTADA */
-        .hero {
-            height: 100vh;
+        .portada {
+            position: relative;
+            height: 90vh;
+            /* La imagen debe llamarse exactamente portada.jpg en tu repositorio */
+            background-image: url('./portada.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 100px 20px 40px 20px;
-            background: linear-gradient(rgba(5, 5, 5, 0.4), rgba(8, 8, 8, 0.9)), url('portada.png') no-repeat center center/cover;
-            position: relative;
         }
 
-        .hero h2-sub {
-            font-size: 1rem;
-            letter-spacing: 3px;
-            color: #ccc;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 900;
-            letter-spacing: 3px;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #00b140 20%, #ffffff 50%, #ff3b30 80%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 5px 25px rgba(0,0,0,0.8);
-        }
-
-        .hero .tagline {
-            font-size: 1.1rem;
-            color: #e0e0e0;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .hero p {
-            font-size: 0.95rem;
-            color: #aaa;
-            max-width: 600px;
-            margin-bottom: 30px;
-        }
-
-        .btn-unete {
-            background: linear-gradient(135deg, #111 0%, #1f1f1f 100%);
-            color: #d4af37;
-            border: 2px solid #d4af37;
-            padding: 14px 35px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
-            letter-spacing: 1px;
-        }
-
-        .btn-unete:hover {
-            background: #d4af37;
-            color: #000;
-            transform: scale(1.05);
-            box-shadow: 0 6px 25px rgba(212, 175, 55, 0.5);
-        }
-
-        /* BARRA INFERIOR DE CARACTERÍSTICAS EN EL HERO */
-        .hero-features {
+        .overlay {
             position: absolute;
-            bottom: 0;
+            top: 0;
             left: 0;
             width: 100%;
-            background: rgba(10, 10, 10, 0.9);
-            border-top: 1px solid #d4af37;
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            padding: 15px 10px;
-            gap: 10px;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1;
         }
 
-        .feature-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 0 10px;
-            border-right: 1px solid rgba(255,255,255,0.1);
+        .contenido-portada {
+            position: relative;
+            z-index: 2;
+            padding: 20px;
         }
 
-        .feature-item:last-child {
-            border-right: none;
-        }
-
-        .feature-item svg {
-            width: 32px;
-            height: 32px;
-            flex-shrink: 0;
-            fill: #d4af37;
-        }
-
-        .feature-text h4 {
-            font-size: 0.8rem;
-            color: #fff;
+        .contenido-portada h1 {
+            color: #ffffff;
+            font-size: 4.5rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 2px;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 10px #000000;
         }
 
-        .feature-text p {
-            font-size: 0.7rem;
-            color: #888;
-            margin: 0;
-            line-height: 1.2;
+        .contenido-portada p {
+            color: #d1d1d1;
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 5px #000000;
         }
 
-        /* SECCIONES INFORMATIVAS GENERALES */
-        section {
-            padding: 80px 20px
+        .btn-principal {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #ffcc00;
+            color: #000000;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-principal:hover {
+            background-color: #e6b800;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo-container">
+            <!-- La imagen debe llamarse exactamente logo.png en tu repositorio -->
+            <img src="./logo.png" alt="Logo de Republic Mex City" class="logo">
+        </div>
+    </header>
+
+    <section class="portada">
+        <div class="overlay"></div>
+        <div class="contenido-portada">
+            <h1>REPUBLIC MEX CITY</h1>
+            <p>La experiencia definitiva de rol. Crea tu historia.</p>
+            <a href="#unete" class="btn-principal">Únete a la ciudad</a>
+        </div>
+    </section>
+
+</body>
+</html>
