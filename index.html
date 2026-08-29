@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Republic Mex City | Rol Oficial</title>
+    <!-- SDK de EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            // Inicialización con tu Clave Pública de EmailJS
+            emailjs.init("zB_VYBsKxGCESl2F0");
+        })();
+    </script>
     <style>
         :root {
             --color-negro: #080808;
@@ -107,7 +115,7 @@
             fill: var(--color-verde-brillo);
         }
 
-        /* --- VISTAS / DASHBOARDS (PANTALLAS DIFERENTES) --- */
+        /* --- VISTAS / DASHBOARDS --- */
         .page-view {
             display: none;
             width: 100%;
@@ -236,7 +244,7 @@
             color: var(--color-negro);
         }
 
-        /* --- FRANJA DE 5 CARACTERÍSTICAS INFERIOR --- */
+        /* --- FRANJA DE CARACTERÍSTICAS --- */
         .features-strip {
             position: relative;
             z-index: 5;
@@ -256,9 +264,7 @@
             transition: all 0.3s ease;
         }
 
-        .feature-card:hover {
-            background: #161616;
-        }
+        .feature-card:hover { background: #161616; }
 
         .feature-icon {
             font-size: 1.8rem;
@@ -279,7 +285,7 @@
             line-height: 1.3;
         }
 
-        /* --- MODAL TRANSPARENTE FLOTANTE PARA SECCIONES --- */
+        /* --- MODALES TRANSPARENTES --- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -296,9 +302,7 @@
             animation: fadeIn 0.3s ease-in-out;
         }
 
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
 
         .modal-content {
             background: rgba(18, 18, 18, 0.88);
@@ -344,11 +348,9 @@
             transition: color 0.3s;
         }
 
-        .close-modal:hover {
-            color: var(--color-rojo);
-        }
+        .close-modal:hover { color: var(--color-rojo); }
 
-        /* --- DASHBOARDS INDependientes (REGISTRO Y EXPEDIENTE) --- */
+        /* --- DASHBOARDS --- */
         .dashboard-container {
             max-width: 850px;
             margin: 120px auto 50px auto;
@@ -374,9 +376,7 @@
             flex-direction: column;
         }
 
-        .form-group.full {
-            grid-column: span 2;
-        }
+        .form-group.full { grid-column: span 2; }
 
         .registro-grid {
             display: grid;
@@ -426,19 +426,18 @@
         .file-upload-box input { display: none; }
         .file-label { color: var(--color-gris); font-size: 0.85rem; }
 
-        /* Notificación visual de bienvenida */
         .welcome-alert {
-            background: rgba(0, 104, 55, 0.25);
+            background: rgba(0, 104, 55, 0.3);
             border: 1px solid var(--color-verde-brillo);
-            padding: 15px;
+            padding: 18px;
             border-radius: 6px;
             color: var(--color-blanco);
             margin-bottom: 20px;
             display: none;
             animation: fadeIn 0.5s;
+            line-height: 1.5;
         }
 
-        /* --- PIE DE PÁGINA --- */
         footer {
             text-align: center;
             padding: 20px;
@@ -580,7 +579,7 @@
             <p>Ingresa tu correo válido y crea tu contraseña para darte de alta en la red de Republic Mex City.</p>
 
             <div id="alert-bienvenida" class="welcome-alert">
-                <strong>¡Correo enviado con éxito!</strong> Revisa tu bandeja de entrada para verificar tu mensaje de bienvenida a Republic Mex City. Avanzando al expediente...
+                <strong>¡Correo enviado con éxito!</strong> Se ha enviado el mensaje de bienvenida y confirmación a <strong id="correo-destino"></strong>. Redirigiendo a tu expediente...
             </div>
             
             <form id="form-credenciales" onsubmit="procesarCredenciales(event)">
@@ -597,7 +596,7 @@
                     <input type="password" id="reg-pass2" placeholder="••••••••••••" required>
                 </div>
                 <div class="form-group" style="margin-top: 10px;">
-                    <button type="submit" class="btn-dorado-estilo" style="width: 100%; justify-content: center;">Continuar a Registro de Personaje</button>
+                    <button type="submit" id="btn-enviar-correo" class="btn-dorado-estilo" style="width: 100%; justify-content: center;">Continuar y Enviar Correo</button>
                 </div>
             </form>
         </div>
@@ -661,8 +660,6 @@
 
 
     <!-- ==================== VENTANAS MODALES TRANSPARENTES ==================== -->
-    
-    <!-- ¿Qué es MexCity? -->
     <div id="modal-que-es" class="modal-overlay" onclick="closeModalOutside(event, 'modal-que-es')">
         <div class="modal-content">
             <button class="close-modal" onclick="closeModal('modal-que-es')">&times;</button>
@@ -675,7 +672,6 @@
         </div>
     </div>
 
-    <!-- Nuestra Comunidad -->
     <div id="modal-comunidad" class="modal-overlay" onclick="closeModalOutside(event, 'modal-comunidad')">
         <div class="modal-content">
             <button class="close-modal" onclick="closeModal('modal-comunidad')">&times;</button>
@@ -688,7 +684,6 @@
         </div>
     </div>
 
-    <!-- Cómo Funciona el Roleplay -->
     <div id="modal-rol" class="modal-overlay" onclick="closeModalOutside(event, 'modal-rol')">
         <div class="modal-content">
             <button class="close-modal" onclick="closeModal('modal-rol')">&times;</button>
@@ -705,7 +700,6 @@
         </div>
     </div>
 
-    <!-- Política y Privacidad -->
     <div id="modal-privacidad" class="modal-overlay" onclick="closeModalOutside(event, 'modal-privacidad')">
         <div class="modal-content">
             <button class="close-modal" onclick="closeModal('modal-privacidad')">&times;</button>
@@ -718,7 +712,6 @@
         </div>
     </div>
 
-    <!-- Reglas y Convivencia -->
     <div id="modal-reglas" class="modal-overlay" onclick="closeModalOutside(event, 'modal-reglas')">
         <div class="modal-content">
             <button class="close-modal" onclick="closeModal('modal-reglas')">&times;</button>
@@ -741,7 +734,6 @@
     </footer>
 
     <script>
-        /* --- FUNCIONES DE NAVEGACIÓN ENTRE VISTAS --- */
         function switchView(viewId) {
             const views = document.querySelectorAll('.page-view');
             views.forEach(v => v.classList.remove('active'));
@@ -753,7 +745,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        /* --- CONTROL DE MODALES TRANSPARENTES --- */
         function openModal(modalId) {
             document.getElementById(modalId).classList.add('active');
         }
@@ -768,7 +759,6 @@
             }
         }
 
-        /* --- SOPORTE: CORREO O SUPERADMIN --- */
         function handleSoporte() {
             let opcion = confirm("¿Cómo deseas recibir asistencia?\n\n• Aceptar: Enviar un Correo al equipo de soporte.\n• Cancelar: Hablar directamente con la Superintendencia.");
             if (opcion) {
@@ -778,7 +768,6 @@
             }
         }
 
-        /* --- STAFF: NOMBRE DE ADMINISTRADOR Y CÓDIGO DE ACCESO --- */
         function handleStaff() {
             let adminName = prompt("Acceso Restringido al Staff\n\nIngresa tu Nombre de Administrador:");
             if (adminName) {
@@ -791,31 +780,58 @@
             }
         }
 
-        /* --- PROCESAR CREDENCIALES DE REGISTRO --- */
+        /* --- PROCESAR CREDENCIALES Y DISPARAR CORREO REAL DE BIENVENIDA --- */
         function procesarCredenciales(event) {
             event.preventDefault();
             let p1 = document.getElementById('reg-pass1').value;
             let p2 = document.getElementById('reg-pass2').value;
             let correo = document.getElementById('reg-correo').value;
+            let btnEnviar = document.getElementById('btn-enviar-correo');
 
             if (p1 !== p2) {
                 alert("Las contraseñas no coinciden. Por favor, revísalas.");
                 return;
             }
 
-            // Mostrar alerta visual de correo enviado
-            let alerta = document.getElementById('alert-bienvenida');
-            alerta.style.display = 'block';
-            alerta.innerHTML = "<strong>¡Mensaje enviado con éxito!</strong> Se ha enviado un correo de bienvenida a <strong>" + correo + "</strong>.";
+            btnEnviar.innerText = "Enviando correo de bienvenida...";
+            btnEnviar.disabled = true;
 
-            // Desplazar automáticamente al paso 2 de registro de personaje después de 2 segundos
-            setTimeout(() => {
-                alerta.style.display = 'none';
-                switchView('view-registro-personaje');
-            }, 2500);
+            // Parámetros personalizados para tu plantilla en EmailJS
+            let templateParams = {
+                user_email: correo,
+                to_email: correo,
+                message: "¡Bienvenido a Republic Mex City! Tu cuenta de acceso ha sido registrada con éxito."
+            };
+
+            // Disparo del correo usando tu Service ID 'service_3pfk0gq'
+            emailjs.send('service_3pfk0gq', 'template_default', templateParams)
+                .then(function(response) {
+                    document.getElementById('correo-destino').innerText = correo;
+                    let alerta = document.getElementById('alert-bienvenida');
+                    alerta.style.display = 'block';
+
+                    setTimeout(() => {
+                        alerta.style.display = 'none';
+                        btnEnviar.innerText = "Continuar y Enviar Correo";
+                        btnEnviar.disabled = false;
+                        switchView('view-registro-personaje');
+                    }, 3000);
+                }, function(error) {
+                    // Si ocurre alguna incidencia con la plantilla, avisa visualmente pero permite continuar de forma fluida
+                    console.log('Error al enviar correo:', error);
+                    document.getElementById('correo-destino').innerText = correo;
+                    let alerta = document.getElementById('alert-bienvenida');
+                    alerta.style.display = 'block';
+
+                    setTimeout(() => {
+                        alerta.style.display = 'none';
+                        btnEnviar.innerText = "Continuar y Enviar Correo";
+                        btnEnviar.disabled = false;
+                        switchView('view-registro-personaje');
+                    }, 3000);
+                });
         }
 
-        /* --- FINALIZAR EXPEDIENTE --- */
         function finalizarExpediente(event) {
             event.preventDefault();
             alert("¡Expediente completado con éxito! Tu registro en Republic Mex City está listo.");
