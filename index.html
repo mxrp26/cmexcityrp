@@ -28,7 +28,19 @@ rel="stylesheet"
 >
 
 <!-- SUPABASE JS CLIENT -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+/* =========================================================
+   ENTRADA AUTOMÁTICA AL DASHBOARD DESPUÉS DEL LOGIN
+========================================================= */
+supabaseClient.auth.onAuthStateChange((event, session) => {
+    if(session && session.user){
+        setTimeout(() => window.mxrpOpenDashboard(session.user), 100);
+    }else if(event === "SIGNED_OUT"){
+        window.mxrpCloseDashboard();
+    }
+});
+
+</script>
 
 
 <style>
@@ -1544,6 +1556,103 @@ footer strong {
     }
 }
 
+
+/* =========================================================
+   DASHBOARD PRIVADO MEXCITY RP — INTEGRADO
+========================================================= */
+#mxrpDashboard{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:5000;
+    overflow-y:auto;
+    background:
+        radial-gradient(circle at 10% 0%,rgba(0,200,50,.12),transparent 30%),
+        radial-gradient(circle at 90% 0%,rgba(229,0,0,.12),transparent 30%),
+        #020303;
+    color:#fff;
+}
+#mxrpDashboard.active{display:block}
+.mxrp-dash-shell{min-height:100%;padding:24px}
+.mxrp-dash-top{
+    width:min(1500px,100%);margin:0 auto 18px;padding:16px 20px;
+    display:flex;justify-content:space-between;align-items:center;gap:15px;
+    border:1px solid rgba(218,166,43,.55);border-radius:14px;
+    background:rgba(5,5,5,.82);backdrop-filter:blur(18px)
+}
+.mxrp-dash-brand{font-size:20px;font-weight:900;letter-spacing:2px}
+.mxrp-dash-brand span{color:var(--dorado)}
+.mxrp-dash-user{display:flex;align-items:center;gap:12px;color:#ccc;font-size:13px}
+.mxrp-dash-avatar{
+    width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--verde),var(--dorado),var(--rojo));
+    color:#000;font-weight:900
+}
+.mxrp-dash-layout{width:min(1500px,100%);margin:auto;display:grid;grid-template-columns:230px 1fr;gap:18px}
+.mxrp-dash-nav{
+    height:max-content;position:sticky;top:18px;padding:12px;
+    border:1px solid rgba(218,166,43,.35);border-radius:14px;
+    background:rgba(5,5,5,.78);backdrop-filter:blur(18px)
+}
+.mxrp-dash-nav button{
+    width:100%;padding:12px;margin:3px 0;border:1px solid transparent;border-radius:9px;
+    background:transparent;color:#ccc;text-align:left;cursor:pointer;font-weight:700
+}
+.mxrp-dash-nav button:hover,.mxrp-dash-nav button.active{
+    color:#fff;border-color:rgba(218,166,43,.35);background:rgba(218,166,43,.08)
+}
+.mxrp-dash-main{min-width:0}
+.mxrp-dash-page{display:none}
+.mxrp-dash-page.active{display:block}
+.mxrp-dash-title{margin-bottom:18px}
+.mxrp-dash-title h2{font-size:28px;margin-bottom:5px}
+.mxrp-dash-title p{color:#999;font-size:13px}
+.mxrp-dash-grid{display:grid;grid-template-columns:1.55fr 1fr;gap:18px}
+.mxrp-card{
+    padding:20px;border:1px solid rgba(218,166,43,.35);border-radius:14px;
+    background:rgba(8,8,8,.78);box-shadow:0 20px 60px rgba(0,0,0,.35);
+    backdrop-filter:blur(16px)
+}
+.mxrp-card h3{margin-bottom:6px}.mxrp-card>p{color:#999;font-size:13px;line-height:1.5}
+.mxrp-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mxrp-form-group{display:flex;flex-direction:column;gap:6px}
+.mxrp-form-group.full{grid-column:1/-1}
+.mxrp-form-group label{font-size:11px;font-weight:800;color:#ccc;text-transform:uppercase}
+.mxrp-form-group input,.mxrp-form-group select,.mxrp-form-group textarea{
+    width:100%;min-height:46px;padding:10px 12px;border:1px solid rgba(255,255,255,.13);
+    border-radius:8px;background:rgba(255,255,255,.045);color:#fff;outline:none
+}
+.mxrp-form-group select option{background:#111;color:#fff}
+.mxrp-form-group input:focus,.mxrp-form-group select:focus{border-color:var(--dorado)}
+.mxrp-readonly{color:var(--dorado-brillo)!important;background:rgba(218,166,43,.05)!important}
+.mxrp-btn{
+    border:1px solid var(--dorado);border-radius:8px;padding:12px 17px;
+    background:linear-gradient(180deg,#332707,#100d03);color:var(--dorado-brillo);
+    font-weight:800;cursor:pointer
+}
+.mxrp-btn.secondary{border-color:rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#fff}
+.mxrp-btn.danger{border-color:var(--rojo);background:rgba(229,0,0,.12);color:#ff9b9b}
+.mxrp-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:15px}
+.mxrp-section{margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
+.mxrp-conditional{display:none}.mxrp-conditional.active{display:block}
+.mxrp-notice{padding:12px;border-radius:8px;border:1px solid rgba(218,166,43,.25);background:rgba(218,166,43,.055);color:#ccc;font-size:12px;line-height:1.6}
+.mxrp-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.mxrp-stat{padding:14px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(255,255,255,.025)}
+.mxrp-stat small{display:block;color:#888;text-transform:uppercase;font-size:10px}.mxrp-stat b{display:block;margin-top:5px;font-size:14px}
+.mxrp-auto{color:var(--dorado-brillo)}.mxrp-money{color:#6dff93}
+.mxrp-upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+.mxrp-upload{
+    padding:10px;border:1px dashed rgba(218,166,43,.35);border-radius:10px;background:rgba(255,255,255,.025)
+}
+.mxrp-upload label{display:block;font-size:11px;font-weight:800;margin-bottom:8px;color:#ccc}
+.mxrp-preview{height:115px;margin-bottom:8px;border-radius:7px;background:#000;display:grid;place-items:center;color:#666;overflow:hidden}
+.mxrp-preview img{width:100%;height:100%;object-fit:cover}
+.mxrp-record{padding:13px;border:1px solid rgba(255,255,255,.08);border-radius:9px;margin:8px 0;background:rgba(255,255,255,.025)}
+.mxrp-record strong{color:var(--dorado-brillo)}.mxrp-record small{display:block;color:#999;margin-top:4px}
+.mxrp-close-dash{white-space:nowrap}
+@media(max-width:1000px){.mxrp-dash-layout{grid-template-columns:1fr}.mxrp-dash-nav{position:static;display:grid;grid-template-columns:repeat(2,1fr)}.mxrp-dash-grid{grid-template-columns:1fr}.mxrp-stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.mxrp-dash-shell{padding:10px}.mxrp-dash-top{padding:12px}.mxrp-dash-user span{display:none}.mxrp-dash-nav{grid-template-columns:1fr 1fr}.mxrp-form-grid{grid-template-columns:1fr}.mxrp-form-group.full{grid-column:auto}.mxrp-upload-grid{grid-template-columns:1fr}.mxrp-stats{grid-template-columns:1fr 1fr}}
+
 </style>
 
 </head>
@@ -1932,6 +2041,232 @@ footer strong {
 
 </main>
 
+
+
+
+<!-- =========================================================
+     DASHBOARD PRIVADO
+========================================================= -->
+<section id="mxrpDashboard" aria-hidden="true">
+<div class="mxrp-dash-shell">
+  <header class="mxrp-dash-top">
+    <div class="mxrp-dash-brand">MEXCITY <span>RP</span> · PANEL</div>
+    <div class="mxrp-dash-user">
+      <span id="mxrpDashEmail">Sesión activa</span>
+      <div class="mxrp-dash-avatar" id="mxrpDashInitial">M</div>
+      <button class="mxrp-btn secondary mxrp-close-dash" id="mxrpLogout">CERRAR SESIÓN</button>
+    </div>
+  </header>
+
+  <div class="mxrp-dash-layout">
+    <nav class="mxrp-dash-nav">
+      <button class="active" data-dash-page="inicio">⌂ Inicio</button>
+      <button data-dash-page="jugador">◉ Registro de jugador</button>
+      <button data-dash-page="hogar">⌂ Hogar</button>
+      <button data-dash-page="transporte">▣ Transporte</button>
+      <button data-dash-page="familia">♧ Familia / Menores</button>
+      <button data-dash-page="trabajo">▤ Empresa / Trabajo</button>
+      <button data-dash-page="organizacion">◆ Organización</button>
+      <button data-dash-page="finanzas">$ Finanzas RP</button>
+      <button data-dash-page="registros">☷ Mis registros</button>
+    </nav>
+
+    <main class="mxrp-dash-main">
+      <section class="mxrp-dash-page active" data-page="inicio">
+        <div class="mxrp-dash-title"><h2>Dashboard del jugador</h2><p>Tu espacio privado dentro de MexCity RP.</p></div>
+        <div class="mxrp-stats">
+          <div class="mxrp-stat"><small>ID oficial</small><b class="mxrp-auto" id="mxrpHomeId">—</b></div>
+          <div class="mxrp-stat"><small>Cuenta</small><b id="mxrpHomeBank">—</b></div>
+          <div class="mxrp-stat"><small>Hogar</small><b id="mxrpHomeHouse">Sin registrar</b></div>
+          <div class="mxrp-stat"><small>Transporte</small><b id="mxrpHomeVehicle">Sin registrar</b></div>
+        </div>
+
+        <div class="mxrp-dash-grid">
+          <div class="mxrp-card">
+            <h3>REGISTRO DEL JUGADOR</h3>
+            <p>Los identificadores RP y bancarios son generados automáticamente.</p>
+            <div class="mxrp-form-grid mxrp-section">
+              <div class="mxrp-form-group"><label>Nombre</label><input id="mxrpName"></div>
+              <div class="mxrp-form-group"><label>Apellido</label><input id="mxrpLast"></div>
+              <div class="mxrp-form-group"><label>Edad</label><input id="mxrpAge" type="number" min="0" value="18"></div>
+              <div class="mxrp-form-group"><label>Unidad de edad</label><select id="mxrpAgeUnit"><option>Días de nacido</option><option>Meses</option><option selected>Años</option></select></div>
+              <div class="mxrp-form-group"><label>Ciudad</label><select id="mxrpCity"></select></div>
+              <div class="mxrp-form-group"><label>Género</label><select id="mxrpGender"><option>Femenino</option><option>Masculino</option><option>No binario</option><option>Otro</option><option>Prefiero no especificar</option></select></div>
+              <div class="mxrp-form-group full"><label>Ocupación</label><select id="mxrpJob"></select></div>
+              <div class="mxrp-form-group"><label>ID OFICIAL MEX CITY RP</label><input id="mxrpId" class="mxrp-readonly" readonly></div>
+              <div class="mxrp-form-group"><label>BANCOMCRP26 · Cuenta</label><input id="mxrpBank" class="mxrp-readonly" readonly></div>
+              <div class="mxrp-form-group full"><label>CB / Clave bancaria RP</label><input id="mxrpCB" class="mxrp-readonly" readonly></div>
+            </div>
+            <div class="mxrp-actions"><button class="mxrp-btn" id="mxrpSavePlayer">GUARDAR REGISTRO</button></div>
+          </div>
+
+          <div class="mxrp-card">
+            <h3>ARCHIVO VISUAL</h3>
+            <p>Sube imágenes relacionadas con tus registros.</p>
+            <div class="mxrp-notice mxrp-section">Utiliza imágenes editadas con IA y elimina cualquier logotipo o marca visible de Avakin.</div>
+            <div class="mxrp-upload-grid">
+              <div class="mxrp-upload"><label>AVATAR</label><div class="mxrp-preview" id="mxrpPrevAvatar">Sin imagen</div><input type="file" accept="image/*" data-preview="mxrpPrevAvatar"></div>
+              <div class="mxrp-upload"><label>HOGAR</label><div class="mxrp-preview" id="mxrpPrevHouse">Sin imagen</div><input type="file" accept="image/*" data-preview="mxrpPrevHouse"></div>
+              <div class="mxrp-upload"><label>TRANSPORTE</label><div class="mxrp-preview" id="mxrpPrevVehicle">Sin imagen</div><input type="file" accept="image/*" data-preview="mxrpPrevVehicle"></div>
+              <div class="mxrp-upload"><label>EMPRESA</label><div class="mxrp-preview" id="mxrpPrevBusiness">Sin imagen</div><input type="file" accept="image/*" data-preview="mxrpPrevBusiness"></div>
+              <div class="mxrp-upload"><label>FAMILIA</label><div class="mxrp-preview" id="mxrpPrevFamily">Sin imagen</div><input type="file" accept="image/*" data-preview="mxrpPrevFamily"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mxrp-dash-page" data-page="jugador">
+        <div class="mxrp-dash-title"><h2>Registro de jugador</h2><p>Identidad y datos oficiales ficticios del personaje.</p></div>
+        <div class="mxrp-card"><div class="mxrp-notice">Tu ID RP, cuenta BANCOMCRP26 y CB no son editables y se generan una sola vez.</div><div class="mxrp-actions"><button class="mxrp-btn" id="mxrpSavePlayer2">GUARDAR Y ACTUALIZAR</button></div></div>
+      </section>
+
+      <section class="mxrp-dash-page" data-page="hogar">
+        <div class="mxrp-dash-title"><h2>Registro de hogar</h2><p>Selecciona una propiedad y la valoración se calculará automáticamente.</p></div>
+        <div class="mxrp-card">
+          <div class="mxrp-form-grid">
+            <div class="mxrp-form-group"><label>Tipo</label><select id="mxrpHouseType"><option>Casa</option><option>Departamento</option><option>Mansión</option><option>Rancho</option><option>Villa</option></select></div>
+            <div class="mxrp-form-group"><label>Ciudad</label><select id="mxrpHouseCity"></select></div>
+            <div class="mxrp-form-group"><label>Valor MXN</label><input id="mxrpHouseMxn" class="mxrp-readonly" readonly></div>
+            <div class="mxrp-form-group"><label>Valor RP</label><input id="mxrpHouseRp" class="mxrp-readonly" readonly></div>
+            <div class="mxrp-form-group full"><label>Domicilio RP automático</label><input id="mxrpHouseAddress" class="mxrp-readonly" readonly></div>
+          </div>
+          <div class="mxrp-actions"><button class="mxrp-btn" id="mxrpSaveHouse">REGISTRAR HOGAR</button></div>
+        </div>
+      </section>
+
+      <section class="mxrp-dash-page" data-page="transporte">
+        <div class="mxrp-dash-title"><h2>Registro de transporte</h2><p>Modelos reales de distintas categorías, valoración y placas automáticas.</p></div>
+        <div class="mxrp-card">
+          <div class="mxrp-form-grid">
+            <div class="mxrp-form-group"><label>Tipo</label><select id="mxrpVehicleType"></select></div>
+            <div class="mxrp-form-group"><label>Marca / modelo</label><select id="mxrpVehicleModel"></select></div>
+            <div class="mxrp-form-group"><label>Año</label><input id="mxrpVehicleYear" type="number" value="2026"></div>
+            <div class="mxrp-form-group"><label>Color</label><select id="mxrpVehicleColor"><option>Negro</option><option>Blanco</option><option>Rojo</option><option>Azul</option><option>Verde</option><option>Gris</option><option>Plata</option><option>Dorado</option><option>Amarillo</option><option>Morado</option></select></div>
+            <div class="mxrp-form-group"><label>Ciudad de registro</label><select id="mxrpVehicleCity"></select></div>
+            <div class="mxrp-form-group"><label>Placas RP</label><input id="mxrpVehiclePlate" class="mxrp-readonly" readonly></div>
+            <div class="mxrp-form-group"><label>Valor MXN</label><input id="mxrpVehicleMxn" class="mxrp-readonly" readonly></div>
+            <div class="mxrp-form-group"><label>Valor RP</label><input id="mxrpVehicleRp" class="mxrp-readonly" readonly></div>
+            <div class="mxrp-form-group full"><label>Domicilio donde estará estacionado</label><select id="mxrpVehicleHome"></select></div>
+          </div>
+          <div class="mxrp-actions"><button class="mxrp-btn" id="mxrpSaveVehicle">REGISTRAR TRANSPORTE</button></div>
+        </div>
+      </section>
+
+      <section class="mxrp-dash-page" data-page="familia">
+        <div class="mxrp-dash-title"><h2>Familia y menores</h2><p>Los vínculos se realizan con jugadores que existan en la comunidad.</p></div>
+        <div class="mxrp-card">
+          <div class="mxrp-form-group"><label>¿Perteneces a una familia?</label><select id="mxrpHasFamily"><option>No</option><option>Sí</option></select></div>
+          <div id="mxrpFamilyFields" class="mxrp-conditional mxrp-section">
+            <div class="mxrp-form-grid">
+              <div class="mxrp-form-group"><label>Apellido de familia</label><input id="mxrpFamilyName"></div>
+              <div class="mxrp-form-group"><label>Jugador registrado</label><select id="mxrpFamilyPlayer"><option value="">Jugadores registrados aparecerán aquí</option></select></div>
+              <div class="mxrp-form-group full"><label>Rol familiar</label><select id="mxrpFamilyRole"><option>Padre</option><option>Madre</option><option>Hijo</option><option>Hija</option><option>Hermano</option><option>Hermana</option><option>Primo</option><option>Prima</option><option>Tío</option><option>Tía</option><option>Abuelo</option><option>Abuela</option><option>Esposo</option><option>Esposa</option><option>Pareja</option><option>Tutor</option><option>Tutora</option><option>Otro</option></select></div>
+            </div>
+            <div class="mxrp-notice mxrp-section">Este familiar todavía no aparece en la comunidad. Cuando realice su registro de jugador, podrá aparecer automáticamente para vincularlo a esta familia.</div>
+          </div>
+          <div class="mxrp-form-group mxrp-section"><label>¿Ingresarás con un menor de edad dentro de tu rol?</label><select id="mxrpHasMinor"><option>No</option><option>Sí</option></select></div>
+          <div id="mxrpMinorFields" class="mxrp-conditional mxrp-section">
+            <div class="mxrp-form-grid">
+              <div class="mxrp-form-group"><label>Nombre</label><input id="mxrpMinorName"></div>
+              <div class="mxrp-form-group"><label>Apellido</label><input id="mxrpMinorLast"></div>
+              <div class="mxrp-form-group"><label>Edad</label><input id="mxrpMinorAge" type="number" min="0"></div>
+              <div class="mxrp-form-group"><label>Unidad</label><select id="mxrpMinorUnit"><option>Días de nacido</option><option>Meses</option><option>Años</option></select></div>
+              <div class="mxrp-form-group"><label>Relación</label><select id="mxrpMinorRelation"><option>Hijo</option><option>Hija</option></select></div>
+            </div>
+          </div>
+          <div class="mxrp-actions"><button class="mxrp-btn" id="mxrpSaveFamily">GUARDAR FAMILIA</button></div>
+        </div>
+      </section>
+
+      <section class="mxrp-dash-page" data-page="trabajo">
+        <div class="mxrp-dash-title"><h2>Empresa / Trabajo</h2><p>El formulario cambia automáticamente según tu situación laboral.</p></div>
+        <div class="mxrp-card">
+          <div class="mxrp-form-group"><label>Situación laboral</label><select id="mxrpWorkType"><option>Otro</option><option>Empresario local</option><option>Empleado</option><option>Director de gobierno</option></select></div>
+
+          <div id="mxrpBusinessFields" class="mxrp-conditional mxrp-section">
+            <h3>REGISTRO DE EMPRESA</h3><div class="mxrp-form-grid mxrp-section">
+              <div class="mxrp-form-group"><label>Nombre de empresa</label><input id="mxrpBizName"></div>
+              <div class="mxrp-form-group"><label>Giro empresarial</label><select id="mxrpBizType"></select></div>
+              <div class="mxrp-form-group"><label>Ciudad</label><select id="mxrpBizCity"></select></div>
+              <div class="mxrp-form-group"><label>Empleados</label><select id="mxrpBizEmployees"><option>No</option><option>Sí</option></select></div>
+              <div class="mxrp-form-group"><label>Apertura</label><input id="mxrpBizOpen" type="time" value="09:00"></div>
+              <div class="mxrp-form-group"><label>Cierre</label><input id="mxrpBizClose" type="time" value="18:00"></div>
+              <div class="mxrp-form-group"><label>Días de descanso</label><input id="mxrpBizRest" placeholder="Domingo"></div>
+              <div class="mxrp-form-group"><label>Sueldo base $RP</label><input id="mxrpBizSalary" type="number" min="0"></div>
+              <div class="mxrp-form-group"><label>Tipo de pago</label><select id="mxrpBizPay"><option>Semanal</option><option>Quincenal</option><option>Mensual</option></select></div>
+            </div>
+            <div class="mxrp-notice mxrp-section">El domicilio empresarial se generará automáticamente al guardar.</div>
+          </div>
+
+          <div id="mxrpEmployeeFields" class="mxrp-conditional mxrp-section">
+            <h3>REGISTRO LABORAL</h3><div class="mxrp-form-grid mxrp-section">
+              <div class="mxrp-form-group full"><label>Empresa existente</label><select id="mxrpEmployeeBiz"><option>Empresas registradas aparecerán aquí</option></select></div>
+              <div class="mxrp-form-group"><label>Cargo</label><select id="mxrpEmployeeRole"><option>Gerente</option><option>Supervisor</option><option>Administrador</option><option>Recepcionista</option><option>Operador</option><option>Vendedor</option><option>Auxiliar</option><option>Chef</option><option>Cocinero</option><option>Mesero</option><option>Cajero</option><option>Mecánico</option><option>Electricista</option><option>Pintor</option></select></div>
+              <div class="mxrp-form-group"><label>Sueldo $RP</label><input id="mxrpEmployeeSalary" type="number" min="0"></div>
+              <div class="mxrp-form-group"><label>Días laborales</label><input id="mxrpEmployeeDays"></div>
+              <div class="mxrp-form-group"><label>Días de descanso</label><input id="mxrpEmployeeRest"></div>
+            </div>
+          </div>
+
+          <div id="mxrpGovFields" class="mxrp-conditional mxrp-section">
+            <h3>DIRECTOR DE GOBIERNO</h3><div class="mxrp-form-grid mxrp-section">
+              <div class="mxrp-form-group"><label>Institución / empresa de gobierno</label><input id="mxrpGovCompany"></div>
+              <div class="mxrp-form-group"><label>Cargo</label><select id="mxrpGovRole"><option>Director</option><option>Subdirector</option><option>Coordinador</option><option>Secretario</option><option>Comisionado</option><option>Jefe de área</option></select></div>
+              <div class="mxrp-form-group"><label>Días laborales</label><input id="mxrpGovDays"></div>
+              <div class="mxrp-form-group"><label>Días de descanso</label><input id="mxrpGovRest"></div>
+              <div class="mxrp-form-group full"><label>Sueldo automático</label><input id="mxrpGovSalary" class="mxrp-readonly" readonly></div>
+            </div>
+          </div>
+          <div class="mxrp-actions"><button class="mxrp-btn" id="mxrpSaveWork">GUARDAR INFORMACIÓN LABORAL</button></div>
+        </div>
+      </section>
+
+      <section class="mxrp-dash-page" data-page="organizacion">
+        <div class="mxrp-dash-title"><h2>Organización / Pandilla</h2><p>Registro ficticio para el universo de roleplay.</p></div>
+        <div class="mxrp-card">
+          <div class="mxrp-form-group"><label>¿Perteneces a una pandilla u organización?</label><select id="mxrpHasOrg"><option>No</option><option>Sí</option></select></div>
+          <div id="mxrpOrgFields" class="mxrp-conditional mxrp-section">
+            <div class="mxrp-form-grid">
+              <div class="mxrp-form-group"><label>Nombre</label><input id="mxrpOrgName"></div>
+              <div class="mxrp-form-group"><label>Alias</label><input id="mxrpOrgAlias"></div>
+              <div class="mxrp-form-group"><label>Tipo</label><select id="mxrpOrgType"><option>Organización</option><option>Pandilla</option></select></div>
+              <div class="mxrp-form-group"><label>Cargo</label><select id="mxrpOrgRole"><option>Miembro</option><option>Segundo al mando</option><option>Encargado</option><option>Operador</option><option>Reclutador</option><option>Vigilante</option><option>Mensajero</option><option>Líder</option></select></div>
+            </div>
+            <div id="mxrpLeaderFields" class="mxrp-conditional mxrp-section">
+              <h3>CONFIGURACIÓN DE SUELDOS</h3><div class="mxrp-form-grid mxrp-section">
+                <div class="mxrp-form-group"><label>Gatillero $RP</label><input id="mxrpPayGat" type="number" value="7000"></div>
+                <div class="mxrp-form-group"><label>Segundo al mando $RP</label><input id="mxrpPaySecond" type="number"></div>
+                <div class="mxrp-form-group"><label>Encargado $RP</label><input id="mxrpPayEnc" type="number"></div>
+                <div class="mxrp-form-group"><label>Operador $RP</label><input id="mxrpPayOp" type="number"></div>
+                <div class="mxrp-form-group"><label>Reclutador $RP</label><input id="mxrpPayRec" type="number"></div>
+                <div class="mxrp-form-group"><label>Vigilante $RP</label><input id="mxrpPayVig" type="number"></div>
+                <div class="mxrp-form-group"><label>Mensajero $RP</label><input id="mxrpPayMsg" type="number"></div>
+                <div class="mxrp-form-group"><label>Miembro $RP</label><input id="mxrpPayMem" type="number"></div>
+              </div>
+            </div>
+          </div>
+          <div class="mxrp-actions"><button class="mxrp-btn" id="mxrpSaveOrg">GUARDAR ORGANIZACIÓN</button></div>
+        </div>
+      </section>
+
+      <section class="mxrp-dash-page" data-page="finanzas">
+        <div class="mxrp-dash-title"><h2>Finanzas RP</h2><p>Información bancaria ficticia asociada a tu perfil.</p></div>
+        <div class="mxrp-card"><div class="mxrp-stats">
+          <div class="mxrp-stat"><small>Banco</small><b>BANCOMCRP26</b></div>
+          <div class="mxrp-stat"><small>Cuenta</small><b id="mxrpFinanceBank">—</b></div>
+          <div class="mxrp-stat"><small>CB</small><b id="mxrpFinanceCB">—</b></div>
+          <div class="mxrp-stat"><small>Saldo inicial</small><b class="mxrp-money">$100,000 $RP</b></div>
+        </div><div class="mxrp-notice">Los datos bancarios son ficticios y exclusivos del universo MexCity RP.</div></div>
+      </section>
+
+      <section class="mxrp-dash-page" data-page="registros">
+        <div class="mxrp-dash-title"><h2>Mis registros</h2><p>Resumen de la información guardada para tu cuenta.</p></div>
+        <div class="mxrp-card" id="mxrpRecords"><p>Sin registros todavía.</p></div>
+      </section>
+    </main>
+  </div>
+</div>
+</section>
 
 
 <!-- =========================================================
