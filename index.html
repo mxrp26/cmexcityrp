@@ -2002,11 +2002,11 @@ footer strong {
 <script>
 
 /* =========================================================
-   CONFIGURACIÓN DE SUPABASE (REEMPLAZA CON TUS DATOS)
+   CONFIGURACIÓN DE SUPABASE (ACTUALIZADA)
 ========================================================= */
 
-const SUPABASE_URL = "TU_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "TU_SUPABASE_ANON_KEY";
+const SUPABASE_URL = "https://tu-proyecto.supabase.co"; // Recuerda poner tu URL de Supabase aquí
+const SUPABASE_ANON_KEY = "sb_publishable_QZ1vQjZQ-7vbkBJLmouMzQ_PUmI8U2c";
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -2667,7 +2667,7 @@ const closeModal =
 
 
 /* =========================================================
-   ABRIR MODAL
+   ABRIR MODAL (CORREGIDO CON TIMEOUT PARA EL DOM)
 ========================================================= */
 
 function openModal(section) {
@@ -2692,24 +2692,20 @@ function openModal(section) {
         "hidden";
 
 
-    if(section === "registro") {
+    setTimeout(() => {
+        if(section === "registro") {
+            setupRegister();
+        }
 
-        setupRegister();
+        if(section === "login") {
+            setupLogin();
+            setupRecovery();
+        }
 
-    }
-
-    if(section === "login") {
-
-        setupLogin();
-        setupRecovery();
-
-    }
-
-    if(section === "staff") {
-
-        setupStaff();
-
-    }
+        if(section === "staff") {
+            setupStaff();
+        }
+    }, 50);
 
 }
 
@@ -2939,7 +2935,6 @@ function setupRegister() {
 
             try {
 
-                // Llamada a Supabase para registrar y enviar correo de confirmación nativo
                 const { data, error } = await supabaseClient.auth.signUp({
                     email: email,
                     password: password,
@@ -3141,8 +3136,7 @@ function setupRecovery() {
                 );
 
             const message =
-                document
-                .getElementById(
+                document.getElementById(
                     "recoveryMessage"
                 );
 
