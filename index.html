@@ -33,6 +33,9 @@ rel="stylesheet"
 src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
 </script>
 
+<!-- SUPABASE JS CLIENT -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
 <style>
 
@@ -2056,6 +2059,11 @@ emailjs.init({
 
 });
 
+/* SUPABASE — PROYECTO REAL DE MEXCITY RP */
+const SUPABASE_URL = "https://ogiupysmhnzvizesqcxr.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_QZ1vQjZQ-7vbkBJLmouMzQ_PUmI8U2c";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 
 
 /* =========================================================
@@ -2811,220 +2819,67 @@ document.addEventListener(
 
 function setupRegister() {
 
-    const form =
-        document.getElementById(
-            "registerForm"
-        );
-
+    const form = document.getElementById("registerForm");
     if(!form) return;
 
-
-    form.addEventListener(
-        "submit",
-        async event => {
-
-            event.preventDefault();
-
-
-            const email =
-                document
-                .getElementById(
-                    "registerEmail"
-                )
-                .value
-                .trim();
-
-
-            const password =
-                document
-                .getElementById(
-                    "registerPassword"
-                )
-                .value;
-
-
-            const confirmPassword =
-                document
-                .getElementById(
-                    "registerConfirmPassword"
-                )
-                .value;
-
-
-            const button =
-                document.getElementById(
-                    "registerButton"
-                );
-
-
-            const message =
-                document.getElementById(
-                    "registerMessage"
-                );
-
-
-            /*
-               Validación de correo
-            */
-
-            const emailPattern =
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
-            if(!emailPattern.test(email)) {
-
-                showMessage(
-                    message,
-                    "Introduce un correo electrónico válido.",
-                    "error"
-                );
-
-                return;
-
-            }
-
-
-            /*
-               Validación contraseña
-            */
-
-            if(password.length < 8) {
-
-                showMessage(
-                    message,
-                    "La contraseña debe tener al menos 8 caracteres.",
-                    "error"
-                );
-
-                return;
-
-            }
-
-
-            /*
-               Confirmación
-            */
-
-            if(password !== confirmPassword) {
-
-                showMessage(
-                    message,
-                    "Las contraseñas no coinciden.",
-                    "error"
-                );
-
-                return;
-
-            }
-
-
-            /*
-               Evitar doble envío
-            */
-
-            button.disabled = true;
-
-            button.textContent =
-                "ENVIANDO...";
-
-
-            try {
-
-
-                /*
-                   =================================================
-                   EMAILJS
-                   =================================================
-
-                   El correo se envía a la dirección
-                   introducida por el jugador.
-
-                   La plantilla debe tener:
-
-                   To Email:
-                   {{user_email}}
-
-                   Y puede utilizar:
-
-                   {{user_email}}
-                   {{user_name}}
-                   {{confirmation_message}}
-
-                */
-
-
-                await emailjs.send(
-
-                    EMAILJS_SERVICE_ID,
-
-                    EMAILJS_TEMPLATE_ID,
-
-                    {
-
-                        user_email:
-                            email,
-
-                        user_name:
-                            email.split("@")[0],
-
-                        confirmation_message:
-                            "Tu registro en MexCity RP ha sido recibido correctamente."
-
-                    }
-
-                );
-
-
-                showMessage(
-
-                    message,
-
-                    "Registro recibido. Revisa tu correo electrónico para confirmar tu cuenta.",
-
-                    "success"
-
-                );
-
-
-                form.reset();
-
-
-                button.textContent =
-                    "CORREO ENVIADO";
-
-
-            }
-
-            catch(error) {
-
-
-                console.error(
-                    "EmailJS:",
-                    error
-                );
-
-
-                showMessage(
-
-                    message,
-
-                    "No fue posible enviar el correo. Revisa la configuración de EmailJS.",
-
-                    "error"
-
-                );
-
-
-                button.disabled = false;
-
-                button.textContent =
-                    "CREAR CUENTA";
-
-            }
-
+    form.addEventListener("submit", async event => {
+        event.preventDefault();
+
+        const email = document.getElementById("registerEmail").value.trim();
+        const password = document.getElementById("registerPassword").value;
+        const confirmPassword = document.getElementById("registerConfirmPassword").value;
+        const button = document.getElementById("registerButton");
+        const message = document.getElementById("registerMessage");
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if(!emailPattern.test(email)) {
+            showMessage(message,"Introduce un correo electrónico válido.","error");
+            return;
         }
-    );
 
+        if(password.length < 8) {
+            showMessage(message,"La contraseña debe tener al menos 8 caracteres.","error");
+            return;
+        }
+
+        if(password !== confirmPassword) {
+            showMessage(message,"Las contraseñas no coinciden.","error");
+            return;
+        }
+
+        button.disabled = true;
+        button.textContent = "CREANDO CUENTA...";
+
+        try {
+            const { data, error } = await supabaseClient.auth.signUp({
+                email,
+                password,
+                options: {
+                    emailRedirectTo: window.location.origin + window.location.pathname
+                }
+            });
+
+            if(error) throw error;
+
+            showMessage(
+                message,
+                data.session
+                    ? "Cuenta creada correctamente. Ya puedes iniciar sesión."
+                    : "Cuenta creada correctamente. Revisa tu correo y confirma tu cuenta antes de iniciar sesión.",
+                "success"
+            );
+
+            form.reset();
+            button.textContent = "CUENTA CREADA";
+
+        } catch(error) {
+            console.error("Supabase registro:",error);
+            showMessage(message,error?.message || "No fue posible crear la cuenta.","error");
+            button.disabled = false;
+            button.textContent = "CREAR CUENTA";
+        }
+    });
 }
 
 
@@ -3035,87 +2890,57 @@ function setupRegister() {
 
 function setupLogin() {
 
-    const form =
-        document.getElementById(
-            "loginForm"
-        );
-
+    const form = document.getElementById("loginForm");
     if(!form) return;
 
+    form.addEventListener("submit", async event => {
+        event.preventDefault();
 
-    form.addEventListener(
-        "submit",
-        async event => {
+        const email = document.getElementById("loginEmail").value.trim();
+        const password = document.getElementById("loginPassword").value;
+        const message = document.getElementById("loginMessage");
+        const button = form.querySelector('button[type="submit"]');
 
-            event.preventDefault();
+        if(!email || !password) {
+            showMessage(message,"Completa todos los campos.","error");
+            return;
+        }
 
+        button.disabled = true;
+        button.textContent = "VERIFICANDO...";
 
-            const email =
-                document
-                .getElementById(
-                    "loginEmail"
-                )
-                .value
-                .trim();
+        try {
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                email,
+                password
+            });
 
+            if(error) throw error;
+            if(!data.session) throw new Error("No se pudo crear una sesión activa.");
 
-            const password =
-                document
-                .getElementById(
-                    "loginPassword"
-                )
-                .value;
+            showMessage(message,"Inicio de sesión correcto. Entrando a MexCity RP...","success");
+            button.textContent = "ENTRANDO...";
 
+            setTimeout(() => {
+                window.location.href = "./dashboard.html";
+            },500);
 
-            const message =
-                document.getElementById(
-                    "loginMessage"
-                );
+        } catch(error) {
+            console.error("Supabase login:",error);
 
+            let text = error?.message || "No fue posible iniciar sesión.";
 
-            if(!email || !password) {
-
-                showMessage(
-
-                    message,
-
-                    "Completa todos los campos.",
-
-                    "error"
-
-                );
-
-                return;
-
+            if(/email not confirmed/i.test(text)) {
+                text = "Tu correo todavía no está confirmado. Revisa tu bandeja de entrada y confirma tu cuenta.";
+            } else if(/invalid login credentials/i.test(text)) {
+                text = "Correo o contraseña incorrectos.";
             }
 
-
-            /*
-               IMPORTANTE:
-
-               Aquí irá Supabase Auth.
-
-               No utilizamos localStorage para guardar
-               contraseñas y tampoco enviamos contraseñas
-               mediante EmailJS.
-
-               El login seguro requiere un proveedor
-               de autenticación.
-            */
-
-            showMessage(
-
-                message,
-
-                "El sistema de autenticación de la cuenta debe conectarse a Supabase antes de activar el inicio de sesión.",
-
-                "error"
-
-            );
-
+            showMessage(message,text,"error");
+            button.disabled = false;
+            button.textContent = "INICIAR SESIÓN";
         }
-    );
-
+    });
 }
 
 
