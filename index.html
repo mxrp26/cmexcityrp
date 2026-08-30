@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -27,11 +26,6 @@ crossorigin>
 href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
 rel="stylesheet"
 >
-
-<!-- EMAILJS -->
-<script
-src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
-</script>
 
 <!-- SUPABASE JS CLIENT -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -997,6 +991,17 @@ input {
     color:#888;
 }
 
+.auth-link {
+    color: var(--dorado-brillo);
+    text-decoration: none;
+    font-size: 13px;
+    transition: var(--transicion);
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+    color: white;
+}
 
 /* =========================================================
    BOTON FORMULARIO
@@ -2016,54 +2021,11 @@ footer strong {
 
 <script>
 
-/* =========================================================
-   EMAILJS
-========================================================= */
-
-/*
-   TU SERVICE ID
-*/
-
-const EMAILJS_SERVICE_ID =
-    "service_3pfk0gq";
-
-
-/*
-   IMPORTANTE:
-
-   Aquí necesitas colocar el ID REAL
-   de tu plantilla de EmailJS.
-
-   Ejemplo:
-   template_xxxxxxx
-*/
-
-const EMAILJS_TEMPLATE_ID =
-    "REEMPLAZA_AQUI_TU_TEMPLATE_ID";
-
-
-/*
-   TU PUBLIC KEY
-*/
-
-const EMAILJS_PUBLIC_KEY =
-    "zB_VYBsKxGCESl2F0";
-
-
-/* Inicializar EmailJS */
-
-emailjs.init({
-
-    publicKey:
-        EMAILJS_PUBLIC_KEY
-
-});
 
 /* SUPABASE — PROYECTO REAL DE MEXCITY RP */
 const SUPABASE_URL = "https://ogiupysmhnzvizesqcxr.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_QZ1vQjZQ-7vbkBJLmouMzQ_PUmI8U2c";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
 
 
 /* =========================================================
@@ -2313,7 +2275,7 @@ const modalData = {
                     </h3>
 
                     <p>
-                        Respeta la lógica y continuidad
+                        Respeta la lógica y continuity
                         de las historias.
                     </p>
 
@@ -2528,7 +2490,7 @@ const modalData = {
                     <br>
 
                     Después de registrarte recibirás
-                    un correo de confirmación.
+                    un correo de confirmación y bienvenida.
 
                 </div>
 
@@ -2593,6 +2555,8 @@ const modalData = {
                         autocomplete="current-password"
                         required
                     >
+                    
+                    <a href="#" class="auth-link" onclick="openModal('recuperar'); return false;">¿Olvidaste tu contraseña?</a>
 
                 </div>
 
@@ -2623,6 +2587,94 @@ const modalData = {
 
             </form>
 
+        `
+    },
+
+    /* =====================================================
+       RECUPERAR CONTRASEÑA (NUEVO)
+    ====================================================== */
+
+    "recuperar": {
+
+        icon:"✉",
+
+        title:"Recuperar contraseña",
+
+        content:`
+
+            <p>
+                Ingresa tu correo y te enviaremos un enlace para que puedas 
+                cambiar tu contraseña.
+            </p>
+
+            <form
+                class="auth-form"
+                id="resetForm"
+            >
+
+                <div class="form-group">
+                    <label>Correo electrónico</label>
+                    <input
+                        type="email"
+                        id="resetEmail"
+                        placeholder="tucorreo@ejemplo.com"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="auth-submit">
+                    ENVIAR ENLACE
+                </button>
+
+                <div class="form-message" id="resetMessage"></div>
+
+                <div class="auth-note">
+                    <a href="#" class="auth-link" onclick="openModal('login'); return false;">Volver a Iniciar Sesión</a>
+                </div>
+
+            </form>
+        `
+    },
+
+    /* =====================================================
+       NUEVA CONTRASEÑA (NUEVO)
+    ====================================================== */
+
+    "nueva-password": {
+
+        icon:"🔑",
+
+        title:"Nueva contraseña",
+
+        content:`
+
+            <p>
+                Ingresa tu nueva contraseña para acceder a tu cuenta.
+            </p>
+
+            <form
+                class="auth-form"
+                id="updatePasswordForm"
+            >
+
+                <div class="form-group">
+                    <label>Nueva contraseña</label>
+                    <input
+                        type="password"
+                        id="newPassword"
+                        placeholder="Mínimo 8 caracteres"
+                        minlength="8"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="auth-submit">
+                    ACTUALIZAR CONTRASEÑA
+                </button>
+
+                <div class="form-message" id="updatePasswordMessage"></div>
+
+            </form>
         `
     }
 
@@ -2683,15 +2735,19 @@ function openModal(section) {
     */
 
     if(section === "registro") {
-
         setupRegister();
-
     }
 
     if(section === "login") {
-
         setupLogin();
+    }
 
+    if(section === "recuperar") {
+        setupReset();
+    }
+
+    if(section === "nueva-password") {
+        setupUpdatePassword();
     }
 
 }
@@ -2703,12 +2759,8 @@ function openModal(section) {
 ========================================================= */
 
 function closeCurrentModal() {
-
     modal.classList.remove("active");
-
-    document.body.style.overflow =
-        "";
-
+    document.body.style.overflow = "";
 }
 
 
@@ -2724,7 +2776,6 @@ document
     button.addEventListener(
         "click",
         () => {
-
             document
             .querySelectorAll(".nav-button")
             .forEach(btn =>
@@ -2736,7 +2787,6 @@ document
             openModal(
                 button.dataset.modal
             );
-
         }
     );
 
@@ -2753,63 +2803,29 @@ document
 .addEventListener(
     "click",
     () => {
-
         openModal("registro");
-
     }
 );
 
 
 
 /* =========================================================
-   CERRAR
+   CERRAR Y ESCAPE
 ========================================================= */
 
-closeModal.addEventListener(
-    "click",
-    closeCurrentModal
-);
+closeModal.addEventListener("click", closeCurrentModal);
 
-
-
-/* =========================================================
-   CERRAR AL CLICK FUERA
-========================================================= */
-
-modal.addEventListener(
-    "click",
-    event => {
-
-        if(event.target === modal) {
-
-            closeCurrentModal();
-
-        }
-
+modal.addEventListener("click", event => {
+    if(event.target === modal) {
+        closeCurrentModal();
     }
-);
+});
 
-
-
-/* =========================================================
-   ESC
-========================================================= */
-
-document.addEventListener(
-    "keydown",
-    event => {
-
-        if(
-            event.key === "Escape" &&
-            modal.classList.contains("active")
-        ) {
-
-            closeCurrentModal();
-
-        }
-
+document.addEventListener("keydown", event => {
+    if(event.key === "Escape" && modal.classList.contains("active")) {
+        closeCurrentModal();
     }
-);
+});
 
 
 
@@ -2866,7 +2882,7 @@ function setupRegister() {
                 message,
                 data.session
                     ? "Cuenta creada correctamente. Ya puedes iniciar sesión."
-                    : "Cuenta creada correctamente. Revisa tu correo y confirma tu cuenta antes de iniciar sesión.",
+                    : "¡Cuenta creada! Revisa tu correo (incluyendo SPAM) para confirmar y darte la bienvenida.",
                 "success"
             );
 
@@ -2944,9 +2960,115 @@ function setupLogin() {
 }
 
 
+/* =========================================================
+   RECUPERAR CONTRASEÑA (ENVIAR CORREO)
+========================================================= */
+
+function setupReset() {
+    const form = document.getElementById("resetForm");
+    if(!form) return;
+
+    form.addEventListener("submit", async event => {
+        event.preventDefault();
+
+        const email = document.getElementById("resetEmail").value.trim();
+        const message = document.getElementById("resetMessage");
+        const button = form.querySelector('button[type="submit"]');
+
+        if(!email) {
+            showMessage(message, "Por favor ingresa tu correo.", "error");
+            return;
+        }
+
+        button.disabled = true;
+        button.textContent = "ENVIANDO CORREO...";
+
+        try {
+            const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + window.location.pathname
+            });
+
+            if (error) throw error;
+
+            showMessage(message, "¡Enviado! Revisa tu correo electrónico para restablecer tu contraseña.", "success");
+            button.textContent = "ENVIADO";
+
+        } catch(error) {
+            console.error("Supabase reset:", error);
+            showMessage(message, "No pudimos enviar el correo. Verifica que el correo esté registrado.", "error");
+            button.disabled = false;
+            button.textContent = "ENVIAR ENLACE";
+        }
+    });
+}
+
 
 /* =========================================================
-   MENSAJES
+   ACTUALIZAR CONTRASEÑA (DESPUÉS DEL CLIC EN EL CORREO)
+========================================================= */
+
+function setupUpdatePassword() {
+    const form = document.getElementById("updatePasswordForm");
+    if(!form) return;
+
+    form.addEventListener("submit", async event => {
+        event.preventDefault();
+
+        const newPassword = document.getElementById("newPassword").value;
+        const message = document.getElementById("updatePasswordMessage");
+        const button = form.querySelector('button[type="submit"]');
+
+        if(newPassword.length < 8) {
+            showMessage(message, "La contraseña debe tener al menos 8 caracteres.", "error");
+            return;
+        }
+
+        button.disabled = true;
+        button.textContent = "ACTUALIZANDO...";
+
+        try {
+            const { error } = await supabaseClient.auth.updateUser({
+                password: newPassword
+            });
+
+            if (error) throw error;
+
+            showMessage(message, "¡Contraseña actualizada con éxito! Ya puedes iniciar sesión.", "success");
+            button.textContent = "LISTO";
+            
+            // Borrar los datos de recuperación de la barra de URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+
+            setTimeout(() => {
+                openModal("login");
+            }, 2500);
+
+        } catch(error) {
+            console.error("Supabase update pass:", error);
+            showMessage(message, "Error al intentar actualizar la contraseña.", "error");
+            button.disabled = false;
+            button.textContent = "ACTUALIZAR CONTRASEÑA";
+        }
+    });
+}
+
+
+/* =========================================================
+   DETECTAR CLIC EN ENLACE DE RECUPERACIÓN
+========================================================= */
+
+supabaseClient.auth.onAuthStateChange((event, session) => {
+    // Si Supabase detecta que el usuario acaba de llegar desde el link de "Reset password" del correo:
+    if (event === 'PASSWORD_RECOVERY') {
+        setTimeout(() => {
+            openModal("nueva-password");
+        }, 500);
+    }
+});
+
+
+/* =========================================================
+   MENSAJES UI
 ========================================================= */
 
 function showMessage(
