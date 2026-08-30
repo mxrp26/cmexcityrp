@@ -29,17 +29,6 @@ rel="stylesheet"
 
 <!-- SUPABASE JS CLIENT -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-/* =========================================================
-   ENTRADA AUTOMÁTICA AL DASHBOARD DESPUÉS DEL LOGIN
-========================================================= */
-supabaseClient.auth.onAuthStateChange((event, session) => {
-    if(session && session.user){
-        setTimeout(() => window.mxrpOpenDashboard(session.user), 100);
-    }else if(event === "SIGNED_OUT"){
-        window.mxrpCloseDashboard();
-    }
-});
-
 </script>
 
 
@@ -3622,6 +3611,76 @@ function showMessage(
 
 </script>
 
+
+<script>
+/* =========================================================
+   MEXCITY RP — CONEXIÓN LOGIN -> DASHBOARD
+   Este bloque se ejecuta DESPUÉS de crear supabaseClient.
+========================================================= */
+(function(){
+'use strict';
+
+const MXRP2_CITIES=[
+'Aguascalientes, Aguascalientes','Mexicali, Baja California','Tijuana, Baja California','La Paz, Baja California Sur','Campeche, Campeche','Tuxtla Gutiérrez, Chiapas','Chihuahua, Chihuahua','Ciudad Juárez, Chihuahua','Saltillo, Coahuila','Torreón, Coahuila','Colima, Colima','Manzanillo, Colima','Durango, Durango','León, Guanajuato','Irapuato, Guanajuato','Acapulco, Guerrero','Chilpancingo, Guerrero','Pachuca, Hidalgo','Guadalajara, Jalisco','Puerto Vallarta, Jalisco','Toluca, Estado de México','Ecatepec, Estado de México','Morelia, Michoacán','Cuernavaca, Morelos','Tepic, Nayarit','Monterrey, Nuevo León','Oaxaca de Juárez, Oaxaca','Puebla, Puebla','Querétaro, Querétaro','Cancún, Quintana Roo','Chetumal, Quintana Roo','San Luis Potosí, San Luis Potosí','Culiacán, Sinaloa','Mazatlán, Sinaloa','Hermosillo, Sonora','Villahermosa, Tabasco','Tampico, Tamaulipas','Ciudad Victoria, Tamaulipas','Tlaxcala, Tlaxcala','Veracruz, Veracruz','Xalapa, Veracruz','Mérida, Yucatán','Zacatecas, Zacatecas','Ciudad de México, CDMX'];
+const MXRP2_JOBS=['Empresario','Empresario local','Comerciante','Director','Gerente','Abogado','Médico','Enfermero','Psicólogo','Arquitecto','Ingeniero','Maestro','Profesor','Policía','Militar','Agente','Paramédico','Bombero','Mecánico','Electricista','Plomero','Constructor','Diseñador','Fotógrafo','Modelo','Periodista','Chef','Cocinero','Mesero','Barista','Conductor','Taxista','Repartidor','Piloto','Empresario de gobierno','Funcionario','Director de gobierno','Empleado','Agricultor','Ganadero','Veterinario','Programador','Diseñador digital','Creador de contenido','Músico','Cantante','Artista','Deportista','Entrenador','Seguridad privada','Investigador','Científico','Técnico','Contador','Economista','Banquero','Agente inmobiliario','Productor','Actor','Estilista','Barbero','Panadero','Carnicero','Joyero','Farmacéutico','Dentista','Cirujano','Capitán','Marinero','Transportista','Consultor','Analista','Administrador','Desarrollador web','Desarrollador de software','Streamer','Influencer','Locutor','DJ','Guía turístico','Agente de seguros','Detective','Notario','Juez','Fiscal','Funcionario público','Otro'];
+const MXRP2_TYPES={
+'Automóvil':[['Toyota','Corolla',450000],['Honda','Civic',520000],['Nissan','Sentra',390000],['Volkswagen','Jetta',480000],['Mazda','Mazda3',520000],['BMW','Serie 3',1100000],['Mercedes-Benz','Clase C',1250000],['Audi','A4',1050000]],
+'SUV':[['Toyota','RAV4',650000],['Honda','CR-V',700000],['Mazda','CX-5',680000],['Jeep','Grand Cherokee',1200000],['BMW','X5',1800000],['Mercedes-Benz','GLC',1600000]],
+'Pickup':[['Ford','F-150',950000],['Toyota','Hilux',650000],['Chevrolet','Silverado',980000],['RAM','1500',1100000]],
+'Deportivo':[['Ford','Mustang',900000],['Chevrolet','Camaro',1000000],['Toyota','GR86',800000],['BMW','M4',2000000]],
+'Superdeportivo':[['Porsche','911',3200000],['Ferrari','Roma',5000000],['Lamborghini','Huracán',6000000],['McLaren','750S',6500000]],
+'Clásico':[['Ford','Mustang 1967',1500000],['Chevrolet','Impala 1964',1200000]],
+'Motocicleta':[['Honda','CB190R',65000],['Yamaha','MT-03',150000],['Kawasaki','Ninja 400',190000]],
+'Motocicleta deportiva':[['Yamaha','R7',300000],['Kawasaki','Ninja ZX-6R',330000],['Honda','CBR600RR',350000]],
+'Motocicleta clásica':[['Harley-Davidson','Sportster',280000],['Royal Enfield','Classic 350',110000]],
+'Camioneta':[['Toyota','Tacoma',850000],['Ford','Maverick',700000],['Chevrolet','Colorado',780000]],
+'Van':[['Toyota','Hiace',750000],['Mercedes-Benz','Sprinter',1300000]],
+'Vehículo de lujo':[['Mercedes-Benz','Clase S',3200000],['BMW','Serie 7',2800000],['Audi','A8',2600000]],
+'Vehículo utilitario':[['Ford','Transit',850000],['Nissan','Urvan',720000]]};
+const MXRP2_HOUSES={Casa:2500000,Departamento:1600000,Mansión:8500000,Rancho:5000000,Villa:4200000};
+const q=id=>document.getElementById(id), money=n=>'$'+Number(n||0).toLocaleString('es-MX');
+const key=()=> 'mxrp_dashboard_'+(window.mxrpCurrentUserId||'guest');
+function store(){try{return JSON.parse(localStorage.getItem(key())||'{}')}catch(e){return {}}}
+function put(d){localStorage.setItem(key(),JSON.stringify(d))}
+function code(n){return Math.random().toString(36).slice(2,2+n).toUpperCase()}
+function ids(){let d=store();if(!d.id)d.id='MXRP-26-'+code(3)+'-'+code(6);if(!d.bank)d.bank='26'+String(Math.floor(Math.random()*1e10)).padStart(10,'0');if(!d.cb)d.cb='MXRP'+String(Math.floor(Math.random()*1e15)).padStart(15,'0');put(d);return d}
+function fill(id,a){let e=q(id);if(e)e.innerHTML=a.map(x=>'<option>'+x+'</option>').join('')}
+function address(city){return 'Av. MexCity #'+Math.floor(100+Math.random()*9900)+', '+city}
+function initDashboard(user){window.mxrpCurrentUserId=user.id||user.email||'guest';let d=ids();fill('mxrpCity',MXRP2_CITIES);fill('mxrpHouseCity',MXRP2_CITIES);fill('mxrpVehicleCity',MXRP2_CITIES);fill('mxrpBizCity',MXRP2_CITIES);fill('mxrpJob',MXRP2_JOBS);fill('mxrpVehicleType',Object.keys(MXRP2_TYPES));
+q('mxrpDashEmail').textContent=user.email||'Sesión activa';q('mxrpDashInitial').textContent=(user.email||'M').charAt(0).toUpperCase();
+q('mxrpId').value=d.id;q('mxrpBank').value=d.bank;q('mxrpCB').value=d.cb;q('mxrpHomeId').textContent=d.id;q('mxrpHomeBank').textContent=d.bank;q('mxrpFinanceBank').textContent=d.bank;q('mxrpFinanceCB').textContent=d.cb;
+if(d.player){q('mxrpName').value=d.player.name||'';q('mxrpLast').value=d.player.last||'';q('mxrpAge').value=d.player.age||18;q('mxrpAgeUnit').value=d.player.unit||'Años';q('mxrpCity').value=d.player.city||MXRP2_CITIES[0];q('mxrpGender').value=d.player.gender||'Femenino';q('mxrpJob').value=d.player.job||MXRP2_JOBS[0]}
+updateHouse();updateVehicle();
+q('mxrpDashboard').classList.add('active');q('mxrpDashboard').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
+function updateHouse(){let t=q('mxrpHouseType').value,v=MXRP2_HOUSES[t]||0;q('mxrpHouseMxn').value=money(v)+' MXN';q('mxrpHouseRp').value=money(v)+' $RP';if(!q('mxrpHouseAddress').value)q('mxrpHouseAddress').value=address(q('mxrpHouseCity').value)}
+function updateVehicle(){let t=q('mxrpVehicleType').value,a=MXRP2_TYPES[t]||[];q('mxrpVehicleModel').innerHTML=a.map((x,i)=>'<option value="'+i+'">'+x[0]+' '+x[1]+'</option>').join('');let x=a[0];if(x){q('mxrpVehicleMxn').value=money(x[2])+' MXN';q('mxrpVehicleRp').value=money(x[2])+' $RP';if(!q('mxrpVehiclePlate').value)q('mxrpVehiclePlate').value='MXR-'+Math.floor(100+Math.random()*900)}}
+function openPage(n){document.querySelectorAll('#mxrpDashboard .mxrp-dash-page').forEach(x=>x.classList.toggle('active',x.dataset.page===n));document.querySelectorAll('#mxrpDashboard .mxrp-dash-nav button').forEach(x=>x.classList.toggle('active',x.dataset.dashPage===n))}
+function closeDash(){q('mxrpDashboard').classList.remove('active');q('mxrpDashboard').setAttribute('aria-hidden','true');document.body.style.overflow=''}
+window.mxrpOpenDashboard=initDashboard;window.mxrpCloseDashboard=closeDash;
+
+document.addEventListener('click',async e=>{
+ const b=e.target.closest('[data-dash-page]');if(b){openPage(b.dataset.dashPage);return}
+ if(e.target.id==='mxrpLogout'){try{await supabaseClient.auth.signOut()}catch(err){}closeDash();return}
+ if(e.target.id==='mxrpSavePlayer'||e.target.id==='mxrpSavePlayer2'){let d=ids();d.player={name:q('mxrpName').value.trim(),last:q('mxrpLast').value.trim(),age:q('mxrpAge').value,unit:q('mxrpAgeUnit').value,city:q('mxrpCity').value,gender:q('mxrpGender').value,job:q('mxrpJob').value};put(d);alert('Registro de jugador guardado.');}
+ if(e.target.id==='mxrpSaveHouse'){let d=ids(),v=MXRP2_HOUSES[q('mxrpHouseType').value];d.house={type:q('mxrpHouseType').value,city:q('mxrpHouseCity').value,mxn:v,address:q('mxrpHouseAddress').value};put(d);q('mxrpHomeHouse').textContent=d.house.type;alert('Hogar registrado correctamente.');}
+ if(e.target.id==='mxrpSaveVehicle'){let d=ids(),a=MXRP2_TYPES[q('mxrpVehicleType').value],x=a[Number(q('mxrpVehicleModel').value)||0];d.vehicle={type:q('mxrpVehicleType').value,brand:x[0],model:x[1],year:q('mxrpVehicleYear').value,color:q('mxrpVehicleColor').value,city:q('mxrpVehicleCity').value,plate:q('mxrpVehiclePlate').value,mxn:x[2],home:q('mxrpVehicleHome').value};put(d);q('mxrpHomeVehicle').textContent=x[0]+' '+x[1];alert('Transporte registrado correctamente.');}
+});
+document.addEventListener('change',e=>{
+ if(e.target.id==='mxrpVehicleType')updateVehicle();
+ if(e.target.id==='mxrpHouseType'||e.target.id==='mxrpHouseCity')updateHouse();
+ if(e.target.id==='mxrpHasFamily')q('mxrpFamilyFields').classList.toggle('active',e.target.value==='Sí');
+ if(e.target.id==='mxrpHasMinor')q('mxrpMinorFields').classList.toggle('active',e.target.value==='Sí');
+ if(e.target.id==='mxrpWorkType'){let t=e.target.value;q('mxrpBusinessFields').classList.toggle('active',t==='Empresario local');q('mxrpEmployeeFields').classList.toggle('active',t==='Empleado');q('mxrpGovFields').classList.toggle('active',t==='Director de gobierno');if(t==='Director de gobierno')q('mxrpGovSalary').value=money(Math.min(1000000,500000+Math.floor(Math.random()*500001)))+' $RP'}
+ if(e.target.id==='mxrpHasOrg')q('mxrpOrgFields').classList.toggle('active',e.target.value==='Sí');
+ if(e.target.id==='mxrpOrgRole')q('mxrpLeaderFields').classList.toggle('active',e.target.value==='Líder');
+ if(e.target.matches('input[type=file][data-preview]')){let f=e.target.files[0],p=q(e.target.dataset.preview);if(f){let r=new FileReader();r.onload=()=>p.innerHTML='<img src="'+r.result+'">';r.readAsDataURL(f)}}
+});
+
+/* Lo importante: escucha la sesión de Supabase DESPUÉS de que supabaseClient existe. */
+supabaseClient.auth.getSession().then(({data})=>{if(data.session)initDashboard(data.session.user)}).catch(console.error);
+supabaseClient.auth.onAuthStateChange((event,session)=>{if(session&&session.user){setTimeout(()=>initDashboard(session.user),0)}else if(event==='SIGNED_OUT'){closeDash()}});
+})();
+</script>
 </body>
 
 </html>
