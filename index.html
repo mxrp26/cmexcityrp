@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -27,8 +28,10 @@ href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;90
 rel="stylesheet"
 >
 
-<!-- SUPABASE JS CLIENT -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- EMAILJS -->
+<script
+src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+</script>
 
 
 <style>
@@ -1404,6 +1407,11 @@ footer strong {
         font-size:7px;
     }
 
+    /*
+       En móvil mantenemos los botones
+       esenciales accesibles.
+    */
+
     .nav-button:nth-child(6),
     .nav-button:nth-child(7) {
 
@@ -1702,7 +1710,9 @@ footer strong {
     </button>
 
 
-    <!-- REGISTRARSE -->
+    <!-- =====================================================
+         NUEVO: REGISTRARSE
+    ====================================================== -->
 
     <button
         class="nav-button register"
@@ -1720,7 +1730,9 @@ footer strong {
     </button>
 
 
-    <!-- INICIAR SESIÓN -->
+    <!-- =====================================================
+         NUEVO: INICIAR SESIÓN
+    ====================================================== -->
 
     <button
         class="nav-button login"
@@ -1792,7 +1804,6 @@ footer strong {
             Crea tu personaje, construye tu historia y vive
             experiencias únicas en la comunidad de roleplay
             más completa inspirada en México.
-           
 
         </p>
 
@@ -2003,12 +2014,47 @@ footer strong {
 <script>
 
 /* =========================================================
-   CONFIGURACIÓN DE SUPABASE (REEMPLAZA LA URL CON LA DE TU PROYECTO)
+   EMAILJS
 ========================================================= */
 
-const SUPABASE_URL = "https://ogiupysmhnzvizesqcxr.supabase.co"; 
-const SUPABASE_ANON_KEY = "sb_publishable_QZ1vQjZQ-7vbkBJLmouMzQ_PUmI8U2c";
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+/*
+   TU SERVICE ID
+*/
+
+const EMAILJS_SERVICE_ID =
+    "service_3pfk0gq";
+
+
+/*
+   IMPORTANTE:
+
+   Aquí necesitas colocar el ID REAL
+   de tu plantilla de EmailJS.
+
+   Ejemplo:
+   template_xxxxxxx
+*/
+
+const EMAILJS_TEMPLATE_ID =
+    "REEMPLAZA_AQUI_TU_TEMPLATE_ID";
+
+
+/*
+   TU PUBLIC KEY
+*/
+
+const EMAILJS_PUBLIC_KEY =
+    "zB_VYBsKxGCESl2F0";
+
+
+/* Inicializar EmailJS */
+
+emailjs.init({
+
+    publicKey:
+        EMAILJS_PUBLIC_KEY
+
+});
 
 
 
@@ -2307,56 +2353,6 @@ const modalData = {
         content:`
 
             <p>
-                Acceso exclusivo para el equipo administrativo.
-                Ingresa tu nombre y código para acceder al sistema.
-            </p>
-
-            <form
-                class="auth-form"
-                id="staffForm"
-            >
-
-                <div class="form-group">
-                    <label>
-                        Nombre
-                    </label>
-                    <input
-                        type="text"
-                        id="staffName"
-                        placeholder="Tu nombre de Staff"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label>
-                        Código de acceso
-                    </label>
-                    <input
-                        type="password"
-                        id="staffCode"
-                        placeholder="Ej: MXC-ADMIN-001"
-                        required
-                    >
-                </div>
-
-                <button
-                    type="submit"
-                    class="auth-submit"
-                >
-                    INGRESAR
-                </button>
-
-                <div
-                    class="form-message"
-                    id="staffMessage"
-                ></div>
-
-            </form>
-
-            <div style="margin: 30px 0; border-top: 1px solid rgba(218,166,43,.28);"></div>
-
-            <p>
                 El equipo administrativo es responsable
                 de mantener el orden y supervisar el
                 funcionamiento de la comunidad.
@@ -2422,7 +2418,7 @@ const modalData = {
 
 
     /* =====================================================
-       REGISTRO (CON SUPABASE AUTH)
+       REGISTRO
     ====================================================== */
 
     "registro": {
@@ -2454,6 +2450,7 @@ const modalData = {
                     <input
                         type="email"
                         id="registerEmail"
+                        name="user_email"
                         placeholder="tucorreo@ejemplo.com"
                         autocomplete="email"
                         required
@@ -2471,6 +2468,7 @@ const modalData = {
                     <input
                         type="password"
                         id="registerPassword"
+                        name="user_password"
                         placeholder="Mínimo 8 caracteres"
                         minlength="8"
                         autocomplete="new-password"
@@ -2522,7 +2520,7 @@ const modalData = {
                     <br>
 
                     Después de registrarte recibirás
-                    un correo de confirmación de Supabase.
+                    un correo de confirmación.
 
                 </div>
 
@@ -2534,7 +2532,7 @@ const modalData = {
 
 
     /* =====================================================
-       LOGIN Y RECUPERACIÓN (CON SUPABASE AUTH)
+       LOGIN
     ====================================================== */
 
     "login": {
@@ -2594,7 +2592,6 @@ const modalData = {
                 <button
                     type="submit"
                     class="auth-submit"
-                    id="loginButton"
                 >
 
                     INICIAR SESIÓN
@@ -2607,36 +2604,16 @@ const modalData = {
                     id="loginMessage"
                 ></div>
 
+
+                <div class="auth-note">
+
+                    El inicio de sesión se conectará
+                    al sistema de autenticación de MexCity RP.
+
+                </div>
+
+
             </form>
-
-
-            <div style="margin-top: 25px; border-top: 1px solid rgba(218,166,43,.28); padding-top: 20px;">
-                <p style="font-size: 14px; margin-bottom: 10px; color: var(--dorado-brillo);">¿Olvidaste tu contraseña?</p>
-                
-                <form class="auth-form" id="recoveryForm" style="margin-top: 10px;">
-                    <div class="form-group">
-                        <input
-                            type="email"
-                            id="recoveryEmail"
-                            placeholder="Ingresa tu correo registrado"
-                            required
-                        >
-                    </div>
-
-                    <button
-                        type="submit"
-                        class="auth-submit"
-                        id="recoveryButton"
-                    >
-                        RECUPERAR CONTRASEÑA
-                    </button>
-
-                    <div
-                        class="form-message"
-                        id="recoveryMessage"
-                    ></div>
-                </form>
-            </div>
 
         `
     }
@@ -2667,7 +2644,7 @@ const closeModal =
 
 
 /* =========================================================
-   ABRIR MODAL (CORREGIDO CON TIMEOUT PARA EL DOM)
+   ABRIR MODAL
 ========================================================= */
 
 function openModal(section) {
@@ -2692,20 +2669,22 @@ function openModal(section) {
         "hidden";
 
 
-    setTimeout(() => {
-        if(section === "registro") {
-            setupRegister();
-        }
+    /*
+       Después de insertar el HTML,
+       conectamos los formularios.
+    */
 
-        if(section === "login") {
-            setupLogin();
-            setupRecovery();
-        }
+    if(section === "registro") {
 
-        if(section === "staff") {
-            setupStaff();
-        }
-    }, 50);
+        setupRegister();
+
+    }
+
+    if(section === "login") {
+
+        setupLogin();
+
+    }
 
 }
 
@@ -2827,7 +2806,7 @@ document.addEventListener(
 
 
 /* =========================================================
-   REGISTRO CON SUPABASE AUTH (ENVÍO DE CORREO AUTOMÁTICO)
+   REGISTRO
 ========================================================= */
 
 function setupRegister() {
@@ -2884,6 +2863,10 @@ function setupRegister() {
                 );
 
 
+            /*
+               Validación de correo
+            */
+
             const emailPattern =
                 /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -2901,6 +2884,10 @@ function setupRegister() {
             }
 
 
+            /*
+               Validación contraseña
+            */
+
             if(password.length < 8) {
 
                 showMessage(
@@ -2913,6 +2900,10 @@ function setupRegister() {
 
             }
 
+
+            /*
+               Confirmación
+            */
 
             if(password !== confirmPassword) {
 
@@ -2927,30 +2918,68 @@ function setupRegister() {
             }
 
 
+            /*
+               Evitar doble envío
+            */
+
             button.disabled = true;
 
             button.textContent =
-                "REGISTRANDO...";
+                "ENVIANDO...";
 
 
             try {
 
-                const { data, error } = await supabaseClient.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: {
-                        emailRedirectTo: window.location.href
-                    }
-                });
 
-                if (error) throw error;
+                /*
+                   =================================================
+                   EMAILJS
+                   =================================================
+
+                   El correo se envía a la dirección
+                   introducida por el jugador.
+
+                   La plantilla debe tener:
+
+                   To Email:
+                   {{user_email}}
+
+                   Y puede utilizar:
+
+                   {{user_email}}
+                   {{user_name}}
+                   {{confirmation_message}}
+
+                */
+
+
+                await emailjs.send(
+
+                    EMAILJS_SERVICE_ID,
+
+                    EMAILJS_TEMPLATE_ID,
+
+                    {
+
+                        user_email:
+                            email,
+
+                        user_name:
+                            email.split("@")[0],
+
+                        confirmation_message:
+                            "Tu registro en MexCity RP ha sido recibido correctamente."
+
+                    }
+
+                );
 
 
                 showMessage(
 
                     message,
 
-                    "¡Cuenta creada con éxito! Revisa tu correo electrónico para confirmar tu cuenta.",
+                    "Registro recibido. Revisa tu correo electrónico para confirmar tu cuenta.",
 
                     "success"
 
@@ -2961,24 +2990,30 @@ function setupRegister() {
 
 
                 button.textContent =
-                    "REGISTRO EXITOSO";
+                    "CORREO ENVIADO";
 
 
             }
 
             catch(error) {
 
-                console.error("Supabase Error:", error);
+
+                console.error(
+                    "EmailJS:",
+                    error
+                );
+
 
                 showMessage(
 
                     message,
 
-                    error.message || "No fue posible registrar la cuenta.",
+                    "No fue posible enviar el correo. Revisa la configuración de EmailJS.",
 
                     "error"
 
                 );
+
 
                 button.disabled = false;
 
@@ -2995,7 +3030,7 @@ function setupRegister() {
 
 
 /* =========================================================
-   LOGIN CON SUPABASE AUTH
+   LOGIN
 ========================================================= */
 
 function setupLogin() {
@@ -3032,12 +3067,6 @@ function setupLogin() {
                 .value;
 
 
-            const button =
-                document.getElementById(
-                    "loginButton"
-                );
-
-
             const message =
                 document.getElementById(
                     "loginMessage"
@@ -3047,195 +3076,6 @@ function setupLogin() {
             if(!email || !password) {
 
                 showMessage(
-                    message,
-                    "Completa todos los campos.",
-                    "error"
-                );
-
-                return;
-
-            }
-
-
-            button.disabled = true;
-            button.textContent = "INICIANDO SESIÓN...";
-
-
-            try {
-
-                const { data, error } = await supabaseClient.auth.signInWithPassword({
-                    email: email,
-                    password: password,
-                });
-
-                if (error) throw error;
-
-                showMessage(
-                    message,
-                    "¡Inicio de sesión exitoso! Bienvenido a MexCity RP.",
-                    "success"
-                );
-
-                setTimeout(() => {
-                    closeCurrentModal();
-                }, 1500);
-
-            } catch (error) {
-
-                console.error("Login Error:", error);
-
-                showMessage(
-                    message,
-                    error.message || "Credenciales incorrectas o correo sin confirmar.",
-                    "error"
-                );
-
-                button.disabled = false;
-                button.textContent = "INICIAR SESIÓN";
-
-            }
-
-        }
-    );
-
-}
-
-
-
-/* =========================================================
-   RECUPERACIÓN DE CONTRASEÑA CON SUPABASE
-========================================================= */
-
-function setupRecovery() {
-
-    const form =
-        document.getElementById(
-            "recoveryForm"
-        );
-
-    if(!form) return;
-
-
-    form.addEventListener(
-        "submit",
-        async event => {
-
-            event.preventDefault();
-
-            const email =
-                document
-                .getElementById(
-                    "recoveryEmail"
-                )
-                .value
-                .trim();
-
-            const button =
-                document.getElementById(
-                    "recoveryButton"
-                );
-
-            const message =
-                document.getElementById(
-                    "recoveryMessage"
-                );
-
-            if(!email) {
-                showMessage(message, "Introduce tu correo electrónico.", "error");
-                return;
-            }
-
-            button.disabled = true;
-            button.textContent = "ENVIANDO...";
-
-            try {
-
-                const { data, error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-                    redirectTo: window.location.href,
-                });
-
-                if (error) throw error;
-
-                showMessage(
-                    message,
-                    "Correo de recuperación enviado. Revisa tu bandeja de entrada.",
-                    "success"
-                );
-
-                form.reset();
-                button.disabled = false;
-                button.textContent = "RECUPERAR CONTRASEÑA";
-
-            } catch (error) {
-
-                console.error("Recovery Error:", error);
-
-                showMessage(
-                    message,
-                    error.message || "No se pudo enviar el correo de recuperación.",
-                    "error"
-                );
-
-                button.disabled = false;
-                button.textContent = "RECUPERAR CONTRASEÑA";
-
-            }
-
-        }
-    );
-
-}
-
-
-
-/* =========================================================
-   STAFF LOGIN
-========================================================= */
-
-function setupStaff() {
-
-    const form =
-        document.getElementById(
-            "staffForm"
-        );
-
-    if(!form) return;
-
-
-    form.addEventListener(
-        "submit",
-        async event => {
-
-            event.preventDefault();
-
-
-            const name =
-                document
-                .getElementById(
-                    "staffName"
-                )
-                .value
-                .trim();
-
-
-            const code =
-                document
-                .getElementById(
-                    "staffCode"
-                )
-                .value
-                .trim();
-
-
-            const message =
-                document.getElementById(
-                    "staffMessage"
-                );
-
-
-            if(!name || !code) {
-
-                showMessage(
 
                     message,
 
@@ -3248,12 +3088,26 @@ function setupStaff() {
                 return;
 
             }
+
+
+            /*
+               IMPORTANTE:
+
+               Aquí irá Supabase Auth.
+
+               No utilizamos localStorage para guardar
+               contraseñas y tampoco enviamos contraseñas
+               mediante EmailJS.
+
+               El login seguro requiere un proveedor
+               de autenticación.
+            */
 
             showMessage(
 
                 message,
 
-                "El sistema de acceso para Staff debe conectarse a la base de datos para verificar el código.",
+                "El sistema de autenticación de la cuenta debe conectarse a Supabase antes de activar el inicio de sesión.",
 
                 "error"
 
