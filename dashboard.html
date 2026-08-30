@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Privado - Mex City RP</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #020202; font-family: 'Inter', sans-serif; color: #fff; display: flex; height: 100vh; overflow: hidden; }
+    .dash-sidebar { width: 280px; background: rgba(8,8,8,0.95); border-right: 1px solid rgba(218,166,43,0.3); display: flex; flex-direction: column; padding: 20px; }
+    .dash-sidebar h3 { color: #d9a52b; font-size: 18px; text-align: center; margin-bottom: 5px; letter-spacing: 2px; }
+    .dash-user-badge { font-size: 11px; text-align: center; color: #00c832; margin-bottom: 25px; font-family: monospace; }
+    .dash-menu { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; flex-grow: 1; }
+    .dash-menu a { padding: 12px 15px; color: #ccc; text-decoration: none; font-size: 13px; font-weight: 600; text-transform: uppercase; border-radius: 6px; transition: all 0.2s ease; background: rgba(255,255,255,0.02); border: 1px solid transparent; }
+    .dash-menu a:hover, .dash-menu a.active { background: rgba(218,166,43,0.1); color: #ffd45a; border-color: rgba(218,166,43,0.3); }
+    .dash-menu a.logout { color: #ff2929; margin-top: auto; border-color: rgba(220,0,0,0.2); }
+    
+    .dash-main { flex-grow: 1; padding: 40px; overflow-y: auto; background: radial-gradient(circle at top right, rgba(0,200,50,0.05), transparent 40%), #030303; }
+    .dash-section { display: none; max-width: 900px; margin: 0 auto; }
+    .dash-section.active { display: block; }
+    .dash-section h2 { font-size: 26px; font-weight: 800; margin-bottom: 25px; color: #fff; border-bottom: 2px solid rgba(218,166,43,0.3); padding-bottom: 10px; }
+    
+    .glass-box { background: rgba(15,15,15,0.75); border: 1px solid rgba(218,166,43,0.25); border-radius: 12px; padding: 25px; backdrop-filter: blur(10px); margin-bottom: 20px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .form-group-rp { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
+    .form-group-rp.full { grid-column: span 2; }
+    .form-group-rp label { font-size: 12px; font-weight: 700; color: #aaa; text-transform: uppercase; }
+    .form-group-rp input, .form-group-rp select { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 12px; color: #fff; font-size: 14px; outline: none; }
+    .form-group-rp input:focus, .form-group-rp select:focus { border-color: #d9a52b; }
+    
+    .btn-rp-gold { background: linear-gradient(180deg, #332707, #100d03); border: 1px solid #d9a52b; color: #ffd45a; padding: 14px; font-weight: 800; border-radius: 6px; cursor: pointer; text-transform: uppercase; width: 100%; transition: 0.2s; }
+    .btn-rp-gold:hover { background: #4a3809; box-shadow: 0 0 20px rgba(218,166,43,0.3); }
+    .highlight-gold { color: #ffd45a; font-family: monospace; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <!-- MENÚ LATERAL -->
+  <aside class="dash-sidebar">
+    <h3>MEX CITY RP</h3>
+    <span class="dash-user-badge" id="rp-badge-id">ID: Verificando...</span>
+    <nav class="dash-menu">
+      <a href="#" onclick="switchTab('tab-inicio', event)" class="active">Inicio</a>
+      <a href="#" onclick="switchTab('tab-jugador', event)">Registro de jugador</a>
+      <a href="#" onclick="switchTab('tab-hogar', event)">Hogar</a>
+      <a href="#" onclick="switchTab('tab-transporte', event)">Transporte</a>
+      <a href="#" onclick="switchTab('tab-finanzas', event)">Finanzas RP</a>
+      <a href="#" onclick="switchTab('tab-visual', event)">Archivo Visual</a>
+      <a href="#" onclick="cerrarSesionRP()" class="logout">Cerrar sesión</a>
+    </nav>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="dash-main">
+    
+    <!-- INICIO -->
+    <section id="tab-inicio" class="dash-section active">
+      <h2>Panel General del Jugador</h2>
+      <div class="glass-box">
+        <h3>ID OFICIAL MEX CITY RP</h3>
+        <p class="highlight-gold" id="txt-id-oficial" style="font-size: 22px; margin-top: 5px;">Generando...</p>
+      </div>
+      <div class="glass-box">
+        <h3>ESTADO DE CUENTA BANCOMCRP26</h3>
+        <p id="txt-banco-resumen" style="margin-top: 8px; color: #ccc;">Cargando información bancaria segura...</p>
+      </div>
+    </section>
+
+    <!-- REGISTRO DE JUGADOR -->
+    <section id="tab-jugador" class="dash-section">
+      <h2>Registro de Jugador</h2>
+      <form id="form-reg-jugador" class="glass-box">
+        <div class="form-grid">
+          <div class="form-group-rp"><label>Nombre</label><input type="text" id="p-nombre" required></div>
+          <div class="form-group-rp"><label>Apellido</label><input type="text" id="p-apellido" required></div>
+          <div class="form-group-rp"><label>Tipo de Edad</label><select id="p-edad-tipo"><option value="Años">Años</option><option value="Meses">Meses</option><option value="Días">Días de nacido</option></select></div>
+          <div class="form-group-rp"><label>Valor de Edad</label><input type="number" id="p-edad-valor" min="1" required></div>
+          <div class="form-group-rp"><label>Ciudad de Nacimiento</label><select id="p-ciudad"><option value="Ciudad de México">Ciudad de México</option><option value="Guadalajara">Guadalajara</option><option value="Monterrey">Monterrey</option><option value="Puebla">Puebla</option></select></div>
+          <div class="form-group-rp"><label>Sexo / Género</label><select id="p-sexo"><option value="Masculino">Masculino</option><option value="Femenino">Femenino</option><option value="No Binario">No Binario</option></select></div>
+          <div class="form-group-rp full"><label>Ocupación</label><select id="p-ocupacion"><option value="Empresario">Empresario</option><option value="Abogado">Abogado</option><option value="Médico">Médico</option><option value="Ingeniero">Ingeniero</option><option value="Policía">Policía</option><option value="Chef">Chef</option><option value="Mecánico">Mecánico</option></select></div>
+        </div>
+        <button type="submit" class="btn-rp-gold" style="margin-top: 15px;">Guardar Registro Oficial</button>
+      </form>
+    </section>
+
+    <!-- HOGAR -->
+    <section id="tab-hogar" class="dash-section">
+      <h2>Registro de Hogar</h2>
+      <form id="form-reg-hogar" class="glass-box">
+        <div class="form-group-rp"><label>Tipo de Propiedad</label><select id="h-tipo" onchange="calcularValorHogar()"><option value="Casa">Casa ($1,500,000 MXN)</option><option value="Departamento">Departamento ($2,500,000 MXN)</option><option value="Mansión">Mansión ($25,000,000 MXN)</option></select></div>
+        <div class="form-group-rp"><label>Ciudad de Ubicación</label><select id="h-ciudad"><option value="Ciudad de México">Ciudad de México</option><option value="Guadalajara">Guadalajara</option><option value="Monterrey">Monterrey</option></select></div>
+        <div style="margin: 15px 0; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px;">
+          <p>Valor Inmobiliario: <strong id="h-val-mxn" class="highlight-gold">$1,500,000 MXN</strong></p>
+          <p>Valor Monetario RP: <strong id="h-val-rp" class="highlight-gold">$1,500,000 $RP</strong></p>
+          <p>Domicilio Automático: <strong id="h-domicilio-gen" class="highlight-gold">Calculando...</strong></p>
+        </div>
+        <button type="submit" class="btn-rp-gold">Registrar Propiedad</button>
+      </form>
+    </section>
+
+    <!-- TRANSPORTE -->
+    <section id="tab-transporte" class="dash-section">
+      <h2>Registro de Transporte</h2>
+      <form id="form-reg-transporte" class="glass-box">
+        <div class="form-group-rp"><label>Tipo de Vehículo</label><select id="v-tipo"><option value="Automóvil">Automóvil</option><option value="Deportivo">Deportivo</option><option value="SUV">SUV</option></select></div>
+        <div class="form-group-rp"><label>Modelo Real (Ej. BMW M4)</label><input type="text" id="v-modelo" required></div>
+        <div class="form-grid"><div class="form-group-rp"><label>Año</label><input type="number" id="v-anio" value="2026" required></div><div class="form-group-rp"><label>Color</label><input type="text" id="v-color" required></div></div>
+        <div style="margin: 15px 0; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px;">
+          <p>Placas Automáticas (Únicas): <strong id="v-placas-gen" class="highlight-gold">MXR-826</strong></p>
+        </div>
+        <button type="submit" class="btn-rp-gold">Registrar Vehículo</button>
+      </form>
+    </section>
+
+    <!-- FINANZAS RP -->
+    <section id="tab-finanzas" class="dash-section">
+      <h2>Finanzas BancomCRP26</h2>
+      <div class="glass-box">
+        <p>Número de Cuenta: <span id="b-num" class="highlight-gold">---</span></p>
+        <p style="margin-top: 10px;">CLABE Bancaria RP: <span id="b-clabe" class="highlight-gold">---</span></p>
+        <p style="margin-top: 10px;">Identificador: <span id="b-id" class="highlight-gold">---</span></p>
+        <p style="margin-top: 10px;">Saldo Disponible: <strong style="color: #00c832;" id="b-saldo">$50,000 $RP</strong></p>
+      </div>
+    </section>
+
+    <!-- ARCHIVO VISUAL -->
+    <section id="tab-visual" class="dash-section">
+      <h2>Archivo Visual</h2>
+      <p style="font-size: 13px; color: #aaa; margin-bottom: 15px;">Utiliza imágenes editadas con IA y elimina cualquier logotipo o marca visible de Avakin.</p>
+      <form id="form-reg-visual" class="glass-box">
+        <div class="form-group-rp"><label>Tipo de Recurso</label><select id="vis-tipo"><option value="Avatar">Avatar del Jugador</option><option value="Hogar">Imagen del Hogar</option><option value="Transporte">Imagen del Transporte</option></select></div>
+        <div class="form-group-rp"><label>URL de Imagen</label><input type="url" id="vis-url" placeholder="https://..." required></div>
+        <button type="submit" class="btn-rp-gold">Guardar Archivo Visual</button>
+      </form>
+    </section>
+
+  </main>
+
+  <script>
+    // CREDENCIALES OFICIALES DE SUPABASE
+    const SUPABASE_URL = "https://ogiupysmhnzvizesqcxr.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_QZ1vQjZQ-7vbkBJLmouMzQ_PUmI8U2c";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Validar sesión activa al cargar la página
+    window.addEventListener('DOMContentLoaded', async () => {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session) {
+        window.location.href = "index.html"; // Si no ha iniciado sesión, lo regresa al login
+        return;
+      }
+      inicializarDashboardPrivado(session.user);
+    });
+
+    function switchTab(tabId, e) {
+      if (e) e.preventDefault();
+      document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.dash-menu a').forEach(a => a.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      if (e && e.target) e.target.classList.add('active');
+    }
+
+    function calcularValorHogar() {
+      const tipo = document.getElementById('h-tipo').value;
+      let val = 1500000;
+      if (tipo === 'Departamento') val = 2500000;
+      if (tipo === 'Mansión') val = 25000000;
+      document.getElementById('h-val-mxn').innerText = `$${val.toLocaleString()} MXN`;
+      document.getElementById('h-val-rp').innerText = `$${val.toLocaleString()} $RP`;
+      document.getElementById('h-domicilio-gen').innerText = `Av. MexCity ${Math.floor(Math.random()*900)}, ${document.getElementById('h-ciudad').value}`;
+    }
+
+    async function inicializarDashboardPrivado(user) {
+      let { data: player } = await supabaseClient.from('players').select('*').eq('id', user.id).single();
+      let idOficial = "";
+      
+      if (!player) {
+        idOficial = "MXRP-26-CMX-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+        let numCuenta = "BAN" + Math.floor(1000000000 + Math.random() * 9000000000);
+        let clabe = "026" + Math.floor(1000000000000000 + Math.random() * 9000000000000000);
+        let idBanco = "BCRP-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+
+        await supabaseClient.from('bank_accounts').insert({
+          user_id: user.id,
+          numero_cuenta: numCuenta,
+          cb_clave: clabe,
+          identificador_bancario: idBanco
+        });
+      } else {
+        idOficial = player.id_oficial;
+      }
+
+      document.getElementById('txt-id-oficial').innerText = idOficial;
+      document.getElementById('rp-badge-id').innerText = `ID: ${idOficial}`;
+
+      let { data: bank } = await supabaseClient.from('bank_accounts').select('*').eq('user_id', user.id).single();
+      if (bank) {
+        document.getElementById('b-num').innerText = bank.numero_cuenta;
+        document.getElementById('b-clabe').innerText = bank.cb_clave;
+        document.getElementById('b-id').innerText = bank.identificador_bancario;
+        document.getElementById('txt-banco-resumen').innerText = `Cuenta: ${bank.numero_cuenta} | Saldo: $${bank.saldo_rp} $RP`;
+      }
+      
+      calcularValorHogar();
+      document.getElementById('v-placas-gen').innerText = `MXR-${Math.floor(100 + Math.random()*900)}`;
+    }
+
+    async function cerrarSesionRP() {
+      await supabaseClient.auth.signOut();
+      window.location.href = "index.html";
+    }
+
+    // Guardar registro de jugador con seguridad RLS
+    document.getElementById('form-reg-jugador')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = (await supabaseClient.auth.getUser()).data.user;
+      if (!user) return;
+
+      const { error } = await supabaseClient.from('players').upsert({
+        id: user.id,
+        nombre: document.getElementById('p-nombre').value,
+        apellido: document.getElementById('p-apellido').value,
+        edad_tipo: document.getElementById('p-edad-tipo').value,
+        edad_valor: parseInt(document.getElementById('p-edad-valor').value),
+        ciudad_nacimiento: document.getElementById('p-ciudad').value,
+        sexo: document.getElementById('p-sexo').value,
+        ocupacion: document.getElementById('p-ocupacion').value,
+        id_oficial: document.getElementById('txt-id-oficial').innerText
+      });
+
+      if (error) alert("Error al registrar: " + error.message);
+      else alert("¡Registro guardado y protegido con éxito en Supabase!");
+    });
+  </script>
+</body>
+</html>
