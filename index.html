@@ -27,10 +27,8 @@ href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;90
 rel="stylesheet"
 >
 
-<!-- EMAILJS -->
-<script
-src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
-</script>
+<!-- SUPABASE JS CLIENT -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 <style>
@@ -1406,11 +1404,6 @@ footer strong {
         font-size:7px;
     }
 
-    /*
-       En móvil mantenemos los botones
-       esenciales accesibles.
-    */
-
     .nav-button:nth-child(6),
     .nav-button:nth-child(7) {
 
@@ -1709,9 +1702,7 @@ footer strong {
     </button>
 
 
-    <!-- =====================================================
-         NUEVO: REGISTRARSE
-    ====================================================== -->
+    <!-- REGISTRARSE -->
 
     <button
         class="nav-button register"
@@ -1729,9 +1720,7 @@ footer strong {
     </button>
 
 
-    <!-- =====================================================
-         NUEVO: INICIAR SESIÓN
-    ====================================================== -->
+    <!-- INICIAR SESIÓN -->
 
     <button
         class="nav-button login"
@@ -2013,47 +2002,13 @@ footer strong {
 <script>
 
 /* =========================================================
-   EMAILJS
+   CONFIGURACIÓN DE SUPABASE (REEMPLAZA CON TUS DATOS)
 ========================================================= */
 
-/*
-   TU SERVICE ID
-*/
+const SUPABASE_URL = "TU_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "TU_SUPABASE_ANON_KEY";
 
-const EMAILJS_SERVICE_ID =
-    "service_3pfk0gq";
-
-
-/*
-   IMPORTANTE:
-
-   Aquí necesitas colocar el ID REAL
-   de tu plantilla de EmailJS.
-
-   Ejemplo:
-   template_xxxxxxx
-*/
-
-const EMAILJS_TEMPLATE_ID =
-    "REEMPLAZA_AQUI_TU_TEMPLATE_ID";
-
-
-/*
-   TU PUBLIC KEY
-*/
-
-const EMAILJS_PUBLIC_KEY =
-    "zB_VYBsKxGCESl2F0";
-
-
-/* Inicializar EmailJS */
-
-emailjs.init({
-
-    publicKey:
-        EMAILJS_PUBLIC_KEY
-
-});
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 
 
@@ -2467,7 +2422,7 @@ const modalData = {
 
 
     /* =====================================================
-       REGISTRO
+       REGISTRO (CON SUPABASE AUTH)
     ====================================================== */
 
     "registro": {
@@ -2499,7 +2454,6 @@ const modalData = {
                     <input
                         type="email"
                         id="registerEmail"
-                        name="user_email"
                         placeholder="tucorreo@ejemplo.com"
                         autocomplete="email"
                         required
@@ -2517,7 +2471,6 @@ const modalData = {
                     <input
                         type="password"
                         id="registerPassword"
-                        name="user_password"
                         placeholder="Mínimo 8 caracteres"
                         minlength="8"
                         autocomplete="new-password"
@@ -2569,7 +2522,7 @@ const modalData = {
                     <br>
 
                     Después de registrarte recibirás
-                    un correo de confirmación.
+                    un correo de confirmación de Supabase.
 
                 </div>
 
@@ -2581,7 +2534,7 @@ const modalData = {
 
 
     /* =====================================================
-       LOGIN
+       LOGIN Y RECUPERACIÓN (CON SUPABASE AUTH)
     ====================================================== */
 
     "login": {
@@ -2641,6 +2594,7 @@ const modalData = {
                 <button
                     type="submit"
                     class="auth-submit"
+                    id="loginButton"
                 >
 
                     INICIAR SESIÓN
@@ -2653,16 +2607,36 @@ const modalData = {
                     id="loginMessage"
                 ></div>
 
-
-                <div class="auth-note">
-
-                    El inicio de sesión se conectará
-                    al sistema de autenticación de MexCity RP.
-
-                </div>
-
-
             </form>
+
+
+            <div style="margin-top: 25px; border-top: 1px solid rgba(218,166,43,.28); padding-top: 20px;">
+                <p style="font-size: 14px; margin-bottom: 10px; color: var(--dorado-brillo);">¿Olvidaste tu contraseña?</p>
+                
+                <form class="auth-form" id="recoveryForm" style="margin-top: 10px;">
+                    <div class="form-group">
+                        <input
+                            type="email"
+                            id="recoveryEmail"
+                            placeholder="Ingresa tu correo registrado"
+                            required
+                        >
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="auth-submit"
+                        id="recoveryButton"
+                    >
+                        RECUPERAR CONTRASEÑA
+                    </button>
+
+                    <div
+                        class="form-message"
+                        id="recoveryMessage"
+                    ></div>
+                </form>
+            </div>
 
         `
     }
@@ -2718,11 +2692,6 @@ function openModal(section) {
         "hidden";
 
 
-    /*
-       Después de insertar el HTML,
-       conectamos los formularios.
-    */
-
     if(section === "registro") {
 
         setupRegister();
@@ -2732,6 +2701,7 @@ function openModal(section) {
     if(section === "login") {
 
         setupLogin();
+        setupRecovery();
 
     }
 
@@ -2861,7 +2831,7 @@ document.addEventListener(
 
 
 /* =========================================================
-   REGISTRO
+   REGISTRO CON SUPABASE AUTH (ENVÍO DE CORREO AUTOMÁTICO)
 ========================================================= */
 
 function setupRegister() {
@@ -2918,10 +2888,6 @@ function setupRegister() {
                 );
 
 
-            /*
-               Validación de correo
-            */
-
             const emailPattern =
                 /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -2939,10 +2905,6 @@ function setupRegister() {
             }
 
 
-            /*
-               Validación contraseña
-            */
-
             if(password.length < 8) {
 
                 showMessage(
@@ -2955,10 +2917,6 @@ function setupRegister() {
 
             }
 
-
-            /*
-               Confirmación
-            */
 
             if(password !== confirmPassword) {
 
@@ -2973,68 +2931,31 @@ function setupRegister() {
             }
 
 
-            /*
-               Evitar doble envío
-            */
-
             button.disabled = true;
 
             button.textContent =
-                "ENVIANDO...";
+                "REGISTRANDO...";
 
 
             try {
 
-
-                /*
-                   =================================================
-                   EMAILJS
-                   =================================================
-
-                   El correo se envía a la dirección
-                   introducida por el jugador.
-
-                   La plantilla debe tener:
-
-                   To Email:
-                   {{user_email}}
-
-                   Y puede utilizar:
-
-                   {{user_email}}
-                   {{user_name}}
-                   {{confirmation_message}}
-
-                */
-
-
-                await emailjs.send(
-
-                    EMAILJS_SERVICE_ID,
-
-                    EMAILJS_TEMPLATE_ID,
-
-                    {
-
-                        user_email:
-                            email,
-
-                        user_name:
-                            email.split("@")[0],
-
-                        confirmation_message:
-                            "Tu registro en MexCity RP ha sido recibido correctamente."
-
+                // Llamada a Supabase para registrar y enviar correo de confirmación nativo
+                const { data, error } = await supabaseClient.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        emailRedirectTo: window.location.href
                     }
+                });
 
-                );
+                if (error) throw error;
 
 
                 showMessage(
 
                     message,
 
-                    "Registro recibido. Revisa tu correo electrónico para confirmar tu cuenta.",
+                    "¡Cuenta creada con éxito! Revisa tu correo electrónico para confirmar tu cuenta.",
 
                     "success"
 
@@ -3045,30 +2966,24 @@ function setupRegister() {
 
 
                 button.textContent =
-                    "CORREO ENVIADO";
+                    "REGISTRO EXITOSO";
 
 
             }
 
             catch(error) {
 
-
-                console.error(
-                    "EmailJS:",
-                    error
-                );
-
+                console.error("Supabase Error:", error);
 
                 showMessage(
 
                     message,
 
-                    "No fue posible enviar el correo. Revisa la configuración de EmailJS.",
+                    error.message || "No fue posible registrar la cuenta.",
 
                     "error"
 
                 );
-
 
                 button.disabled = false;
 
@@ -3085,7 +3000,7 @@ function setupRegister() {
 
 
 /* =========================================================
-   LOGIN
+   LOGIN CON SUPABASE AUTH
 ========================================================= */
 
 function setupLogin() {
@@ -3122,6 +3037,12 @@ function setupLogin() {
                 .value;
 
 
+            const button =
+                document.getElementById(
+                    "loginButton"
+                );
+
+
             const message =
                 document.getElementById(
                     "loginMessage"
@@ -3131,13 +3052,9 @@ function setupLogin() {
             if(!email || !password) {
 
                 showMessage(
-
                     message,
-
                     "Completa todos los campos.",
-
                     "error"
-
                 );
 
                 return;
@@ -3145,28 +3062,129 @@ function setupLogin() {
             }
 
 
-            /*
-               IMPORTANTE:
+            button.disabled = true;
+            button.textContent = "INICIANDO SESIÓN...";
 
-               Aquí irá Supabase Auth.
 
-               No utilizamos localStorage para guardar
-               contraseñas y tampoco enviamos contraseñas
-               mediante EmailJS.
+            try {
 
-               El login seguro requiere un proveedor
-               de autenticación.
-            */
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
 
-            showMessage(
+                if (error) throw error;
 
-                message,
+                showMessage(
+                    message,
+                    "¡Inicio de sesión exitoso! Bienvenido a MexCity RP.",
+                    "success"
+                );
 
-                "El sistema de autenticación de la cuenta debe conectarse a Supabase antes de activar el inicio de sesión.",
+                setTimeout(() => {
+                    closeCurrentModal();
+                }, 1500);
 
-                "error"
+            } catch (error) {
 
-            );
+                console.error("Login Error:", error);
+
+                showMessage(
+                    message,
+                    error.message || "Credenciales incorrectas o correo sin confirmar.",
+                    "error"
+                );
+
+                button.disabled = false;
+                button.textContent = "INICIAR SESIÓN";
+
+            }
+
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   RECUPERACIÓN DE CONTRASEÑA CON SUPABASE
+========================================================= */
+
+function setupRecovery() {
+
+    const form =
+        document.getElementById(
+            "recoveryForm"
+        );
+
+    if(!form) return;
+
+
+    form.addEventListener(
+        "submit",
+        async event => {
+
+            event.preventDefault();
+
+            const email =
+                document
+                .getElementById(
+                    "recoveryEmail"
+                )
+                .value
+                .trim();
+
+            const button =
+                document.getElementById(
+                    "recoveryButton"
+                );
+
+            const message =
+                document.getElementById(
+                    "recoveryMessage"
+                );
+
+            if(!email) {
+                showMessage(message, "Introduce tu correo electrónico.", "error");
+                return;
+            }
+
+            button.disabled = true;
+            button.textContent = "ENVIANDO...";
+
+            try {
+
+                const { data, error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.href,
+                });
+
+                if (error) throw error;
+
+                showMessage(
+                    message,
+                    "Correo de recuperación enviado. Revisa tu bandeja de entrada.",
+                    "success"
+                );
+
+                form.reset();
+                button.disabled = false;
+                button.textContent = "RECUPERAR CONTRASEÑA";
+
+            } catch (error) {
+
+                console.error("Recovery Error:", error);
+
+                showMessage(
+                    message,
+                    error.message || "No se pudo enviar el correo de recuperación.",
+                    "error"
+                );
+
+                button.disabled = false;
+                button.textContent = "RECUPERAR CONTRASEÑA";
+
+            }
 
         }
     );
@@ -3235,14 +3253,6 @@ function setupStaff() {
                 return;
 
             }
-
-
-            /*
-               IMPORTANTE:
-               Aquí irá la validación y conexión a Supabase
-               para verificar que el código y el nombre
-               correspondan al administrador.
-            */
 
             showMessage(
 
