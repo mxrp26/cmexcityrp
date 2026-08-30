@@ -1,237 +1,3292 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Privado - Mex City RP</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #020202; font-family: 'Inter', sans-serif; color: #fff; display: flex; height: 100vh; overflow: hidden; }
-    .dash-sidebar { width: 280px; background: rgba(8,8,8,0.95); border-right: 1px solid rgba(218,166,43,0.3); display: flex; flex-direction: column; padding: 20px; }
-    .dash-sidebar h3 { color: #d9a52b; font-size: 18px; text-align: center; margin-bottom: 5px; letter-spacing: 2px; }
-    .dash-user-badge { font-size: 11px; text-align: center; color: #00c832; margin-bottom: 25px; font-family: monospace; }
-    .dash-menu { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; flex-grow: 1; }
-    .dash-menu a { padding: 12px 15px; color: #ccc; text-decoration: none; font-size: 13px; font-weight: 600; text-transform: uppercase; border-radius: 6px; transition: all 0.2s ease; background: rgba(255,255,255,0.02); border: 1px solid transparent; }
-    .dash-menu a:hover, .dash-menu a.active { background: rgba(218,166,43,0.1); color: #ffd45a; border-color: rgba(218,166,43,0.3); }
-    .dash-menu a.logout { color: #ff2929; margin-top: auto; border-color: rgba(220,0,0,0.2); }
-    
-    .dash-main { flex-grow: 1; padding: 40px; overflow-y: auto; background: radial-gradient(circle at top right, rgba(0,200,50,0.05), transparent 40%), #030303; }
-    .dash-section { display: none; max-width: 900px; margin: 0 auto; }
-    .dash-section.active { display: block; }
-    .dash-section h2 { font-size: 26px; font-weight: 800; margin-bottom: 25px; color: #fff; border-bottom: 2px solid rgba(218,166,43,0.3); padding-bottom: 10px; }
-    
-    .glass-box { background: rgba(15,15,15,0.75); border: 1px solid rgba(218,166,43,0.25); border-radius: 12px; padding: 25px; backdrop-filter: blur(10px); margin-bottom: 20px; }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    .form-group-rp { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
-    .form-group-rp.full { grid-column: span 2; }
-    .form-group-rp label { font-size: 12px; font-weight: 700; color: #aaa; text-transform: uppercase; }
-    .form-group-rp input, .form-group-rp select { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 12px; color: #fff; font-size: 14px; outline: none; }
-    .form-group-rp input:focus, .form-group-rp select:focus { border-color: #d9a52b; }
-    
-    .btn-rp-gold { background: linear-gradient(180deg, #332707, #100d03); border: 1px solid #d9a52b; color: #ffd45a; padding: 14px; font-weight: 800; border-radius: 6px; cursor: pointer; text-transform: uppercase; width: 100%; transition: 0.2s; }
-    .btn-rp-gold:hover { background: #4a3809; box-shadow: 0 0 20px rgba(218,166,43,0.3); }
-    .highlight-gold { color: #ffd45a; font-family: monospace; font-weight: bold; }
-  </style>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>MexCity RP | La ciudad donde tu historia comienza</title>
+
+<meta
+name="description"
+content="MexCity RP - La ciudad donde tu historia comienza."
+>
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+rel="stylesheet"
+>
+
+<!-- SUPABASE JS CLIENT -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<style>
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+:root {
+
+    --negro:#030303;
+    --negro2:#080808;
+
+    --verde:#00c832;
+    --verde-brillo:#16ff45;
+
+    --rojo:#e50000;
+    --rojo-brillo:#ff2929;
+
+    --dorado:#d9a52b;
+    --dorado-brillo:#ffd45a;
+
+    --blanco:#ffffff;
+    --gris:#bcbcbc;
+
+    --glass:rgba(5,5,5,.78);
+
+    --transicion:all .28s ease;
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html {
+    scroll-behavior:smooth;
+}
+
+body {
+
+    min-height:100vh;
+
+    font-family:"Inter",Arial,sans-serif;
+
+    color:white;
+
+    background:
+
+        radial-gradient(
+            circle at top left,
+            rgba(0,180,45,.13),
+            transparent 35%
+        ),
+
+        radial-gradient(
+            circle at top right,
+            rgba(220,0,0,.13),
+            transparent 35%
+        ),
+
+        #020202;
+
+    overflow-x:hidden;
+}
+
+button,
+input {
+
+    font-family:inherit;
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.navbar {
+
+    position:fixed;
+
+    top:15px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:min(1500px,calc(100% - 30px));
+
+    min-height:120px;
+
+    display:grid;
+
+    grid-template-columns:
+        310px
+        repeat(9,1fr);
+
+    align-items:stretch;
+
+    z-index:1000;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(0,80,25,.16),
+            rgba(0,0,0,.93) 18%,
+            rgba(0,0,0,.96) 82%,
+            rgba(100,0,0,.18)
+        );
+
+    border:1px solid rgba(218,166,43,.7);
+
+    clip-path:polygon(
+        28px 0,
+        calc(100% - 28px) 0,
+        100% 50%,
+        calc(100% - 28px) 100%,
+        28px 100%,
+        0 50%
+    );
+
+    box-shadow:
+        0 10px 45px rgba(0,0,0,.65);
+
+    backdrop-filter:blur(15px);
+
+    -webkit-backdrop-filter:blur(15px);
+}
+
+
+.navbar::before {
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:5%;
+
+    width:90%;
+    height:2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--dorado),
+            transparent
+        );
+
+    box-shadow:
+        0 0 12px var(--dorado);
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo-area {
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    padding:12px 25px;
+
+    border-right:
+        1px solid rgba(255,255,255,.08);
+}
+
+.logo-area img {
+
+    width:100%;
+
+    max-width:250px;
+
+    max-height:100px;
+
+    object-fit:contain;
+
+    transition:var(--transicion);
+}
+
+.logo-area:hover img {
+
+    transform:scale(1.04);
+
+    filter:
+        drop-shadow(
+            0 0 16px
+            rgba(218,166,43,.25)
+        );
+}
+
+
+/* =========================================================
+   BOTONES NAVEGACIÓN
+========================================================= */
+
+.nav-button {
+
+    position:relative;
+
+    min-width:0;
+
+    border:none;
+
+    border-right:
+        1px solid rgba(255,255,255,.07);
+
+    background:transparent;
+
+    color:white;
+
+    cursor:pointer;
+
+    padding:12px 6px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    transition:var(--transicion);
+}
+
+.nav-button:hover {
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(218,166,43,.12),
+            rgba(218,166,43,.03)
+        );
+}
+
+.nav-button::after {
+
+    content:"";
+
+    position:absolute;
+
+    left:15%;
+    right:15%;
+
+    bottom:0;
+
+    height:2px;
+
+    transform:scaleX(0);
+
+    background:var(--dorado);
+
+    box-shadow:
+        0 0 10px var(--dorado);
+
+    transition:var(--transicion);
+}
+
+.nav-button:hover::after,
+.nav-button.active::after {
+
+    transform:scaleX(1);
+}
+
+.nav-icon {
+
+    width:40px;
+    height:40px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:26px;
+
+    color:var(--dorado);
+}
+
+.nav-text {
+
+    font-size:11px;
+
+    font-weight:700;
+
+    text-align:center;
+
+    line-height:1.25;
+
+    text-transform:uppercase;
+}
+
+
+/* COLORES */
+
+.nav-button:nth-child(3) .nav-icon {
+    color:white;
+}
+
+.nav-button:nth-child(4) .nav-icon {
+    color:var(--dorado);
+}
+
+.nav-button:nth-child(5) .nav-icon {
+    color:var(--verde);
+}
+
+.nav-button:nth-child(6) .nav-icon {
+    color:var(--rojo);
+}
+
+.nav-button:nth-child(7) .nav-icon {
+    color:var(--dorado);
+}
+
+.nav-button:nth-child(8) .nav-icon {
+    color:white;
+}
+
+.nav-button.register .nav-icon {
+    color:var(--verde);
+}
+
+.nav-button.login .nav-icon {
+    color:var(--dorado);
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+
+    position:relative;
+
+    min-height:100vh;
+
+    padding-top:150px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    overflow:hidden;
+}
+
+
+/* PORTADA ORIGINAL */
+
+.hero-background {
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:
+
+        linear-gradient(
+            90deg,
+            rgba(0,120,35,.28),
+            rgba(0,0,0,.03) 50%,
+            rgba(130,0,0,.30)
+        ),
+
+        url("portada.png");
+
+    background-size:cover;
+
+    background-position:center;
+
+    background-repeat:no-repeat;
+
+    z-index:0;
+}
+
+.hero-background::after {
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+
+        linear-gradient(
+            180deg,
+            rgba(0,0,0,.36),
+            rgba(0,0,0,.02) 40%,
+            rgba(0,0,0,.55)
+        );
+}
+
+
+/* =========================================================
+   CONTENIDO HERO
+========================================================= */
+
+.hero-content {
+
+    position:relative;
+
+    z-index:2;
+
+    width:min(900px,92%);
+
+    text-align:center;
+
+    margin-top:80px;
+}
+
+.welcome {
+
+    font-size:clamp(18px,2vw,28px);
+
+    font-weight:700;
+
+    letter-spacing:3px;
+
+    margin-bottom:12px;
+
+    text-shadow:
+        0 3px 12px black;
+}
+
+.hero-title {
+
+    font-size:clamp(55px,9vw,130px);
+
+    line-height:.95;
+
+    font-weight:900;
+
+    letter-spacing:-5px;
+
+    text-transform:uppercase;
+
+    text-shadow:
+        0 8px 30px rgba(0,0,0,.9);
+}
+
+.hero-title .mx {
+    color:var(--verde);
+}
+
+.hero-title .city {
+    color:white;
+}
+
+.hero-title .rp {
+    color:var(--rojo);
+}
+
+
+.hero-divider {
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:15px;
+
+    margin:20px auto;
+}
+
+.hero-divider span {
+
+    height:2px;
+
+    width:min(180px,20vw);
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--dorado)
+        );
+}
+
+.hero-divider span:last-child {
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--dorado),
+            transparent
+        );
+}
+
+.star {
+
+    color:var(--dorado);
+
+    font-size:23px;
+}
+
+
+.hero-subtitle {
+
+    font-size:clamp(17px,2vw,25px);
+
+    font-weight:500;
+
+    line-height:1.4;
+
+    margin-bottom:14px;
+}
+
+.hero-subtitle strong {
+
+    color:var(--dorado-brillo);
+}
+
+.hero-description {
+
+    max-width:680px;
+
+    margin:0 auto 30px;
+
+    color:#eee;
+
+    font-size:clamp(14px,1.5vw,18px);
+
+    line-height:1.7;
+}
+
+
+/* =========================================================
+   BOTON PRINCIPAL
+========================================================= */
+
+.join-button {
+
+    border:1px solid var(--dorado);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(55,42,10,.95),
+            rgba(15,12,4,.95)
+        );
+
+    color:var(--dorado-brillo);
+
+    padding:17px 40px;
+
+    min-width:300px;
+
+    border-radius:5px;
+
+    font-size:17px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    cursor:pointer;
+
+    transition:var(--transicion);
+}
+
+.join-button:hover {
+
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 0 35px rgba(218,166,43,.35);
+}
+
+
+/* =========================================================
+   CARACTERÍSTICAS
+========================================================= */
+
+.features {
+
+    position:absolute;
+
+    z-index:5;
+
+    bottom:0;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:min(1500px,100%);
+
+    display:grid;
+
+    grid-template-columns:repeat(5,1fr);
+
+    background:rgba(0,0,0,.82);
+
+    border-top:
+        1px solid rgba(218,166,43,.65);
+
+    backdrop-filter:blur(8px);
+}
+
+.feature {
+
+    min-height:120px;
+
+    padding:20px 18px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    border-right:
+        1px solid rgba(255,255,255,.07);
+}
+
+.feature-icon {
+
+    flex-shrink:0;
+
+    width:54px;
+    height:54px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:34px;
+}
+
+.feature-title {
+
+    font-size:14px;
+
+    font-weight:800;
+
+    margin-bottom:6px;
+
+    text-transform:uppercase;
+}
+
+.feature-text {
+
+    color:#ddd;
+
+    font-size:12px;
+
+    line-height:1.5;
+}
+
+.feature:nth-child(1) .feature-icon,
+.feature:nth-child(1) .feature-title {
+    color:var(--verde);
+}
+
+.feature:nth-child(2) .feature-icon,
+.feature:nth-child(2) .feature-title {
+    color:white;
+}
+
+.feature:nth-child(3) .feature-icon,
+.feature:nth-child(3) .feature-title {
+    color:var(--dorado);
+}
+
+.feature:nth-child(4) .feature-icon,
+.feature:nth-child(4) .feature-title {
+    color:var(--rojo);
+}
+
+.feature:nth-child(5) .feature-icon,
+.feature:nth-child(5) .feature-title {
+    color:var(--verde);
+}
+
+
+/* =========================================================
+   MODAL GENERAL
+========================================================= */
+
+.modal {
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:3000;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    background:rgba(0,0,0,.72);
+
+    backdrop-filter:blur(9px);
+
+    -webkit-backdrop-filter:blur(9px);
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:
+        opacity .25s ease,
+        visibility .25s ease;
+}
+
+.modal.active {
+
+    opacity:1;
+
+    visibility:visible;
+}
+
+.modal-box {
+
+    position:relative;
+
+    width:min(700px,100%);
+
+    max-height:90vh;
+
+    overflow-y:auto;
+
+    padding:38px;
+
+    border:
+        1px solid rgba(218,166,43,.75);
+
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(17,17,17,.87),
+            rgba(3,3,3,.76)
+        );
+
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.85),
+        0 0 35px rgba(218,166,43,.12);
+
+    backdrop-filter:blur(25px);
+
+    transform:
+        translateY(20px)
+        scale(.97);
+
+    transition:
+        transform .3s ease;
+}
+
+.modal.active .modal-box {
+
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+.modal-box::before {
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:12%;
+
+    width:76%;
+    height:2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--dorado),
+            transparent
+        );
+}
+
+
+/* =========================================================
+   CERRAR MODAL
+========================================================= */
+
+.modal-close {
+
+    position:absolute;
+
+    top:14px;
+    right:16px;
+
+    width:40px;
+    height:40px;
+
+    border-radius:50%;
+
+    border:
+        1px solid rgba(255,255,255,.16);
+
+    background:
+        rgba(255,255,255,.05);
+
+    color:white;
+
+    font-size:24px;
+
+    cursor:pointer;
+}
+
+.modal-close:hover {
+
+    background:
+        rgba(220,0,0,.35);
+
+    border-color:
+        var(--rojo);
+}
+
+
+/* =========================================================
+   MODAL CONTENIDO
+========================================================= */
+
+.modal-icon {
+
+    text-align:center;
+
+    font-size:45px;
+
+    color:var(--dorado);
+
+    margin-bottom:12px;
+}
+
+.modal-title {
+
+    text-align:center;
+
+    font-size:clamp(23px,4vw,34px);
+
+    font-weight:800;
+
+    margin-bottom:20px;
+
+    text-transform:uppercase;
+}
+
+.modal-title span {
+    color:var(--dorado-brillo);
+}
+
+.modal-content {
+
+    color:#dedede;
+
+    line-height:1.75;
+
+    font-size:15px;
+}
+
+.modal-content p {
+    margin-bottom:14px;
+}
+
+
+/* =========================================================
+   FORMULARIOS
+========================================================= */
+
+.auth-form {
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+    margin-top:20px;
+}
+
+.form-group {
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:7px;
+}
+
+.form-group label {
+
+    color:#ddd;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    text-transform:uppercase;
+}
+
+.form-group input {
+
+    width:100%;
+
+    min-height:52px;
+
+    padding:13px 15px;
+
+    border:
+        1px solid rgba(255,255,255,.14);
+
+    border-radius:8px;
+
+    outline:none;
+
+    background:
+        rgba(255,255,255,.055);
+
+    color:white;
+
+    font-size:15px;
+
+    transition:var(--transicion);
+}
+
+.form-group input:focus {
+
+    border-color:var(--dorado);
+
+    background:
+        rgba(255,255,255,.08);
+
+    box-shadow:
+        0 0 15px rgba(218,166,43,.10);
+}
+
+.form-group input::placeholder {
+    color:#888;
+}
+
+
+/* =========================================================
+   BOTON FORMULARIO
+========================================================= */
+
+.auth-submit {
+
+    width:100%;
+
+    min-height:54px;
+
+    margin-top:5px;
+
+    border:
+        1px solid var(--dorado);
+
+    border-radius:8px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #332707,
+            #100d03
+        );
+
+    color:var(--dorado-brillo);
+
+    font-size:15px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:var(--transicion);
+}
+
+.auth-submit:hover {
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 0 25px rgba(218,166,43,.22);
+}
+
+.auth-submit:disabled {
+
+    opacity:.55;
+
+    cursor:not-allowed;
+
+    transform:none;
+}
+
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+.form-message {
+
+    display:none;
+
+    padding:13px;
+
+    margin-top:10px;
+
+    border-radius:7px;
+
+    font-size:13px;
+
+    line-height:1.5;
+
+    text-align:center;
+}
+
+.form-message.show {
+    display:block;
+}
+
+.form-message.success {
+
+    color:#9cffb0;
+
+    border:
+        1px solid rgba(0,200,50,.4);
+
+    background:
+        rgba(0,200,50,.08);
+}
+
+.form-message.error {
+
+    color:#ff9b9b;
+
+    border:
+        1px solid rgba(230,0,0,.4);
+
+    background:
+        rgba(230,0,0,.08);
+}
+
+.auth-note {
+
+    margin-top:15px;
+
+    color:#888;
+
+    font-size:12px;
+
+    text-align:center;
+
+    line-height:1.5;
+}
+
+
+/* =========================================================
+   STAFF
+========================================================= */
+
+.staff-list {
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:15px;
+
+    margin-top:20px;
+}
+
+.staff-card {
+
+    padding:20px;
+
+    border:
+        1px solid rgba(218,166,43,.28);
+
+    border-radius:10px;
+
+    background:
+        rgba(255,255,255,.035);
+}
+
+.staff-role {
+
+    color:var(--verde);
+
+    font-size:12px;
+
+    font-weight:800;
+
+    text-transform:uppercase;
+
+    margin-bottom:6px;
+}
+
+.staff-name {
+
+    font-size:19px;
+
+    font-weight:800;
+
+    margin-bottom:8px;
+}
+
+.staff-code {
+
+    display:inline-block;
+
+    padding:6px 10px;
+
+    border-radius:5px;
+
+    background:
+        rgba(218,166,43,.10);
+
+    color:var(--dorado-brillo);
+
+    font-family:monospace;
+
+    font-size:13px;
+}
+
+
+/* =========================================================
+   MODAL GRID
+========================================================= */
+
+.modal-grid {
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:13px;
+
+    margin-top:22px;
+}
+
+.info-card {
+
+    padding:18px;
+
+    border:
+        1px solid rgba(255,255,255,.09);
+
+    border-radius:9px;
+
+    background:
+        rgba(255,255,255,.035);
+}
+
+.info-card h3 {
+
+    color:var(--dorado-brillo);
+
+    font-size:15px;
+
+    margin-bottom:7px;
+}
+
+.info-card p {
+
+    color:#c8c8c8;
+
+    font-size:13px;
+
+    line-height:1.5;
+
+    margin:0;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+
+    min-height:120px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    padding:35px 20px;
+
+    background:#020202;
+
+    border-top:
+        1px solid rgba(218,166,43,.35);
+}
+
+footer p {
+
+    color:#888;
+
+    font-size:13px;
+}
+
+footer strong {
+    color:var(--dorado);
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+    width:8px;
+}
+
+::-webkit-scrollbar-track {
+    background:#020202;
+}
+
+::-webkit-scrollbar-thumb {
+
+    background:
+        linear-gradient(
+            var(--verde),
+            var(--dorado),
+            var(--rojo)
+        );
+
+    border-radius:10px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media(max-width:1100px) {
+
+    .navbar {
+
+        grid-template-columns:
+            220px
+            repeat(9,1fr);
+
+        min-height:105px;
+    }
+
+    .logo-area img {
+        max-width:180px;
+    }
+
+    .nav-text {
+        font-size:9px;
+    }
+
+    .nav-icon {
+        font-size:22px;
+    }
+
+    .feature {
+
+        padding:15px 10px;
+
+        gap:8px;
+    }
+
+    .feature-icon {
+
+        width:42px;
+
+        font-size:27px;
+    }
+
+    .feature-title {
+        font-size:10px;
+    }
+
+    .feature-text {
+        font-size:9px;
+    }
+}
+
+
+/* =========================================================
+   CELULAR
+========================================================= */
+
+@media(max-width:760px) {
+
+    .navbar {
+
+        top:8px;
+
+        width:calc(100% - 16px);
+
+        min-height:auto;
+
+        display:grid;
+
+        grid-template-columns:
+            repeat(4,1fr);
+
+        clip-path:none;
+
+        border-radius:12px;
+
+        overflow:hidden;
+
+        background:
+            rgba(3,3,3,.94);
+    }
+
+    .logo-area {
+
+        grid-column:1/-1;
+
+        min-height:72px;
+
+        border-right:none;
+
+        border-bottom:
+            1px solid rgba(255,255,255,.08);
+    }
+
+    .logo-area img {
+
+        max-width:165px;
+
+        max-height:62px;
+    }
+
+    .nav-button {
+
+        min-height:76px;
+
+        padding:7px 3px;
+
+        gap:4px;
+    }
+
+    .nav-icon {
+
+        width:30px;
+        height:30px;
+
+        font-size:20px;
+    }
+
+    .nav-text {
+        font-size:7px;
+    }
+
+    .nav-button:nth-child(6),
+    .nav-button:nth-child(7) {
+
+        display:none;
+    }
+
+    .hero {
+
+        min-height:100svh;
+
+        padding-top:180px;
+
+        padding-bottom:190px;
+
+        align-items:flex-start;
+    }
+
+    .hero-content {
+
+        margin-top:70px;
+    }
+
+    .hero-title {
+
+        font-size:
+            clamp(46px,14vw,78px);
+
+        letter-spacing:-3px;
+    }
+
+    .hero-description {
+
+        font-size:13px;
+    }
+
+    .join-button {
+
+        width:90%;
+
+        min-width:0;
+
+        padding:15px 20px;
+
+        font-size:14px;
+    }
+
+    .features {
+
+        position:absolute;
+
+        bottom:0;
+
+        width:100%;
+
+        display:grid;
+
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .feature {
+
+        min-height:90px;
+
+        padding:12px;
+    }
+
+    .feature:nth-child(5) {
+
+        grid-column:1/-1;
+    }
+
+    .feature-icon {
+
+        width:38px;
+
+        font-size:24px;
+    }
+
+    .feature-title {
+        font-size:9px;
+    }
+
+    .feature-text {
+        font-size:8px;
+    }
+
+    .modal {
+
+        padding:12px;
+    }
+
+    .modal-box {
+
+        padding:30px 20px;
+
+        max-height:90vh;
+
+        border-radius:11px;
+    }
+
+    .modal-grid,
+    .staff-list {
+
+        grid-template-columns:1fr;
+    }
+
+    .modal-content {
+        font-size:14px;
+    }
+}
+
+
+/* =========================================================
+   CELULAR PEQUEÑO
+========================================================= */
+
+@media(max-width:420px) {
+
+    .navbar {
+
+        grid-template-columns:
+            repeat(4,1fr);
+    }
+
+    .hero {
+
+        padding-top:160px;
+
+        padding-bottom:250px;
+    }
+
+    .hero-title {
+        font-size:45px;
+    }
+
+    .hero-description {
+        font-size:12px;
+    }
+}
+
+</style>
+
 </head>
+
+
 <body>
 
-  <!-- MENÚ LATERAL -->
-  <aside class="dash-sidebar">
-    <h3>MEX CITY RP</h3>
-    <span class="dash-user-badge" id="rp-badge-id">ID: Verificando...</span>
-    <nav class="dash-menu">
-      <a href="#" onclick="switchTab('tab-inicio', event)" class="active">Inicio</a>
-      <a href="#" onclick="switchTab('tab-jugador', event)">Registro de jugador</a>
-      <a href="#" onclick="switchTab('tab-hogar', event)">Hogar</a>
-      <a href="#" onclick="switchTab('tab-transporte', event)">Transporte</a>
-      <a href="#" onclick="switchTab('tab-finanzas', event)">Finanzas RP</a>
-      <a href="#" onclick="switchTab('tab-visual', event)">Archivo Visual</a>
-      <a href="#" onclick="cerrarSesionRP()" class="logout">Cerrar sesión</a>
-    </nav>
-  </aside>
 
-  <!-- CONTENIDO PRINCIPAL -->
-  <main class="dash-main">
-    
-    <!-- INICIO -->
-    <section id="tab-inicio" class="dash-section active">
-      <h2>Panel General del Jugador</h2>
-      <div class="glass-box">
-        <h3>ID OFICIAL MEX CITY RP</h3>
-        <p class="highlight-gold" id="txt-id-oficial" style="font-size: 22px; margin-top: 5px;">Generando...</p>
-      </div>
-      <div class="glass-box">
-        <h3>ESTADO DE CUENTA BANCOMCRP26</h3>
-        <p id="txt-banco-resumen" style="margin-top: 8px; color: #ccc;">Cargando información bancaria segura...</p>
-      </div>
-    </section>
+<!-- =========================================================
+     NAVBAR
+========================================================= -->
 
-    <!-- REGISTRO DE JUGADOR -->
-    <section id="tab-jugador" class="dash-section">
-      <h2>Registro de Jugador</h2>
-      <form id="form-reg-jugador" class="glass-box">
-        <div class="form-grid">
-          <div class="form-group-rp"><label>Nombre</label><input type="text" id="p-nombre" required></div>
-          <div class="form-group-rp"><label>Apellido</label><input type="text" id="p-apellido" required></div>
-          <div class="form-group-rp"><label>Tipo de Edad</label><select id="p-edad-tipo"><option value="Años">Años</option><option value="Meses">Meses</option><option value="Días">Días de nacido</option></select></div>
-          <div class="form-group-rp"><label>Valor de Edad</label><input type="number" id="p-edad-valor" min="1" required></div>
-          <div class="form-group-rp"><label>Ciudad de Nacimiento</label><select id="p-ciudad"><option value="Ciudad de México">Ciudad de México</option><option value="Guadalajara">Guadalajara</option><option value="Monterrey">Monterrey</option><option value="Puebla">Puebla</option></select></div>
-          <div class="form-group-rp"><label>Sexo / Género</label><select id="p-sexo"><option value="Masculino">Masculino</option><option value="Femenino">Femenino</option><option value="No Binario">No Binario</option></select></div>
-          <div class="form-group-rp full"><label>Ocupación</label><select id="p-ocupacion"><option value="Empresario">Empresario</option><option value="Abogado">Abogado</option><option value="Médico">Médico</option><option value="Ingeniero">Ingeniero</option><option value="Policía">Policía</option><option value="Chef">Chef</option><option value="Mecánico">Mecánico</option></select></div>
+<nav class="navbar">
+
+
+    <!-- LOGO -->
+
+    <div class="logo-area">
+
+        <img
+            src="logo.png"
+            alt="MexCity RP"
+        >
+
+    </div>
+
+
+    <!-- ¿QUÉ ES? -->
+
+    <button
+        class="nav-button"
+        data-modal="que-es"
+    >
+
+        <div class="nav-icon">
+            🏙
         </div>
-        <button type="submit" class="btn-rp-gold" style="margin-top: 15px;">Guardar Registro Oficial</button>
-      </form>
-    </section>
 
-    <!-- HOGAR -->
-    <section id="tab-hogar" class="dash-section">
-      <h2>Registro de Hogar</h2>
-      <form id="form-reg-hogar" class="glass-box">
-        <div class="form-group-rp"><label>Tipo de Propiedad</label><select id="h-tipo" onchange="calcularValorHogar()"><option value="Casa">Casa ($1,500,000 MXN)</option><option value="Departamento">Departamento ($2,500,000 MXN)</option><option value="Mansión">Mansión ($25,000,000 MXN)</option></select></div>
-        <div class="form-group-rp"><label>Ciudad de Ubicación</label><select id="h-ciudad"><option value="Ciudad de México">Ciudad de México</option><option value="Guadalajara">Guadalajara</option><option value="Monterrey">Monterrey</option></select></div>
-        <div style="margin: 15px 0; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px;">
-          <p>Valor Inmobiliario: <strong id="h-val-mxn" class="highlight-gold">$1,500,000 MXN</strong></p>
-          <p>Valor Monetario RP: <strong id="h-val-rp" class="highlight-gold">$1,500,000 $RP</strong></p>
-          <p>Domicilio Automático: <strong id="h-domicilio-gen" class="highlight-gold">Calculando...</strong></p>
+        <div class="nav-text">
+            ¿Qué es<br>
+            MexCity?
         </div>
-        <button type="submit" class="btn-rp-gold">Registrar Propiedad</button>
-      </form>
-    </section>
 
-    <!-- TRANSPORTE -->
-    <section id="tab-transporte" class="dash-section">
-      <h2>Registro de Transporte</h2>
-      <form id="form-reg-transporte" class="glass-box">
-        <div class="form-group-rp"><label>Tipo de Vehículo</label><select id="v-tipo"><option value="Automóvil">Automóvil</option><option value="Deportivo">Deportivo</option><option value="SUV">SUV</option></select></div>
-        <div class="form-group-rp"><label>Modelo Real (Ej. BMW M4)</label><input type="text" id="v-modelo" required></div>
-        <div class="form-grid"><div class="form-group-rp"><label>Año</label><input type="number" id="v-anio" value="2026" required></div><div class="form-group-rp"><label>Color</label><input type="text" id="v-color" required></div></div>
-        <div style="margin: 15px 0; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px;">
-          <p>Placas Automáticas (Únicas): <strong id="v-placas-gen" class="highlight-gold">MXR-826</strong></p>
+    </button>
+
+
+    <!-- COMUNIDAD -->
+
+    <button
+        class="nav-button"
+        data-modal="comunidad"
+    >
+
+        <div class="nav-icon">
+            👥
         </div>
-        <button type="submit" class="btn-rp-gold">Registrar Vehículo</button>
-      </form>
+
+        <div class="nav-text">
+            Nuestra<br>
+            Comunidad
+        </div>
+
+    </button>
+
+
+    <!-- ROLEPLAY -->
+
+    <button
+        class="nav-button"
+        data-modal="funciona"
+    >
+
+        <div class="nav-icon">
+            ☆
+        </div>
+
+        <div class="nav-text">
+            Cómo funciona<br>
+            el Roleplay
+        </div>
+
+    </button>
+
+
+    <!-- PRIVACIDAD -->
+
+    <button
+        class="nav-button"
+        data-modal="politica"
+    >
+
+        <div class="nav-icon">
+            ♙
+        </div>
+
+        <div class="nav-text">
+            Política y<br>
+            Privacidad
+        </div>
+
+    </button>
+
+
+    <!-- REGLAS -->
+
+    <button
+        class="nav-button"
+        data-modal="reglas"
+    >
+
+        <div class="nav-icon">
+            ♢
+        </div>
+
+        <div class="nav-text">
+            Reglas y<br>
+            Convivencia
+        </div>
+
+    </button>
+
+
+    <!-- STAFF -->
+
+    <button
+        class="nav-button"
+        data-modal="staff"
+    >
+
+        <div class="nav-icon">
+            ★
+        </div>
+
+        <div class="nav-text">
+            Staff
+        </div>
+
+    </button>
+
+
+    <!-- SOPORTE -->
+
+    <button
+        class="nav-button"
+        data-modal="soporte"
+    >
+
+        <div class="nav-icon">
+            ◉
+        </div>
+
+        <div class="nav-text">
+            Soporte
+        </div>
+
+    </button>
+
+
+    <!-- REGISTRARSE -->
+
+    <button
+        class="nav-button register"
+        data-modal="registro"
+    >
+
+        <div class="nav-icon">
+            ✚
+        </div>
+
+        <div class="nav-text">
+            Registrarse
+        </div>
+
+    </button>
+
+
+    <!-- INICIAR SESIÓN -->
+
+    <button
+        class="nav-button login"
+        data-modal="login"
+    >
+
+        <div class="nav-icon">
+            ⇥
+        </div>
+
+        <div class="nav-text">
+            Iniciar<br>
+            sesión
+        </div>
+
+    </button>
+
+</nav>
+
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<main class="hero">
+
+    <div class="hero-background"></div>
+
+
+    <div class="hero-content">
+
+        <div class="welcome">
+            BIENVENIDO A
+        </div>
+
+
+        <h1 class="hero-title">
+
+            <span class="mx">MEX</span><span class="city">CITY</span><span class="rp"> RP</span>
+
+        </h1>
+
+
+        <div class="hero-divider">
+
+            <span></span>
+
+            <div class="star">
+                ★
+            </div>
+
+            <span></span>
+
+        </div>
+
+
+        <div class="hero-subtitle">
+
+            LA CIUDAD DONDE
+            <strong>TU HISTORIA</strong>
+            COMIENZA
+
+        </div>
+
+
+        <p class="hero-description">
+
+            Crea tu personaje, construye tu historia y vive
+            experiencias únicas en la comunidad de roleplay
+            más completa inspirada en México.
+           
+
+        </p>
+
+
+        <button
+            class="join-button"
+            data-modal="registro"
+        >
+
+            ★ &nbsp;
+            ÚNETE A LA CIUDAD
+            &nbsp; ★
+
+        </button>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CARACTERÍSTICAS
+    ====================================================== -->
+
+    <section class="features">
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                ♙
+            </div>
+
+            <div>
+
+                <div class="feature-title">
+                    Comunidad Activa
+                </div>
+
+                <div class="feature-text">
+                    Miles de historias<br>
+                    cada día
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                ◈
+            </div>
+
+            <div>
+
+                <div class="feature-title">
+                    Ambiente Realista
+                </div>
+
+                <div class="feature-text">
+                    Un roleplay serio<br>
+                    y organizado
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                ♜
+            </div>
+
+            <div>
+
+                <div class="feature-title">
+                    Infinitas Posibilidades
+                </div>
+
+                <div class="feature-text">
+                    Crea, trabaja,<br>
+                    emprende e interactúa
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                ☆
+            </div>
+
+            <div>
+
+                <div class="feature-title">
+                    Eventos Exclusivos
+                </div>
+
+                <div class="feature-text">
+                    Participa en eventos<br>
+                    de toda la ciudad
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                ♜
+            </div>
+
+            <div>
+
+                <div class="feature-title">
+                    Organizaciones
+                </div>
+
+                <div class="feature-text">
+                    Empresas, gobierno,<br>
+                    fuerzas y más
+                </div>
+
+            </div>
+
+        </div>
+
     </section>
 
-    <!-- FINANZAS RP -->
-    <section id="tab-finanzas" class="dash-section">
-      <h2>Finanzas BancomCRP26</h2>
-      <div class="glass-box">
-        <p>Número de Cuenta: <span id="b-num" class="highlight-gold">---</span></p>
-        <p style="margin-top: 10px;">CLABE Bancaria RP: <span id="b-clabe" class="highlight-gold">---</span></p>
-        <p style="margin-top: 10px;">Identificador: <span id="b-id" class="highlight-gold">---</span></p>
-        <p style="margin-top: 10px;">Saldo Disponible: <strong style="color: #00c832;" id="b-saldo">$50,000 $RP</strong></p>
-      </div>
-    </section>
+</main>
 
-    <!-- ARCHIVO VISUAL -->
-    <section id="tab-visual" class="dash-section">
-      <h2>Archivo Visual</h2>
-      <p style="font-size: 13px; color: #aaa; margin-bottom: 15px;">Utiliza imágenes editadas con IA y elimina cualquier logotipo o marca visible de Avakin.</p>
-      <form id="form-reg-visual" class="glass-box">
-        <div class="form-group-rp"><label>Tipo de Recurso</label><select id="vis-tipo"><option value="Avatar">Avatar del Jugador</option><option value="Hogar">Imagen del Hogar</option><option value="Transporte">Imagen del Transporte</option></select></div>
-        <div class="form-group-rp"><label>URL de Imagen</label><input type="url" id="vis-url" placeholder="https://..." required></div>
-        <button type="submit" class="btn-rp-gold">Guardar Archivo Visual</button>
-      </form>
-    </section>
 
-  </main>
 
-  <script>
-    // CREDENCIALES OFICIALES DE SUPABASE
-    const SUPABASE_URL = "https://ogiupysmhnzvizesqcxr.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_QZ1vQjZQ-7vbkBJLmouMzQ_PUmI8U2c";
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+<!-- =========================================================
+     FOOTER
+========================================================= -->
 
-    // Validar sesión activa al cargar la página
-    window.addEventListener('DOMContentLoaded', async () => {
-      const { data: { session } } = await supabaseClient.auth.getSession();
-      if (!session) {
-        window.location.href = "index.html"; // Si no ha iniciado sesión, lo regresa al login
-        return;
-      }
-      inicializarDashboardPrivado(session.user);
-    });
+<footer>
 
-    function switchTab(tabId, e) {
-      if (e) e.preventDefault();
-      document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.dash-menu a').forEach(a => a.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      if (e && e.target) e.target.classList.add('active');
+    <p>
+
+        © 2026
+        <strong>MexCity RP</strong>.
+        Todos los derechos reservados.
+
+    </p>
+
+</footer>
+
+
+
+<!-- =========================================================
+     MODAL GENERAL
+========================================================= -->
+
+<div
+    class="modal"
+    id="modal"
+>
+
+    <div class="modal-box">
+
+
+        <button
+            class="modal-close"
+            id="closeModal"
+        >
+            ×
+        </button>
+
+
+        <div
+            class="modal-icon"
+            id="modalIcon"
+        >
+            ★
+        </div>
+
+
+        <h2
+            class="modal-title"
+            id="modalTitle"
+        >
+            MexCity RP
+        </h2>
+
+
+        <div
+            class="modal-content"
+            id="modalContent"
+        >
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   CONFIGURACIÓN DE SUPABASE (REEMPLAZA LA URL CON LA DE TU PROYECTO)
+========================================================= */
+
+const SUPABASE_URL = "https://ogiupysmhnzvizesqcxr.supabase.co"; 
+const SUPABASE_ANON_KEY = "sb_publishable_QZ1vQjZQ-7vbkBJLmouMzQ_PUmI8U2c";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+
+
+/* =========================================================
+   INFORMACIÓN DE LOS MODALES
+========================================================= */
+
+const modalData = {
+
+
+    "que-es": {
+
+        icon:"🏙",
+
+        title:"¿Qué es MexCity?",
+
+        content:`
+
+            <p>
+                <strong>MexCity RP</strong> es una comunidad
+                de roleplay inspirada en México donde cada
+                jugador puede crear su propio personaje y
+                desarrollar una historia dentro de la ciudad.
+            </p>
+
+            <p>
+                La ciudad está diseñada para que diferentes
+                tipos de personajes puedan convivir,
+                trabajar, crear negocios, pertenecer a
+                organizaciones y desarrollar historias.
+            </p>
+
+        `
+    },
+
+
+    "comunidad": {
+
+        icon:"👥",
+
+        title:"Nuestra Comunidad",
+
+        content:`
+
+            <p>
+                MexCity RP busca construir una comunidad
+                activa, organizada y respetuosa.
+            </p>
+
+            <div class="modal-grid">
+
+                <div class="info-card">
+
+                    <h3>
+                        Ciudadanos
+                    </h3>
+
+                    <p>
+                        Personajes que forman parte
+                        de la vida cotidiana de MexCity.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>
+                        Empresas
+                    </h3>
+
+                    <p>
+                        Negocios y proyectos creados
+                        dentro de la ciudad.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>
+                        Gobierno
+                    </h3>
+
+                    <p>
+                        Instituciones encargadas de
+                        diferentes funciones de la ciudad.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>
+                        Organizaciones
+                    </h3>
+
+                    <p>
+                        Diferentes grupos con objetivos
+                        específicos.
+                    </p>
+
+                </div>
+
+            </div>
+
+        `
+    },
+
+
+    "funciona": {
+
+        icon:"☆",
+
+        title:"Cómo funciona el Roleplay",
+
+        content:`
+
+            <p>
+                El roleplay consiste en interpretar a un
+                personaje dentro de un universo ficticio,
+                respetando la historia y las situaciones
+                creadas dentro de la comunidad.
+            </p>
+
+            <div class="modal-grid">
+
+                <div class="info-card">
+
+                    <h3>
+                        01 · Crea
+                    </h3>
+
+                    <p>
+                        Diseña tu personaje y define
+                        su identidad.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>
+                        02 · Presenta
+                    </h3>
+
+                    <p>
+                        Presenta tu personaje y establece
+                        el inicio de su historia.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>
+                        03 · Interactúa
+                    </h3>
+
+                    <p>
+                        Convive y desarrolla situaciones
+                        con otros personajes.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>
+                        04 · Construye
+                    </h3>
+
+                    <p>
+                        Haz crecer la historia de tu
+                        personaje dentro de MexCity.
+                    </p>
+
+                </div>
+
+            </div>
+
+        `
+    },
+
+
+    "politica": {
+
+        icon:"♙",
+
+        title:"Política y Privacidad",
+
+        content:`
+
+            <p>
+                La privacidad de los integrantes de la
+                comunidad es una prioridad.
+            </p>
+
+            <p>
+                La información proporcionada para participar
+                en MexCity RP debe manejarse de manera
+                responsable.
+            </p>
+
+        `
+    },
+
+
+    "reglas": {
+
+        icon:"♢",
+
+        title:"Reglas y Convivencia",
+
+        content:`
+
+            <p>
+                Para mantener una comunidad organizada,
+                todos los integrantes deben respetar las
+                normas establecidas por MexCity RP.
+            </p>
+
+            <div class="modal-grid">
+
+                <div class="info-card">
+
+                    <h3>
+                        Respeto
+                    </h3>
+
+                    <p>
+                        Mantén una convivencia respetuosa
+                        con los demás integrantes.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>
+                        Roleplay
+                    </h3>
+
+                    <p>
+                        Respeta la lógica y continuidad
+                        de las historias.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>
+                        Administración
+                    </h3>
+
+                    <p>
+                        Sigue las indicaciones administrativas.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>
+                        Convivencia
+                    </h3>
+
+                    <p>
+                        No utilices la comunidad para generar
+                        conflictos fuera del roleplay.
+                    </p>
+
+                </div>
+
+            </div>
+
+        `
+    },
+
+
+    "staff": {
+
+        icon:"★",
+
+        title:"Staff MexCity RP",
+
+        content:`
+
+            <p>
+                Acceso exclusivo para el equipo administrativo.
+                Ingresa tu nombre y código para acceder al sistema.
+            </p>
+
+            <form
+                class="auth-form"
+                id="staffForm"
+            >
+
+                <div class="form-group">
+                    <label>
+                        Nombre
+                    </label>
+                    <input
+                        type="text"
+                        id="staffName"
+                        placeholder="Tu nombre de Staff"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        Código de acceso
+                    </label>
+                    <input
+                        type="password"
+                        id="staffCode"
+                        placeholder="Ej: MXC-ADMIN-001"
+                        required
+                    >
+                </div>
+
+                <button
+                    type="submit"
+                    class="auth-submit"
+                >
+                    INGRESAR
+                </button>
+
+                <div
+                    class="form-message"
+                    id="staffMessage"
+                ></div>
+
+            </form>
+
+            <div style="margin: 30px 0; border-top: 1px solid rgba(218,166,43,.28);"></div>
+
+            <p>
+                El equipo administrativo es responsable
+                de mantener el orden y supervisar el
+                funcionamiento de la comunidad.
+            </p>
+
+            <div class="staff-list">
+
+                <div class="staff-card">
+
+                    <div class="staff-role">
+                        Administrador
+                    </div>
+
+                    <div class="staff-name">
+                        CARTSH
+                    </div>
+
+                    <div class="staff-code">
+                        MXC-ADMIN-001
+                    </div>
+
+                </div>
+
+
+                <div class="staff-card">
+
+                    <div class="staff-role">
+                        Staff
+                    </div>
+
+                    <div class="staff-name">
+                        NOMBRE DEL ADMINISTRADOR
+                    </div>
+
+                    <div class="staff-code">
+                        MXC-STAFF-002
+                    </div>
+
+                </div>
+
+            </div>
+
+        `
+    },
+
+
+    "soporte": {
+
+        icon:"◉",
+
+        title:"Soporte",
+
+        content:`
+
+            <p>
+                ¿Tienes algún problema o necesitas ayuda?
+                El equipo de soporte puede ayudarte con
+                situaciones relacionadas con MexCity RP.
+            </p>
+
+        `
+    },
+
+
+    /* =====================================================
+       REGISTRO (CON SUPABASE AUTH)
+    ====================================================== */
+
+    "registro": {
+
+        icon:"✚",
+
+        title:"Crear cuenta",
+
+        content:`
+
+            <p>
+                Crea tu cuenta para comenzar tu experiencia
+                dentro de <strong>MexCity RP</strong>.
+            </p>
+
+
+            <form
+                class="auth-form"
+                id="registerForm"
+            >
+
+
+                <div class="form-group">
+
+                    <label>
+                        Correo electrónico
+                    </label>
+
+                    <input
+                        type="email"
+                        id="registerEmail"
+                        placeholder="tucorreo@ejemplo.com"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Crear contraseña
+                    </label>
+
+                    <input
+                        type="password"
+                        id="registerPassword"
+                        placeholder="Mínimo 8 caracteres"
+                        minlength="8"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Confirmar contraseña
+                    </label>
+
+                    <input
+                        type="password"
+                        id="registerConfirmPassword"
+                        placeholder="Repite tu contraseña"
+                        minlength="8"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="auth-submit"
+                    id="registerButton"
+                >
+
+                    CREAR CUENTA
+
+                </button>
+
+
+                <div
+                    class="form-message"
+                    id="registerMessage"
+                ></div>
+
+
+                <div class="auth-note">
+
+                    Tu contraseña no se enviará por correo.
+
+                    <br>
+
+                    Después de registrarte recibirás
+                    un correo de confirmación de Supabase.
+
+                </div>
+
+
+            </form>
+
+        `
+    },
+
+
+    /* =====================================================
+       LOGIN Y RECUPERACIÓN (CON SUPABASE AUTH)
+    ====================================================== */
+
+    "login": {
+
+        icon:"⇥",
+
+        title:"Iniciar sesión",
+
+        content:`
+
+            <p>
+                Ingresa a tu cuenta de
+                <strong>MexCity RP</strong>.
+            </p>
+
+
+            <form
+                class="auth-form"
+                id="loginForm"
+            >
+
+
+                <div class="form-group">
+
+                    <label>
+                        Correo electrónico
+                    </label>
+
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        placeholder="tucorreo@ejemplo.com"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Contraseña
+                    </label>
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Tu contraseña"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="auth-submit"
+                    id="loginButton"
+                >
+
+                    INICIAR SESIÓN
+
+                </button>
+
+
+                <div
+                    class="form-message"
+                    id="loginMessage"
+                ></div>
+
+            </form>
+
+
+            <div style="margin-top: 25px; border-top: 1px solid rgba(218,166,43,.28); padding-top: 20px;">
+                <p style="font-size: 14px; margin-bottom: 10px; color: var(--dorado-brillo);">¿Olvidaste tu contraseña?</p>
+                
+                <form class="auth-form" id="recoveryForm" style="margin-top: 10px;">
+                    <div class="form-group">
+                        <input
+                            type="email"
+                            id="recoveryEmail"
+                            placeholder="Ingresa tu correo registrado"
+                            required
+                        >
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="auth-submit"
+                        id="recoveryButton"
+                    >
+                        RECUPERAR CONTRASEÑA
+                    </button>
+
+                    <div
+                        class="form-message"
+                        id="recoveryMessage"
+                    ></div>
+                </form>
+            </div>
+
+        `
     }
 
-    function calcularValorHogar() {
-      const tipo = document.getElementById('h-tipo').value;
-      let val = 1500000;
-      if (tipo === 'Departamento') val = 2500000;
-      if (tipo === 'Mansión') val = 25000000;
-      document.getElementById('h-val-mxn').innerText = `$${val.toLocaleString()} MXN`;
-      document.getElementById('h-val-rp').innerText = `$${val.toLocaleString()} $RP`;
-      document.getElementById('h-domicilio-gen').innerText = `Av. MexCity ${Math.floor(Math.random()*900)}, ${document.getElementById('h-ciudad').value}`;
+};
+
+
+
+/* =========================================================
+   ELEMENTOS
+========================================================= */
+
+const modal =
+    document.getElementById("modal");
+
+const modalTitle =
+    document.getElementById("modalTitle");
+
+const modalContent =
+    document.getElementById("modalContent");
+
+const modalIcon =
+    document.getElementById("modalIcon");
+
+const closeModal =
+    document.getElementById("closeModal");
+
+
+
+/* =========================================================
+   ABRIR MODAL (CORREGIDO CON TIMEOUT PARA EL DOM)
+========================================================= */
+
+function openModal(section) {
+
+    const data =
+        modalData[section];
+
+    if(!data) return;
+
+    modalIcon.textContent =
+        data.icon;
+
+    modalTitle.textContent =
+        data.title;
+
+    modalContent.innerHTML =
+        data.content;
+
+    modal.classList.add("active");
+
+    document.body.style.overflow =
+        "hidden";
+
+
+    setTimeout(() => {
+        if(section === "registro") {
+            setupRegister();
+        }
+
+        if(section === "login") {
+            setupLogin();
+            setupRecovery();
+        }
+
+        if(section === "staff") {
+            setupStaff();
+        }
+    }, 50);
+
+}
+
+
+
+/* =========================================================
+   CERRAR MODAL
+========================================================= */
+
+function closeCurrentModal() {
+
+    modal.classList.remove("active");
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+
+/* =========================================================
+   BOTONES DE NAVEGACIÓN
+========================================================= */
+
+document
+.querySelectorAll(".nav-button")
+.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            document
+            .querySelectorAll(".nav-button")
+            .forEach(btn =>
+                btn.classList.remove("active")
+            );
+
+            button.classList.add("active");
+
+            openModal(
+                button.dataset.modal
+            );
+
+        }
+    );
+
+});
+
+
+
+/* =========================================================
+   BOTON ÚNETE
+========================================================= */
+
+document
+.querySelector(".join-button")
+.addEventListener(
+    "click",
+    () => {
+
+        openModal("registro");
+
     }
+);
 
-    async function inicializarDashboardPrivado(user) {
-      let { data: player } = await supabaseClient.from('players').select('*').eq('id', user.id).single();
-      let idOficial = "";
-      
-      if (!player) {
-        idOficial = "MXRP-26-CMX-" + Math.random().toString(36).substring(2, 8).toUpperCase();
-        let numCuenta = "BAN" + Math.floor(1000000000 + Math.random() * 9000000000);
-        let clabe = "026" + Math.floor(1000000000000000 + Math.random() * 9000000000000000);
-        let idBanco = "BCRP-" + Math.random().toString(36).substring(2, 8).toUpperCase();
 
-        await supabaseClient.from('bank_accounts').insert({
-          user_id: user.id,
-          numero_cuenta: numCuenta,
-          cb_clave: clabe,
-          identificador_bancario: idBanco
-        });
-      } else {
-        idOficial = player.id_oficial;
-      }
 
-      document.getElementById('txt-id-oficial').innerText = idOficial;
-      document.getElementById('rp-badge-id').innerText = `ID: ${idOficial}`;
+/* =========================================================
+   CERRAR
+========================================================= */
 
-      let { data: bank } = await supabaseClient.from('bank_accounts').select('*').eq('user_id', user.id).single();
-      if (bank) {
-        document.getElementById('b-num').innerText = bank.numero_cuenta;
-        document.getElementById('b-clabe').innerText = bank.cb_clave;
-        document.getElementById('b-id').innerText = bank.identificador_bancario;
-        document.getElementById('txt-banco-resumen').innerText = `Cuenta: ${bank.numero_cuenta} | Saldo: $${bank.saldo_rp} $RP`;
-      }
-      
-      calcularValorHogar();
-      document.getElementById('v-placas-gen').innerText = `MXR-${Math.floor(100 + Math.random()*900)}`;
+closeModal.addEventListener(
+    "click",
+    closeCurrentModal
+);
+
+
+
+/* =========================================================
+   CERRAR AL CLICK FUERA
+========================================================= */
+
+modal.addEventListener(
+    "click",
+    event => {
+
+        if(event.target === modal) {
+
+            closeCurrentModal();
+
+        }
+
     }
+);
 
-    async function cerrarSesionRP() {
-      await supabaseClient.auth.signOut();
-      window.location.href = "index.html";
+
+
+/* =========================================================
+   ESC
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if(
+            event.key === "Escape" &&
+            modal.classList.contains("active")
+        ) {
+
+            closeCurrentModal();
+
+        }
+
     }
+);
 
-    // Guardar registro de jugador con seguridad RLS
-    document.getElementById('form-reg-jugador')?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const user = (await supabaseClient.auth.getUser()).data.user;
-      if (!user) return;
 
-      const { error } = await supabaseClient.from('players').upsert({
-        id: user.id,
-        nombre: document.getElementById('p-nombre').value,
-        apellido: document.getElementById('p-apellido').value,
-        edad_tipo: document.getElementById('p-edad-tipo').value,
-        edad_valor: parseInt(document.getElementById('p-edad-valor').value),
-        ciudad_nacimiento: document.getElementById('p-ciudad').value,
-        sexo: document.getElementById('p-sexo').value,
-        ocupacion: document.getElementById('p-ocupacion').value,
-        id_oficial: document.getElementById('txt-id-oficial').innerText
-      });
 
-      if (error) alert("Error al registrar: " + error.message);
-      else alert("¡Registro guardado y protegido con éxito en Supabase!");
-    });
-  </script>
+/* =========================================================
+   REGISTRO CON SUPABASE AUTH (ENVÍO DE CORREO AUTOMÁTICO)
+========================================================= */
+
+function setupRegister() {
+
+    const form =
+        document.getElementById(
+            "registerForm"
+        );
+
+    if(!form) return;
+
+
+    form.addEventListener(
+        "submit",
+        async event => {
+
+            event.preventDefault();
+
+
+            const email =
+                document
+                .getElementById(
+                    "registerEmail"
+                )
+                .value
+                .trim();
+
+
+            const password =
+                document
+                .getElementById(
+                    "registerPassword"
+                )
+                .value;
+
+
+            const confirmPassword =
+                document
+                .getElementById(
+                    "registerConfirmPassword"
+                )
+                .value;
+
+
+            const button =
+                document.getElementById(
+                    "registerButton"
+                );
+
+
+            const message =
+                document.getElementById(
+                    "registerMessage"
+                );
+
+
+            const emailPattern =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+            if(!emailPattern.test(email)) {
+
+                showMessage(
+                    message,
+                    "Introduce un correo electrónico válido.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if(password.length < 8) {
+
+                showMessage(
+                    message,
+                    "La contraseña debe tener al menos 8 caracteres.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if(password !== confirmPassword) {
+
+                showMessage(
+                    message,
+                    "Las contraseñas no coinciden.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            button.disabled = true;
+
+            button.textContent =
+                "REGISTRANDO...";
+
+
+            try {
+
+                const { data, error } = await supabaseClient.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        emailRedirectTo: window.location.href
+                    }
+                });
+
+                if (error) throw error;
+
+
+                showMessage(
+
+                    message,
+
+                    "¡Cuenta creada con éxito! Revisa tu correo electrónico para confirmar tu cuenta.",
+
+                    "success"
+
+                );
+
+
+                form.reset();
+
+
+                button.textContent =
+                    "REGISTRO EXITOSO";
+
+
+            }
+
+            catch(error) {
+
+                console.error("Supabase Error:", error);
+
+                showMessage(
+
+                    message,
+
+                    error.message || "No fue posible registrar la cuenta.",
+
+                    "error"
+
+                );
+
+                button.disabled = false;
+
+                button.textContent =
+                    "CREAR CUENTA";
+
+            }
+
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   LOGIN CON SUPABASE AUTH
+========================================================= */
+
+function setupLogin() {
+
+    const form =
+        document.getElementById(
+            "loginForm"
+        );
+
+    if(!form) return;
+
+
+    form.addEventListener(
+        "submit",
+        async event => {
+
+            event.preventDefault();
+
+
+            const email =
+                document
+                .getElementById(
+                    "loginEmail"
+                )
+                .value
+                .trim();
+
+
+            const password =
+                document
+                .getElementById(
+                    "loginPassword"
+                )
+                .value;
+
+
+            const button =
+                document.getElementById(
+                    "loginButton"
+                );
+
+
+            const message =
+                document.getElementById(
+                    "loginMessage"
+                );
+
+
+            if(!email || !password) {
+
+                showMessage(
+                    message,
+                    "Completa todos los campos.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            button.disabled = true;
+            button.textContent = "INICIANDO SESIÓN...";
+
+
+            try {
+
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+
+                if (error) throw error;
+
+                showMessage(
+                    message,
+                    "¡Inicio de sesión exitoso! Bienvenido a MexCity RP.",
+                    "success"
+                );
+
+                setTimeout(() => {
+                    closeCurrentModal();
+                }, 1500);
+
+            } catch (error) {
+
+                console.error("Login Error:", error);
+
+                showMessage(
+                    message,
+                    error.message || "Credenciales incorrectas o correo sin confirmar.",
+                    "error"
+                );
+
+                button.disabled = false;
+                button.textContent = "INICIAR SESIÓN";
+
+            }
+
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   RECUPERACIÓN DE CONTRASEÑA CON SUPABASE
+========================================================= */
+
+function setupRecovery() {
+
+    const form =
+        document.getElementById(
+            "recoveryForm"
+        );
+
+    if(!form) return;
+
+
+    form.addEventListener(
+        "submit",
+        async event => {
+
+            event.preventDefault();
+
+            const email =
+                document
+                .getElementById(
+                    "recoveryEmail"
+                )
+                .value
+                .trim();
+
+            const button =
+                document.getElementById(
+                    "recoveryButton"
+                );
+
+            const message =
+                document.getElementById(
+                    "recoveryMessage"
+                );
+
+            if(!email) {
+                showMessage(message, "Introduce tu correo electrónico.", "error");
+                return;
+            }
+
+            button.disabled = true;
+            button.textContent = "ENVIANDO...";
+
+            try {
+
+                const { data, error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.href,
+                });
+
+                if (error) throw error;
+
+                showMessage(
+                    message,
+                    "Correo de recuperación enviado. Revisa tu bandeja de entrada.",
+                    "success"
+                );
+
+                form.reset();
+                button.disabled = false;
+                button.textContent = "RECUPERAR CONTRASEÑA";
+
+            } catch (error) {
+
+                console.error("Recovery Error:", error);
+
+                showMessage(
+                    message,
+                    error.message || "No se pudo enviar el correo de recuperación.",
+                    "error"
+                );
+
+                button.disabled = false;
+                button.textContent = "RECUPERAR CONTRASEÑA";
+
+            }
+
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   STAFF LOGIN
+========================================================= */
+
+function setupStaff() {
+
+    const form =
+        document.getElementById(
+            "staffForm"
+        );
+
+    if(!form) return;
+
+
+    form.addEventListener(
+        "submit",
+        async event => {
+
+            event.preventDefault();
+
+
+            const name =
+                document
+                .getElementById(
+                    "staffName"
+                )
+                .value
+                .trim();
+
+
+            const code =
+                document
+                .getElementById(
+                    "staffCode"
+                )
+                .value
+                .trim();
+
+
+            const message =
+                document.getElementById(
+                    "staffMessage"
+                );
+
+
+            if(!name || !code) {
+
+                showMessage(
+
+                    message,
+
+                    "Completa todos los campos.",
+
+                    "error"
+
+                );
+
+                return;
+
+            }
+
+            showMessage(
+
+                message,
+
+                "El sistema de acceso para Staff debe conectarse a la base de datos para verificar el código.",
+
+                "error"
+
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+function showMessage(
+    element,
+    text,
+    type
+) {
+
+    element.textContent =
+        text;
+
+    element.className =
+        "form-message show " +
+        type;
+
+}
+
+</script>
+
 </body>
+
 </html>
