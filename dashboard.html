@@ -409,13 +409,13 @@ a{color:inherit;text-decoration:none}
 </section>
 
 <!-- =========================================================
-     DASHBOARD PRIVADO
+     DASHBOARD PRIVADO PARA CADA USUARIO QUE ES JUGADOR
 ========================================================= -->
 <div id="app">
 
 <header class="topbar">
   <div class="brand-small">
-    <div class="m">♛</div>
+    <div class="m"> </div>
     <div>
       <strong>MEXCITY RP</strong>
       <span>LA CIUDAD DONDE TU HISTORIA COMIENZA</span>
@@ -467,64 +467,48 @@ a{color:inherit;text-decoration:none}
         <span class="ico">⌂</span>Inicio
       </button>
       <button data-page="explorar" onclick="showPage('explorar',this)">
-        <span class="ico">⌕</span>Explorar
+        <span class="ico">⌕</span>Inicio 
       </button>
       <button data-page="mensajes" onclick="showPage('mensajes',this)">
         <span class="ico">▱</span>Mensajes
       </button>
       <button data-page="notificaciones" onclick="showPage('notificaciones',this)">
-        <span class="ico">♧</span>Notificaciones
+        <span class="ico">♧</span>menú del jugador
       </button>
       <button data-page="eventos" onclick="showPage('eventos',this)">
-        <span class="ico">▣</span>Eventos
+        <span class="ico">▣</span>Hogar
       </button>
       <button data-page="directorio" onclick="showPage('directorio',this)">
         <span class="ico">♙</span>Directorio
       </button>
       <button data-page="rankings" onclick="showPage('rankings',this)">
-        <span class="ico">♛</span>Rankings
+        <span class="ico">♛</span>Transporte
       </button>
       <button data-page="radio" onclick="showPage('radio',this)">
-        <span class="ico">◉</span>Radio MexCity
+        <span class="ico">◉</span>familia
       </button>
     </div>
-  </div>
-
-  <div class="side-card">
+   <div class="side-card">
     <div class="muted" style="font-size:11px;margin-bottom:8px">MENÚ DEL JUGADOR</div>
 
     <div class="nav" style="margin:0">
       <button data-page="jugador" onclick="showPage('jugador',this)">
-        <span class="ico">●</span>Registro de jugador
-      </button>
-      <button data-page="hogar" onclick="showPage('hogar',this)">
-        <span class="ico">⌂</span>Hogar
-      </button>
-      <button data-page="transporte" onclick="showPage('transporte',this)">
-        <span class="ico">▣</span>Transporte
-      </button>
-      <button data-page="familia" onclick="showPage('familia',this)">
-        <span class="ico">♧</span>Familia
-      </button>
-      <button data-page="menores" onclick="showPage('menores',this)">
         <span class="ico">●</span>Menores
       </button>
-      <button data-page="empresa" onclick="showPage('empresa',this)">
-        <span class="ico">▤</span>Empresa / Trabajo
+      <button data-page="hogar" onclick="showPage('hogar',this)">
+        <span class="ico">⌂</span>Empresa/trabajo
       </button>
-      <button data-page="organizacion" onclick="showPage('organizacion',this)">
-        <span class="ico">◆</span>Organización
+      <button data-page="transporte" onclick="showPage('transporte',this)">
+        <span class="ico">▣</span>Organización
       </button>
-      <button data-page="finanzas" onclick="showPage('finanzas',this)">
-        <span class="ico">$</span>Finanzas RP
+      <button data-page="familia" onclick="showPage('familia',this)">
+        <span class="ico">♧</span>BANCORMCRP
       </button>
-      <button data-page="registros" onclick="showPage('registros',this)">
-        <span class="ico">☷</span>Mis registros
+      <button data-page="menores" onclick="showPage('menores',this)">
+        <span class="ico">●</span>Mi registro
       </button>
     </div>
-  </div>
-
-  <div class="bank-card">
+    <div class="bank-card">
     <div class="green">SALDO DISPONIBLE</div>
     <strong id="bankBalance">$100,000 RP</strong>
     <button class="btn secondary" style="width:100%" onclick="showPage('finanzas')">
@@ -564,8 +548,7 @@ a{color:inherit;text-decoration:none}
       <button class="chip" onclick="openComposer('Imagen')">▧ Imagen</button>
       <button class="chip" onclick="openComposer('Video')">▹ Video</button>
       <button class="chip gold-chip" onclick="openComposer('Rol')">♥ Rol</button>
-      <button class="chip" onclick="openComposer('Encuesta')">☷ Encuesta</button>
-      <button class="btn" style="margin-left:auto" onclick="openComposer()">Publicar</button>
+               <button class="btn" style="margin-left:auto" onclick="openComposer()">Publicar</button>
     </div>
   </div>
 
