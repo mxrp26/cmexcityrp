@@ -1,3292 +1,1769 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>MexCity RP | La ciudad donde tu historia comienza</title>
-
-<meta
-name="description"
-content="MexCity RP - La ciudad donde tu historia comienza."
->
-
-<link rel="preconnect"
-href="https://fonts.googleapis.com">
-
-<link rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin>
-
-<link
-href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-rel="stylesheet"
->
-
-<!-- SUPABASE JS CLIENT -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#05080c">
+<title>MEXCITY RP — Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
 <style>
-
-/* =========================================================
-   VARIABLES
-========================================================= */
-
-:root {
-
-    --negro:#030303;
-    --negro2:#080808;
-
-    --verde:#00c832;
-    --verde-brillo:#16ff45;
-
-    --rojo:#e50000;
-    --rojo-brillo:#ff2929;
-
-    --dorado:#d9a52b;
-    --dorado-brillo:#ffd45a;
-
-    --blanco:#ffffff;
-    --gris:#bcbcbc;
-
-    --glass:rgba(5,5,5,.78);
-
-    --transicion:all .28s ease;
-}
-
-
-/* =========================================================
-   RESET
-========================================================= */
-
-* {
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-html {
-    scroll-behavior:smooth;
-}
-
-body {
-
-    min-height:100vh;
-
-    font-family:"Inter",Arial,sans-serif;
-
-    color:white;
-
-    background:
-
-        radial-gradient(
-            circle at top left,
-            rgba(0,180,45,.13),
-            transparent 35%
-        ),
-
-        radial-gradient(
-            circle at top right,
-            rgba(220,0,0,.13),
-            transparent 35%
-        ),
-
-        #020202;
-
-    overflow-x:hidden;
-}
-
-button,
-input {
-
-    font-family:inherit;
-}
-
-
-/* =========================================================
-   NAVBAR
-========================================================= */
-
-.navbar {
-
-    position:fixed;
-
-    top:15px;
-    left:50%;
-
-    transform:translateX(-50%);
-
-    width:min(1500px,calc(100% - 30px));
-
-    min-height:120px;
-
-    display:grid;
-
-    grid-template-columns:
-        310px
-        repeat(9,1fr);
-
-    align-items:stretch;
-
-    z-index:1000;
-
-    background:
-
-        linear-gradient(
-            90deg,
-            rgba(0,80,25,.16),
-            rgba(0,0,0,.93) 18%,
-            rgba(0,0,0,.96) 82%,
-            rgba(100,0,0,.18)
-        );
-
-    border:1px solid rgba(218,166,43,.7);
-
-    clip-path:polygon(
-        28px 0,
-        calc(100% - 28px) 0,
-        100% 50%,
-        calc(100% - 28px) 100%,
-        28px 100%,
-        0 50%
-    );
-
-    box-shadow:
-        0 10px 45px rgba(0,0,0,.65);
-
-    backdrop-filter:blur(15px);
-
-    -webkit-backdrop-filter:blur(15px);
-}
-
-
-.navbar::before {
-
-    content:"";
-
-    position:absolute;
-
-    top:0;
-    left:5%;
-
-    width:90%;
-    height:2px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            var(--dorado),
-            transparent
-        );
-
-    box-shadow:
-        0 0 12px var(--dorado);
-}
-
-
-/* =========================================================
-   LOGO
-========================================================= */
-
-.logo-area {
-
-    display:flex;
-
-    justify-content:center;
-    align-items:center;
-
-    padding:12px 25px;
-
-    border-right:
-        1px solid rgba(255,255,255,.08);
-}
-
-.logo-area img {
-
-    width:100%;
-
-    max-width:250px;
-
-    max-height:100px;
-
-    object-fit:contain;
-
-    transition:var(--transicion);
-}
-
-.logo-area:hover img {
-
-    transform:scale(1.04);
-
-    filter:
-        drop-shadow(
-            0 0 16px
-            rgba(218,166,43,.25)
-        );
-}
-
-
-/* =========================================================
-   BOTONES NAVEGACIÓN
-========================================================= */
-
-.nav-button {
-
-    position:relative;
-
-    min-width:0;
-
-    border:none;
-
-    border-right:
-        1px solid rgba(255,255,255,.07);
-
-    background:transparent;
-
-    color:white;
-
-    cursor:pointer;
-
-    padding:12px 6px;
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:center;
-
-    justify-content:center;
-
-    gap:8px;
-
-    transition:var(--transicion);
-}
-
-.nav-button:hover {
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(218,166,43,.12),
-            rgba(218,166,43,.03)
-        );
-}
-
-.nav-button::after {
-
-    content:"";
-
-    position:absolute;
-
-    left:15%;
-    right:15%;
-
-    bottom:0;
-
-    height:2px;
-
-    transform:scaleX(0);
-
-    background:var(--dorado);
-
-    box-shadow:
-        0 0 10px var(--dorado);
-
-    transition:var(--transicion);
-}
-
-.nav-button:hover::after,
-.nav-button.active::after {
-
-    transform:scaleX(1);
-}
-
-.nav-icon {
-
-    width:40px;
-    height:40px;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    font-size:26px;
-
-    color:var(--dorado);
-}
-
-.nav-text {
-
-    font-size:11px;
-
-    font-weight:700;
-
-    text-align:center;
-
-    line-height:1.25;
-
-    text-transform:uppercase;
-}
-
-
-/* COLORES */
-
-.nav-button:nth-child(3) .nav-icon {
-    color:white;
-}
-
-.nav-button:nth-child(4) .nav-icon {
-    color:var(--dorado);
-}
-
-.nav-button:nth-child(5) .nav-icon {
-    color:var(--verde);
-}
-
-.nav-button:nth-child(6) .nav-icon {
-    color:var(--rojo);
-}
-
-.nav-button:nth-child(7) .nav-icon {
-    color:var(--dorado);
-}
-
-.nav-button:nth-child(8) .nav-icon {
-    color:white;
-}
-
-.nav-button.register .nav-icon {
-    color:var(--verde);
-}
-
-.nav-button.login .nav-icon {
-    color:var(--dorado);
-}
-
-
-/* =========================================================
-   HERO
-========================================================= */
-
-.hero {
-
-    position:relative;
-
-    min-height:100vh;
-
-    padding-top:150px;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    overflow:hidden;
-}
-
-
-/* PORTADA ORIGINAL */
-
-.hero-background {
-
-    position:absolute;
-
-    inset:0;
-
-    background-image:
-
-        linear-gradient(
-            90deg,
-            rgba(0,120,35,.28),
-            rgba(0,0,0,.03) 50%,
-            rgba(130,0,0,.30)
-        ),
-
-        url("portada.png");
-
-    background-size:cover;
-
-    background-position:center;
-
-    background-repeat:no-repeat;
-
-    z-index:0;
-}
-
-.hero-background::after {
-
-    content:"";
-
-    position:absolute;
-
-    inset:0;
-
-    background:
-
-        linear-gradient(
-            180deg,
-            rgba(0,0,0,.36),
-            rgba(0,0,0,.02) 40%,
-            rgba(0,0,0,.55)
-        );
-}
-
-
-/* =========================================================
-   CONTENIDO HERO
-========================================================= */
-
-.hero-content {
-
-    position:relative;
-
-    z-index:2;
-
-    width:min(900px,92%);
-
-    text-align:center;
-
-    margin-top:80px;
-}
-
-.welcome {
-
-    font-size:clamp(18px,2vw,28px);
-
-    font-weight:700;
-
-    letter-spacing:3px;
-
-    margin-bottom:12px;
-
-    text-shadow:
-        0 3px 12px black;
-}
-
-.hero-title {
-
-    font-size:clamp(55px,9vw,130px);
-
-    line-height:.95;
-
-    font-weight:900;
-
-    letter-spacing:-5px;
-
-    text-transform:uppercase;
-
-    text-shadow:
-        0 8px 30px rgba(0,0,0,.9);
-}
-
-.hero-title .mx {
-    color:var(--verde);
-}
-
-.hero-title .city {
-    color:white;
-}
-
-.hero-title .rp {
-    color:var(--rojo);
-}
-
-
-.hero-divider {
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    gap:15px;
-
-    margin:20px auto;
-}
-
-.hero-divider span {
-
-    height:2px;
-
-    width:min(180px,20vw);
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            var(--dorado)
-        );
-}
-
-.hero-divider span:last-child {
-
-    background:
-        linear-gradient(
-            90deg,
-            var(--dorado),
-            transparent
-        );
-}
-
-.star {
-
-    color:var(--dorado);
-
-    font-size:23px;
-}
-
-
-.hero-subtitle {
-
-    font-size:clamp(17px,2vw,25px);
-
-    font-weight:500;
-
-    line-height:1.4;
-
-    margin-bottom:14px;
-}
-
-.hero-subtitle strong {
-
-    color:var(--dorado-brillo);
-}
-
-.hero-description {
-
-    max-width:680px;
-
-    margin:0 auto 30px;
-
-    color:#eee;
-
-    font-size:clamp(14px,1.5vw,18px);
-
-    line-height:1.7;
-}
-
-
-/* =========================================================
-   BOTON PRINCIPAL
-========================================================= */
-
-.join-button {
-
-    border:1px solid var(--dorado);
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(55,42,10,.95),
-            rgba(15,12,4,.95)
-        );
-
-    color:var(--dorado-brillo);
-
-    padding:17px 40px;
-
-    min-width:300px;
-
-    border-radius:5px;
-
-    font-size:17px;
-
-    font-weight:800;
-
-    letter-spacing:1px;
-
-    cursor:pointer;
-
-    transition:var(--transicion);
-}
-
-.join-button:hover {
-
-    transform:translateY(-3px);
-
-    box-shadow:
-        0 0 35px rgba(218,166,43,.35);
-}
-
-
-/* =========================================================
-   CARACTERÍSTICAS
-========================================================= */
-
-.features {
-
-    position:absolute;
-
-    z-index:5;
-
-    bottom:0;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    width:min(1500px,100%);
-
-    display:grid;
-
-    grid-template-columns:repeat(5,1fr);
-
-    background:rgba(0,0,0,.82);
-
-    border-top:
-        1px solid rgba(218,166,43,.65);
-
-    backdrop-filter:blur(8px);
-}
-
-.feature {
-
-    min-height:120px;
-
-    padding:20px 18px;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:15px;
-
-    border-right:
-        1px solid rgba(255,255,255,.07);
-}
-
-.feature-icon {
-
-    flex-shrink:0;
-
-    width:54px;
-    height:54px;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    font-size:34px;
-}
-
-.feature-title {
-
-    font-size:14px;
-
-    font-weight:800;
-
-    margin-bottom:6px;
-
-    text-transform:uppercase;
-}
-
-.feature-text {
-
-    color:#ddd;
-
-    font-size:12px;
-
-    line-height:1.5;
-}
-
-.feature:nth-child(1) .feature-icon,
-.feature:nth-child(1) .feature-title {
-    color:var(--verde);
-}
-
-.feature:nth-child(2) .feature-icon,
-.feature:nth-child(2) .feature-title {
-    color:white;
-}
-
-.feature:nth-child(3) .feature-icon,
-.feature:nth-child(3) .feature-title {
-    color:var(--dorado);
-}
-
-.feature:nth-child(4) .feature-icon,
-.feature:nth-child(4) .feature-title {
-    color:var(--rojo);
-}
-
-.feature:nth-child(5) .feature-icon,
-.feature:nth-child(5) .feature-title {
-    color:var(--verde);
-}
-
-
-/* =========================================================
-   MODAL GENERAL
-========================================================= */
-
-.modal {
-
-    position:fixed;
-
-    inset:0;
-
-    z-index:3000;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    padding:20px;
-
-    background:rgba(0,0,0,.72);
-
-    backdrop-filter:blur(9px);
-
-    -webkit-backdrop-filter:blur(9px);
-
-    opacity:0;
-
-    visibility:hidden;
-
-    transition:
-        opacity .25s ease,
-        visibility .25s ease;
-}
-
-.modal.active {
-
-    opacity:1;
-
-    visibility:visible;
-}
-
-.modal-box {
-
-    position:relative;
-
-    width:min(700px,100%);
-
-    max-height:90vh;
-
-    overflow-y:auto;
-
-    padding:38px;
-
-    border:
-        1px solid rgba(218,166,43,.75);
-
-    border-radius:14px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(17,17,17,.87),
-            rgba(3,3,3,.76)
-        );
-
-    box-shadow:
-        0 30px 100px rgba(0,0,0,.85),
-        0 0 35px rgba(218,166,43,.12);
-
-    backdrop-filter:blur(25px);
-
-    transform:
-        translateY(20px)
-        scale(.97);
-
-    transition:
-        transform .3s ease;
-}
-
-.modal.active .modal-box {
-
-    transform:
-        translateY(0)
-        scale(1);
-}
-
-.modal-box::before {
-
-    content:"";
-
-    position:absolute;
-
-    top:0;
-    left:12%;
-
-    width:76%;
-    height:2px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            var(--dorado),
-            transparent
-        );
-}
-
-
-/* =========================================================
-   CERRAR MODAL
-========================================================= */
-
-.modal-close {
-
-    position:absolute;
-
-    top:14px;
-    right:16px;
-
-    width:40px;
-    height:40px;
-
-    border-radius:50%;
-
-    border:
-        1px solid rgba(255,255,255,.16);
-
-    background:
-        rgba(255,255,255,.05);
-
-    color:white;
-
-    font-size:24px;
-
-    cursor:pointer;
-}
-
-.modal-close:hover {
-
-    background:
-        rgba(220,0,0,.35);
-
-    border-color:
-        var(--rojo);
-}
-
-
-/* =========================================================
-   MODAL CONTENIDO
-========================================================= */
-
-.modal-icon {
-
-    text-align:center;
-
-    font-size:45px;
-
-    color:var(--dorado);
-
-    margin-bottom:12px;
-}
-
-.modal-title {
-
-    text-align:center;
-
-    font-size:clamp(23px,4vw,34px);
-
-    font-weight:800;
-
-    margin-bottom:20px;
-
-    text-transform:uppercase;
-}
-
-.modal-title span {
-    color:var(--dorado-brillo);
-}
-
-.modal-content {
-
-    color:#dedede;
-
-    line-height:1.75;
-
-    font-size:15px;
-}
-
-.modal-content p {
-    margin-bottom:14px;
-}
-
-
-/* =========================================================
-   FORMULARIOS
-========================================================= */
-
-.auth-form {
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:15px;
-
-    margin-top:20px;
-}
-
-.form-group {
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:7px;
-}
-
-.form-group label {
-
-    color:#ddd;
-
-    font-size:13px;
-
-    font-weight:700;
-
-    text-transform:uppercase;
-}
-
-.form-group input {
-
-    width:100%;
-
-    min-height:52px;
-
-    padding:13px 15px;
-
-    border:
-        1px solid rgba(255,255,255,.14);
-
-    border-radius:8px;
-
-    outline:none;
-
-    background:
-        rgba(255,255,255,.055);
-
-    color:white;
-
-    font-size:15px;
-
-    transition:var(--transicion);
-}
-
-.form-group input:focus {
-
-    border-color:var(--dorado);
-
-    background:
-        rgba(255,255,255,.08);
-
-    box-shadow:
-        0 0 15px rgba(218,166,43,.10);
-}
-
-.form-group input::placeholder {
-    color:#888;
-}
-
-
-/* =========================================================
-   BOTON FORMULARIO
-========================================================= */
-
-.auth-submit {
-
-    width:100%;
-
-    min-height:54px;
-
-    margin-top:5px;
-
-    border:
-        1px solid var(--dorado);
-
-    border-radius:8px;
-
-    background:
-        linear-gradient(
-            180deg,
-            #332707,
-            #100d03
-        );
-
-    color:var(--dorado-brillo);
-
-    font-size:15px;
-
-    font-weight:800;
-
-    cursor:pointer;
-
-    transition:var(--transicion);
-}
-
-.auth-submit:hover {
-
-    transform:translateY(-2px);
-
-    box-shadow:
-        0 0 25px rgba(218,166,43,.22);
-}
-
-.auth-submit:disabled {
-
-    opacity:.55;
-
-    cursor:not-allowed;
-
-    transform:none;
-}
-
-
-/* =========================================================
-   MENSAJES
-========================================================= */
-
-.form-message {
-
-    display:none;
-
-    padding:13px;
-
-    margin-top:10px;
-
-    border-radius:7px;
-
-    font-size:13px;
-
-    line-height:1.5;
-
-    text-align:center;
-}
-
-.form-message.show {
-    display:block;
-}
-
-.form-message.success {
-
-    color:#9cffb0;
-
-    border:
-        1px solid rgba(0,200,50,.4);
-
-    background:
-        rgba(0,200,50,.08);
-}
-
-.form-message.error {
-
-    color:#ff9b9b;
-
-    border:
-        1px solid rgba(230,0,0,.4);
-
-    background:
-        rgba(230,0,0,.08);
-}
-
-.auth-note {
-
-    margin-top:15px;
-
-    color:#888;
-
-    font-size:12px;
-
-    text-align:center;
-
-    line-height:1.5;
-}
-
-
-/* =========================================================
-   STAFF
-========================================================= */
-
-.staff-list {
-
-    display:grid;
-
-    grid-template-columns:repeat(2,1fr);
-
-    gap:15px;
-
-    margin-top:20px;
-}
-
-.staff-card {
-
-    padding:20px;
-
-    border:
-        1px solid rgba(218,166,43,.28);
-
-    border-radius:10px;
-
-    background:
-        rgba(255,255,255,.035);
-}
-
-.staff-role {
-
-    color:var(--verde);
-
-    font-size:12px;
-
-    font-weight:800;
-
-    text-transform:uppercase;
-
-    margin-bottom:6px;
-}
-
-.staff-name {
-
-    font-size:19px;
-
-    font-weight:800;
-
-    margin-bottom:8px;
-}
-
-.staff-code {
-
-    display:inline-block;
-
-    padding:6px 10px;
-
-    border-radius:5px;
-
-    background:
-        rgba(218,166,43,.10);
-
-    color:var(--dorado-brillo);
-
-    font-family:monospace;
-
-    font-size:13px;
-}
-
-
-/* =========================================================
-   MODAL GRID
-========================================================= */
-
-.modal-grid {
-
-    display:grid;
-
-    grid-template-columns:repeat(2,1fr);
-
-    gap:13px;
-
-    margin-top:22px;
-}
-
-.info-card {
-
-    padding:18px;
-
-    border:
-        1px solid rgba(255,255,255,.09);
-
-    border-radius:9px;
-
-    background:
-        rgba(255,255,255,.035);
-}
-
-.info-card h3 {
-
-    color:var(--dorado-brillo);
-
-    font-size:15px;
-
-    margin-bottom:7px;
-}
-
-.info-card p {
-
-    color:#c8c8c8;
-
-    font-size:13px;
-
-    line-height:1.5;
-
-    margin:0;
-}
-
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-footer {
-
-    min-height:120px;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    text-align:center;
-
-    padding:35px 20px;
-
-    background:#020202;
-
-    border-top:
-        1px solid rgba(218,166,43,.35);
-}
-
-footer p {
-
-    color:#888;
-
-    font-size:13px;
-}
-
-footer strong {
-    color:var(--dorado);
-}
-
-
-/* =========================================================
-   SCROLLBAR
-========================================================= */
-
-::-webkit-scrollbar {
-    width:8px;
-}
-
-::-webkit-scrollbar-track {
-    background:#020202;
-}
-
-::-webkit-scrollbar-thumb {
-
-    background:
-        linear-gradient(
-            var(--verde),
-            var(--dorado),
-            var(--rojo)
-        );
-
-    border-radius:10px;
-}
-
-
-/* =========================================================
-   TABLET
-========================================================= */
-
-@media(max-width:1100px) {
-
-    .navbar {
-
-        grid-template-columns:
-            220px
-            repeat(9,1fr);
-
-        min-height:105px;
-    }
-
-    .logo-area img {
-        max-width:180px;
-    }
-
-    .nav-text {
-        font-size:9px;
-    }
-
-    .nav-icon {
-        font-size:22px;
-    }
-
-    .feature {
-
-        padding:15px 10px;
-
-        gap:8px;
-    }
-
-    .feature-icon {
-
-        width:42px;
-
-        font-size:27px;
-    }
-
-    .feature-title {
-        font-size:10px;
-    }
-
-    .feature-text {
-        font-size:9px;
-    }
-}
-
-
-/* =========================================================
-   CELULAR
-========================================================= */
-
-@media(max-width:760px) {
-
-    .navbar {
-
-        top:8px;
-
-        width:calc(100% - 16px);
-
-        min-height:auto;
-
-        display:grid;
-
-        grid-template-columns:
-            repeat(4,1fr);
-
-        clip-path:none;
-
-        border-radius:12px;
-
-        overflow:hidden;
-
-        background:
-            rgba(3,3,3,.94);
-    }
-
-    .logo-area {
-
-        grid-column:1/-1;
-
-        min-height:72px;
-
-        border-right:none;
-
-        border-bottom:
-            1px solid rgba(255,255,255,.08);
-    }
-
-    .logo-area img {
-
-        max-width:165px;
-
-        max-height:62px;
-    }
-
-    .nav-button {
-
-        min-height:76px;
-
-        padding:7px 3px;
-
-        gap:4px;
-    }
-
-    .nav-icon {
-
-        width:30px;
-        height:30px;
-
-        font-size:20px;
-    }
-
-    .nav-text {
-        font-size:7px;
-    }
-
-    .nav-button:nth-child(6),
-    .nav-button:nth-child(7) {
-
-        display:none;
-    }
-
-    .hero {
-
-        min-height:100svh;
-
-        padding-top:180px;
-
-        padding-bottom:190px;
-
-        align-items:flex-start;
-    }
-
-    .hero-content {
-
-        margin-top:70px;
-    }
-
-    .hero-title {
-
-        font-size:
-            clamp(46px,14vw,78px);
-
-        letter-spacing:-3px;
-    }
-
-    .hero-description {
-
-        font-size:13px;
-    }
-
-    .join-button {
-
-        width:90%;
-
-        min-width:0;
-
-        padding:15px 20px;
-
-        font-size:14px;
-    }
-
-    .features {
-
-        position:absolute;
-
-        bottom:0;
-
-        width:100%;
-
-        display:grid;
-
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .feature {
-
-        min-height:90px;
-
-        padding:12px;
-    }
-
-    .feature:nth-child(5) {
-
-        grid-column:1/-1;
-    }
-
-    .feature-icon {
-
-        width:38px;
-
-        font-size:24px;
-    }
-
-    .feature-title {
-        font-size:9px;
-    }
-
-    .feature-text {
-        font-size:8px;
-    }
-
-    .modal {
-
-        padding:12px;
-    }
-
-    .modal-box {
-
-        padding:30px 20px;
-
-        max-height:90vh;
-
-        border-radius:11px;
-    }
-
-    .modal-grid,
-    .staff-list {
-
-        grid-template-columns:1fr;
-    }
-
-    .modal-content {
-        font-size:14px;
-    }
-}
-
-
-/* =========================================================
-   CELULAR PEQUEÑO
-========================================================= */
-
-@media(max-width:420px) {
-
-    .navbar {
-
-        grid-template-columns:
-            repeat(4,1fr);
-    }
-
-    .hero {
-
-        padding-top:160px;
-
-        padding-bottom:250px;
-    }
-
-    .hero-title {
-        font-size:45px;
-    }
-
-    .hero-description {
-        font-size:12px;
-    }
+:root{
+  --bg:#03070b;
+  --panel:#071017;
+  --panel2:#0a141b;
+  --panel3:#0d1820;
+  --line:rgba(255,255,255,.09);
+  --line2:rgba(255,255,255,.16);
+  --text:#f4f5f6;
+  --muted:#89959c;
+  --gold:#d8a52e;
+  --gold2:#f2c85b;
+  --green:#16c66b;
+  --red:#ef4444;
+  --purple:#9257df;
+  --blue:#26a9d9;
+  --shadow:0 20px 60px rgba(0,0,0,.38);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:
+radial-gradient(circle at 50% -20%,#17252c 0,#071017 35%,#020406 100%);
+color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
+body{overflow-x:hidden}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+.hidden{display:none!important}
+.muted{color:var(--muted)}
+a{color:inherit;text-decoration:none}
+
+/* ================= LOGIN ================= */
+#loginScreen{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:24px;
+}
+.login-card{
+  width:min(430px,100%);
+  padding:32px;
+  border:1px solid var(--line2);
+  border-radius:24px;
+  background:rgba(7,16,23,.94);
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(20px)
+}
+.brand{text-align:center;margin-bottom:25px}
+.crown{font-size:48px;color:var(--gold);line-height:1}
+.brand h1{margin:7px 0 4px;font-size:28px;letter-spacing:2px}
+.brand p{margin:0;color:var(--muted);font-size:12px}
+.field{margin:14px 0}
+.field label{display:block;color:#b8c1c5;font-size:12px;margin-bottom:7px}
+.field input,.field textarea,.field select{
+  width:100%;padding:12px 13px;
+  color:var(--text);background:#050b10;
+  border:1px solid var(--line2);border-radius:11px;outline:none
+}
+.field input:focus,.field textarea:focus,.field select:focus{
+  border-color:rgba(216,165,46,.65)
+}
+.btn{
+  border:1px solid transparent;border-radius:11px;
+  padding:11px 16px;background:linear-gradient(135deg,var(--gold2),var(--gold));
+  color:#111;font-weight:800
+}
+.btn.secondary{background:#ffffff07;color:#fff;border-color:var(--line2)}
+.btn.danger{background:#42151a;color:#ff9a9a;border-color:#ef444433}
+.login-msg{min-height:20px;margin-top:10px;color:#ff9c9c;font-size:13px}
+
+/* ================= APP ================= */
+#app{display:none;min-height:100vh}
+.topbar{
+  height:76px;position:sticky;top:0;z-index:50;
+  display:grid;grid-template-columns:250px minmax(240px,1fr) 330px;
+  gap:20px;align-items:center;padding:0 18px;
+  border-bottom:1px solid var(--line);
+  background:rgba(3,8,12,.92);backdrop-filter:blur(22px)
+}
+.brand-small{display:flex;align-items:center;gap:10px}
+.brand-small .m{font-size:36px;color:var(--gold)}
+.brand-small strong{display:block;font-size:19px;letter-spacing:1px}
+.brand-small span{display:block;color:#aab3b7;font-size:10px}
+.search{max-width:540px;width:100%;margin:auto;position:relative}
+.search input{
+  width:100%;padding:12px 42px 12px 16px;
+  background:#071017;border:1px solid var(--line2);
+  color:#fff;border-radius:12px;outline:none
+}
+.search-icon{position:absolute;right:15px;top:9px;color:#aab3b7;font-size:22px}
+.top-actions{display:flex;justify-content:flex-end;align-items:center;gap:9px}
+.icon-btn{
+  width:42px;height:42px;border-radius:12px;
+  border:1px solid var(--line);background:#ffffff06;color:#fff;
+  position:relative
+}
+.badge{
+  position:absolute;right:-5px;top:-6px;min-width:20px;height:20px;
+  padding:2px 5px;border-radius:20px;background:#e33b43;
+  color:#fff;font-size:11px;font-weight:800
+}
+.profile-mini{display:flex;align-items:center;gap:9px;margin-left:7px}
+.avatar{
+  width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
+  overflow:hidden;flex:none;border:1px solid rgba(216,165,46,.65);
+  background:radial-gradient(circle at 35% 30%,#8b6839,#271e10 60%,#090b0c);
+  color:#fff;font-weight:800
+}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.profile-mini .name{font-size:13px}
+.profile-mini small{display:block;color:var(--green);font-size:10px;margin-top:2px}
+
+/* ================= LAYOUT ================= */
+.shell{
+  display:grid;grid-template-columns:250px minmax(0,1fr) 350px;
+  gap:14px;max-width:1600px;margin:auto;padding:14px
+}
+.sidebar,.rightbar{min-width:0}
+.sidebar{
+  position:sticky;top:90px;height:calc(100vh - 104px);overflow:auto
+}
+.rightbar{
+  position:sticky;top:90px;height:calc(100vh - 104px);overflow:auto
+}
+.side-card,.panel{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(9,18,24,.94),rgba(5,11,15,.94));
+  border-radius:15px;box-shadow:0 10px 35px rgba(0,0,0,.2)
+}
+.side-card{padding:14px;margin-bottom:12px}
+.side-profile{
+  display:flex;gap:11px;align-items:center;
+  padding-bottom:13px;border-bottom:1px solid var(--line)
+}
+.side-profile b{font-size:14px}
+.side-profile small{display:block;color:var(--muted);margin-top:3px}
+.status{color:var(--green);font-size:11px;margin-top:3px}
+.nav{margin-top:12px}
+.nav button{
+  width:100%;display:flex;align-items:center;gap:12px;
+  text-align:left;background:transparent;border:1px solid transparent;
+  color:#aeb8bd;padding:10px 11px;border-radius:10px;margin:3px 0
+}
+.nav button:hover,.nav button.active{
+  color:#fff;background:rgba(216,165,46,.08);
+  border-color:rgba(216,165,46,.3)
+}
+.nav .ico{width:22px;text-align:center;font-size:18px}
+.bank-card{
+  padding:15px;border:1px solid rgba(22,198,107,.18);
+  background:#061a12;border-radius:13px
+}
+.bank-card .green{color:#17c56c;font-size:11px}
+.bank-card strong{display:block;font-size:22px;margin:5px 0 12px}
+.logout{width:100%;margin-top:8px}
+
+/* ================= FEED ================= */
+.main{min-width:0}
+.stories{
+  display:flex;gap:8px;padding:6px 0 14px;overflow-x:auto
+}
+.story{min-width:82px;text-align:center;color:#aeb8bd;font-size:11px}
+.story-circle{
+  width:65px;height:65px;border-radius:50%;margin:0 auto 6px;padding:2px;
+  background:linear-gradient(135deg,var(--gold),#e72e7b,#7542d7)
+}
+.story-circle>div{
+  width:100%;height:100%;border-radius:50%;
+  background:#071017;border:2px solid #071017;
+  display:grid;place-items:center;font-size:22px
+}
+.story:first-child .story-circle{background:var(--line2)}
+.composer{padding:12px;margin-bottom:12px}
+.composer-row{display:flex;gap:10px;align-items:center}
+.composer input{
+  flex:1;border:1px solid var(--line);background:#050b0f;
+  color:#fff;border-radius:12px;padding:12px;outline:none
+}
+.composer-actions{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+.chip{
+  border:1px solid var(--line2);background:#ffffff05;
+  color:#b9c1c4;border-radius:10px;padding:8px 10px;font-size:12px
+}
+.gold-chip{background:rgba(216,165,46,.1);border-color:rgba(216,165,46,.35);color:#f0c65a}
+.feed{display:flex;flex-direction:column;gap:12px}
+.post{overflow:hidden}
+.post-head{display:flex;align-items:center;gap:10px;padding:13px}
+.post-head .meta{flex:1}
+.post-head b{font-size:14px}
+.post-head small{display:block;color:var(--muted);margin-top:2px}
+.online{color:var(--green)}
+.post-media{
+  width:100%;aspect-ratio:16/8.5;background:#081116;overflow:hidden
+}
+.post-media img{width:100%;height:100%;object-fit:cover}
+.post-body{padding:12px 14px}
+.tag{
+  display:inline-block;padding:5px 8px;border-radius:20px;
+  background:rgba(13,92,56,.16);border:1px solid rgba(22,183,104,.32);
+  color:#3edb91;font-size:10px;font-weight:800
+}
+.post h3{margin:8px 0 4px;font-size:19px}
+.post p{margin:0;color:#aeb8bd;font-size:13px;line-height:1.5}
+.hashtag{color:#32a9dd;margin-top:8px;font-size:12px}
+.post-actions{
+  display:flex;gap:16px;border-top:1px solid var(--line);
+  padding:10px 14px;color:#aeb8bd
+}
+.post-actions button{background:none;border:0;color:inherit;padding:0}
+.post-actions button:hover{color:#fff}
+.liked{color:#ef5261!important}
+
+/* ================= RIGHT ================= */
+.panel{padding:14px;margin-bottom:12px}
+.panel-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.panel-title h3{margin:0;font-size:13px;letter-spacing:.4px}
+.panel-title a{color:#9fa9ad;font-size:11px;cursor:pointer}
+.stat-list{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.stat-box{
+  padding:10px;border-radius:11px;background:#ffffff05;border:1px solid var(--line)
+}
+.stat-box b{display:block;font-size:17px}
+.stat-box small{color:var(--muted);font-size:10px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px}
+.green{color:#18c66e}.green .dot{background:#18c66e}
+.purple{color:#a363eb}.purple .dot{background:#a363eb}
+.blue{color:#2bb5dc}.blue .dot{background:#2bb5dc}
+.orange{color:#ee9143}.orange .dot{background:#ee9143}
+.event{
+  padding:10px 0;border-bottom:1px solid var(--line);
+  display:flex;gap:10px
+}
+.event:last-child{border-bottom:0}
+.event-icon{
+  width:34px;height:34px;border-radius:9px;background:#ffffff08;
+  display:grid;place-items:center
+}
+.event b{font-size:12px}
+.event small{display:block;color:var(--muted);margin-top:4px}
+.player{
+  display:flex;gap:9px;align-items:center;
+  padding:8px 0;border-bottom:1px solid var(--line)
+}
+.player:last-child{border-bottom:0}
+.player .avatar{width:34px;height:34px}
+.player b{font-size:12px}
+.player small{display:block;color:var(--green);font-size:10px}
+.chat{height:360px;display:flex;flex-direction:column}
+.chat-list{overflow:auto;flex:1}
+.message{display:flex;gap:8px;padding:8px 0}
+.message .avatar{width:30px;height:30px}
+.message b{font-size:11px}
+.message small{color:var(--muted);font-size:9px;margin-left:5px}
+.message p{margin:3px 0 0;color:#c6cdd0;font-size:11px;line-height:1.4}
+.chat-input{display:flex;gap:6px;margin-top:8px}
+.chat-input input{
+  flex:1;min-width:0;background:#050b0f;border:1px solid var(--line2);
+  border-radius:10px;color:#fff;padding:9px;outline:none
+}
+.radio{display:flex;align-items:center;gap:12px}
+.mic{
+  width:48px;height:48px;border:2px solid #f04444;
+  border-radius:50%;display:grid;place-items:center;font-size:22px
+}
+.wave{
+  flex:1;height:30px;
+  background:repeating-linear-gradient(90deg,transparent 0 4px,#d7a52f 5px 7px,transparent 8px 12px);
+  opacity:.8
+}
+.play{
+  width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--line2);background:#ffffff0a;color:#fff
+}
+
+/* ================= PAGES ================= */
+.page{display:none}
+.page.active{display:block}
+.page-head{
+  display:flex;justify-content:space-between;gap:10px;
+  align-items:flex-end;margin:8px 0 14px
+}
+.page-head h2{margin:0;font-size:25px}
+.page-head p{margin:5px 0 0;color:var(--muted);font-size:13px}
+.grid2{display:grid;grid-template-columns:1.35fr 1fr;gap:12px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px}
+.full{grid-column:1/-1}
+.records{display:flex;flex-direction:column;gap:8px}
+.record{
+  padding:12px;border:1px solid var(--line);
+  border-radius:11px;background:#ffffff04
+}
+.record b{font-size:13px}
+.record small{display:block;color:var(--muted);margin-top:4px}
+.empty{padding:35px 10px;text-align:center;color:var(--muted)}
+
+/* ================= MODAL ================= */
+.modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.75);
+  display:none;place-items:center;padding:18px;z-index:100
+}
+.modal.show{display:grid}
+.modal-card{
+  width:min(620px,100%);max-height:90vh;overflow:auto;
+  background:#071015;border:1px solid var(--line2);
+  border-radius:18px;padding:18px;box-shadow:var(--shadow)
+}
+.modal-head{display:flex;justify-content:space-between;align-items:center}
+.modal-head h3{margin:0}
+.close{background:none;border:0;color:#fff;font-size:25px}
+.toast{
+  position:fixed;right:18px;bottom:82px;z-index:120;
+  background:#0c171c;border:1px solid var(--line2);
+  padding:12px 16px;border-radius:11px;display:none
+}
+.bottom-nav{display:none}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:1200px){
+  .topbar{grid-template-columns:220px 1fr 270px}
+  .shell{grid-template-columns:220px minmax(0,1fr)}
+  .rightbar{display:none}
+}
+@media(max-width:800px){
+  .topbar{
+    height:65px;grid-template-columns:1fr auto;padding:0 12px
+  }
+  .brand-small .m{font-size:28px}
+  .brand-small strong{font-size:16px}
+  .brand-small span{display:none}
+  .search{display:none}
+  .profile-mini .name,.profile-mini small{display:none}
+  .shell{display:block;padding:8px 8px 82px}
+  .sidebar{display:none}
+  .main{width:100%}
+  .rightbar{display:none}
+  .bottom-nav{
+    position:fixed;display:flex;left:0;right:0;bottom:0;z-index:60;
+    height:62px;background:rgba(5,10,14,.95);
+    border-top:1px solid var(--line2);backdrop-filter:blur(20px);
+    justify-content:space-around;padding-bottom:env(safe-area-inset-bottom)
+  }
+  .bottom-nav button{
+    background:none;border:0;color:#929da2;font-size:10px;min-width:52px
+  }
+  .bottom-nav button.active{color:var(--gold2)}
+  .bottom-nav span{display:block;font-size:20px;margin-bottom:3px}
+  .stories{padding-top:4px}
+  .post-media{aspect-ratio:1.25/1}
+  .post h3{font-size:17px}
+  .form-grid{grid-template-columns:1fr}
+  .full{grid-column:auto}
+  .grid2{grid-template-columns:1fr}
+  .page-head{align-items:flex-start;flex-direction:column}
+  .top-actions{gap:5px}
+  .top-actions .icon-btn:first-child{display:none}
+}
+@media(max-width:430px){
+  .brand-small .m{font-size:25px}
+  .brand-small strong{font-size:14px}
+  .top-actions .icon-btn{width:38px;height:38px}
+  .avatar{width:38px;height:38px}
+  .composer-actions .chip{flex:1}
+  .post-head{padding:10px}
+  .post-body{padding:10px}
+  .post-actions{gap:11px;font-size:12px}
 }
-
 </style>
-
 </head>
-
 
 <body>
 
-
 <!-- =========================================================
-     NAVBAR
+     LOGIN DE RESPALDO
+     La página principal de MexCity ya redirige a dashboard.html
+     después del login. Este bloque evita que dashboard quede
+     accesible sin sesión si alguien entra directamente a la URL.
 ========================================================= -->
-
-<nav class="navbar">
-
-
-    <!-- LOGO -->
-
-    <div class="logo-area">
-
-        <img
-            src="logo.png"
-            alt="MexCity RP"
-        >
-
+<section id="loginScreen">
+  <div class="login-card">
+    <div class="brand">
+      <div class="crown">♛</div>
+      <h1>MEXCITY RP</h1>
+      <p>LA CIUDAD DONDE TU HISTORIA COMIENZA</p>
     </div>
 
-
-    <!-- ¿QUÉ ES? -->
-
-    <button
-        class="nav-button"
-        data-modal="que-es"
-    >
-
-        <div class="nav-icon">
-            🏙
-        </div>
-
-        <div class="nav-text">
-            ¿Qué es<br>
-            MexCity?
-        </div>
-
-    </button>
-
-
-    <!-- COMUNIDAD -->
-
-    <button
-        class="nav-button"
-        data-modal="comunidad"
-    >
-
-        <div class="nav-icon">
-            👥
-        </div>
-
-        <div class="nav-text">
-            Nuestra<br>
-            Comunidad
-        </div>
-
-    </button>
-
-
-    <!-- ROLEPLAY -->
-
-    <button
-        class="nav-button"
-        data-modal="funciona"
-    >
-
-        <div class="nav-icon">
-            ☆
-        </div>
-
-        <div class="nav-text">
-            Cómo funciona<br>
-            el Roleplay
-        </div>
-
-    </button>
-
-
-    <!-- PRIVACIDAD -->
-
-    <button
-        class="nav-button"
-        data-modal="politica"
-    >
-
-        <div class="nav-icon">
-            ♙
-        </div>
-
-        <div class="nav-text">
-            Política y<br>
-            Privacidad
-        </div>
-
-    </button>
-
-
-    <!-- REGLAS -->
-
-    <button
-        class="nav-button"
-        data-modal="reglas"
-    >
-
-        <div class="nav-icon">
-            ♢
-        </div>
-
-        <div class="nav-text">
-            Reglas y<br>
-            Convivencia
-        </div>
-
-    </button>
-
-
-    <!-- STAFF -->
-
-    <button
-        class="nav-button"
-        data-modal="staff"
-    >
-
-        <div class="nav-icon">
-            ★
-        </div>
-
-        <div class="nav-text">
-            Staff
-        </div>
-
-    </button>
-
-
-    <!-- SOPORTE -->
-
-    <button
-        class="nav-button"
-        data-modal="soporte"
-    >
-
-        <div class="nav-icon">
-            ◉
-        </div>
-
-        <div class="nav-text">
-            Soporte
-        </div>
-
-    </button>
-
-
-    <!-- REGISTRARSE -->
-
-    <button
-        class="nav-button register"
-        data-modal="registro"
-    >
-
-        <div class="nav-icon">
-            ✚
-        </div>
-
-        <div class="nav-text">
-            Registrarse
-        </div>
-
-    </button>
-
-
-    <!-- INICIAR SESIÓN -->
-
-    <button
-        class="nav-button login"
-        data-modal="login"
-    >
-
-        <div class="nav-icon">
-            ⇥
-        </div>
-
-        <div class="nav-text">
-            Iniciar<br>
-            sesión
-        </div>
-
-    </button>
-
-</nav>
-
-
-
-<!-- =========================================================
-     HERO
-========================================================= -->
-
-<main class="hero">
-
-    <div class="hero-background"></div>
-
-
-    <div class="hero-content">
-
-        <div class="welcome">
-            BIENVENIDO A
-        </div>
-
-
-        <h1 class="hero-title">
-
-            <span class="mx">MEX</span><span class="city">CITY</span><span class="rp"> RP</span>
-
-        </h1>
-
-
-        <div class="hero-divider">
-
-            <span></span>
-
-            <div class="star">
-                ★
-            </div>
-
-            <span></span>
-
-        </div>
-
-
-        <div class="hero-subtitle">
-
-            LA CIUDAD DONDE
-            <strong>TU HISTORIA</strong>
-            COMIENZA
-
-        </div>
-
-
-        <p class="hero-description">
-
-            Crea tu personaje, construye tu historia y vive
-            experiencias únicas en la comunidad de roleplay
-            más completa inspirada en México.
-           
-
-        </p>
-
-
-        <button
-            class="join-button"
-            data-modal="registro"
-        >
-
-            ★ &nbsp;
-            ÚNETE A LA CIUDAD
-            &nbsp; ★
-
-        </button>
-
+    <div class="field">
+      <label>Correo electrónico</label>
+      <input id="loginEmail" type="email" autocomplete="email" placeholder="correo@ejemplo.com">
     </div>
 
+    <div class="field">
+      <label>Contraseña</label>
+      <input id="loginPassword" type="password" autocomplete="current-password"
+             placeholder="••••••••"
+             onkeydown="if(event.key==='Enter') login()">
+    </div>
 
+    <button class="btn" style="width:100%" onclick="login()">INICIAR SESIÓN</button>
+    <div id="loginMsg" class="login-msg"></div>
+  </div>
+</section>
 
-    <!-- =====================================================
-         CARACTERÍSTICAS
-    ====================================================== -->
+<!-- =========================================================
+     DASHBOARD PRIVADO
+========================================================= -->
+<div id="app">
 
-    <section class="features">
+<header class="topbar">
+  <div class="brand-small">
+    <div class="m">♛</div>
+    <div>
+      <strong>MEXCITY RP</strong>
+      <span>LA CIUDAD DONDE TU HISTORIA COMIENZA</span>
+    </div>
+  </div>
 
+  <div class="search">
+    <input id="searchInput" placeholder="Buscar en MexCity..." oninput="searchFeed(this.value)">
+    <span class="search-icon">⌕</span>
+  </div>
 
-        <div class="feature">
+  <div class="top-actions">
+    <button class="icon-btn" onclick="openComposer()">＋</button>
+    <button class="icon-btn" onclick="showPage('notificaciones')">
+      ♧<span class="badge">12</span>
+    </button>
+    <button class="icon-btn" onclick="showPage('mensajes')">
+      ▱<span class="badge">8</span>
+    </button>
+    <div class="profile-mini">
+      <div class="avatar" id="topAvatar">C</div>
+      <div>
+        <div class="name" id="topName">Jugador</div>
+        <small>● En línea</small>
+      </div>
+    </div>
+  </div>
+</header>
 
-            <div class="feature-icon">
-                ♙
-            </div>
+<div class="shell">
 
-            <div>
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+<aside class="sidebar">
 
-                <div class="feature-title">
-                    Comunidad Activa
-                </div>
+  <div class="side-card">
+    <div class="side-profile">
+      <div class="avatar" id="sideAvatar">C</div>
+      <div>
+        <b id="sideName">Jugador</b>
+        <small id="sideCity">México</small>
+        <div class="status">● En línea</div>
+      </div>
+    </div>
 
-                <div class="feature-text">
-                    Miles de historias<br>
-                    cada día
-                </div>
+    <div class="nav">
+      <button class="active" data-page="inicio" onclick="showPage('inicio',this)">
+        <span class="ico">⌂</span>Inicio
+      </button>
+      <button data-page="explorar" onclick="showPage('explorar',this)">
+        <span class="ico">⌕</span>Explorar
+      </button>
+      <button data-page="mensajes" onclick="showPage('mensajes',this)">
+        <span class="ico">▱</span>Mensajes
+      </button>
+      <button data-page="notificaciones" onclick="showPage('notificaciones',this)">
+        <span class="ico">♧</span>Notificaciones
+      </button>
+      <button data-page="eventos" onclick="showPage('eventos',this)">
+        <span class="ico">▣</span>Eventos
+      </button>
+      <button data-page="directorio" onclick="showPage('directorio',this)">
+        <span class="ico">♙</span>Directorio
+      </button>
+      <button data-page="rankings" onclick="showPage('rankings',this)">
+        <span class="ico">♛</span>Rankings
+      </button>
+      <button data-page="radio" onclick="showPage('radio',this)">
+        <span class="ico">◉</span>Radio MexCity
+      </button>
+    </div>
+  </div>
 
-            </div>
+  <div class="side-card">
+    <div class="muted" style="font-size:11px;margin-bottom:8px">MENÚ DEL JUGADOR</div>
 
+    <div class="nav" style="margin:0">
+      <button data-page="jugador" onclick="showPage('jugador',this)">
+        <span class="ico">●</span>Registro de jugador
+      </button>
+      <button data-page="hogar" onclick="showPage('hogar',this)">
+        <span class="ico">⌂</span>Hogar
+      </button>
+      <button data-page="transporte" onclick="showPage('transporte',this)">
+        <span class="ico">▣</span>Transporte
+      </button>
+      <button data-page="familia" onclick="showPage('familia',this)">
+        <span class="ico">♧</span>Familia
+      </button>
+      <button data-page="menores" onclick="showPage('menores',this)">
+        <span class="ico">●</span>Menores
+      </button>
+      <button data-page="empresa" onclick="showPage('empresa',this)">
+        <span class="ico">▤</span>Empresa / Trabajo
+      </button>
+      <button data-page="organizacion" onclick="showPage('organizacion',this)">
+        <span class="ico">◆</span>Organización
+      </button>
+      <button data-page="finanzas" onclick="showPage('finanzas',this)">
+        <span class="ico">$</span>Finanzas RP
+      </button>
+      <button data-page="registros" onclick="showPage('registros',this)">
+        <span class="ico">☷</span>Mis registros
+      </button>
+    </div>
+  </div>
+
+  <div class="bank-card">
+    <div class="green">SALDO DISPONIBLE</div>
+    <strong id="bankBalance">$100,000 RP</strong>
+    <button class="btn secondary" style="width:100%" onclick="showPage('finanzas')">
+      Ver mi cuenta
+    </button>
+  </div>
+
+  <button class="btn danger logout" onclick="logout()">↪ Cerrar sesión</button>
+</aside>
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+<main class="main">
+
+<section id="page-inicio" class="page active">
+
+  <div class="stories">
+    <div class="story" onclick="openComposer()">
+      <div class="story-circle"><div>＋</div></div>Crear historia
+    </div>
+    <div class="story"><div class="story-circle"><div>📣</div></div>Anuncios</div>
+    <div class="story"><div class="story-circle"><div>▣</div></div>Eventos</div>
+    <div class="story"><div class="story-circle"><div>♛</div></div>Rol destacado</div>
+    <div class="story"><div class="story-circle"><div>🏆</div></div>Tops</div>
+    <div class="story"><div class="story-circle"><div>R-MEX</div></div>R-MEX Models</div>
+    <div class="story"><div class="story-circle"><div>🎙</div></div>Radio</div>
+  </div>
+
+  <div class="panel composer">
+    <div class="composer-row">
+      <div class="avatar" id="composerAvatar">C</div>
+      <input readonly onclick="openComposer()" placeholder="¿Qué estás roleando hoy?">
+    </div>
+
+    <div class="composer-actions">
+      <button class="chip" onclick="openComposer('Imagen')">▧ Imagen</button>
+      <button class="chip" onclick="openComposer('Video')">▹ Video</button>
+      <button class="chip gold-chip" onclick="openComposer('Rol')">♥ Rol</button>
+      <button class="chip" onclick="openComposer('Encuesta')">☷ Encuesta</button>
+      <button class="btn" style="margin-left:auto" onclick="openComposer()">Publicar</button>
+    </div>
+  </div>
+
+  <div id="feed" class="feed"></div>
+</section>
+
+<section id="page-explorar" class="page">
+  <div class="page-head">
+    <div>
+      <h2>Explorar MexCity</h2>
+      <p>Descubre historias, jugadores, empresas y eventos.</p>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h3>Contenido destacado</h3>
+      <div id="exploreFeed"></div>
+    </div>
+    <div class="panel">
+      <h3>Jugadores conectados</h3>
+      <div id="explorePlayers"></div>
+    </div>
+  </div>
+</section>
+
+<section id="page-mensajes" class="page">
+  <div class="page-head">
+    <div>
+      <h2>Mensajes</h2>
+      <p>Conversaciones privadas de tu comunidad.</p>
+    </div>
+  </div>
+  <div class="panel" id="privateMessages"></div>
+</section>
+
+<section id="page-notificaciones" class="page">
+  <div class="page-head">
+    <div>
+      <h2>Notificaciones</h2>
+      <p>Actividad reciente de tu cuenta.</p>
+    </div>
+  </div>
+  <div class="panel" id="notifications"></div>
+</section>
+
+<section id="page-eventos" class="page">
+  <div class="page-head">
+    <div>
+      <h2>Eventos</h2>
+      <p>Próximas actividades de MexCity RP.</p>
+    </div>
+  </div>
+  <div class="panel" id="eventsPage"></div>
+</section>
+
+<section id="page-directorio" class="page">
+  <div class="page-head">
+    <div>
+      <h2>Directorio</h2>
+      <p>Jugadores, empresas e instituciones.</p>
+    </div>
+  </div>
+  <div class="panel" id="directory"></div>
+</section>
+
+<section id="page-rankings" class="page">
+  <div class="page-head">
+    <div>
+      <h2>Rankings</h2>
+      <p>Clasificaciones de actividad de la comunidad.</p>
+    </div>
+  </div>
+  <div class="panel" id="rankings"></div>
+</section>
+
+<section id="page-radio" class="page">
+  <div class="page-head">
+    <div>
+      <h2>MexCity Radio</h2>
+      <p>Noticias y novedades de la comunidad.</p>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="radio">
+      <div class="mic">🎙</div>
+      <div>
+        <b>MEXCITY RADIO <span style="color:#ef4444">● EN VIVO</span></b>
+        <div class="muted">Locutor: Alex Morgan</div>
+      </div>
+      <div class="wave"></div>
+      <button class="play" onclick="toggleRadio(this)">▶</button>
+    </div>
+  </div>
+</section>
+
+<section id="page-jugador" class="page">
+  <div class="page-head">
+    <div>
+      <h2>Registro del jugador</h2>
+      <p>Identidad oficial dentro de MexCity RP.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="form-grid">
+      <div class="field">
+        <label>Nombre</label>
+        <input id="pName">
+      </div>
+      <div class="field">
+        <label>Apellido</label>
+        <input id="pLast">
+      </div>
+      <div class="field">
+        <label>Edad</label>
+        <input id="pAge" type="number" min="0">
+      </div>
+      <div class="field">
+        <label>Unidad</label>
+        <select id="pAgeUnit">
+          <option>Días</option>
+          <option>Meses</option>
+          <option selected>Años</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Ciudad</label>
+        <select id="pCity"></select>
+      </div>
+      <div class="field">
+        <label>Sexo / Género</label>
+        <select id="pGender">
+          <option>Femenino</option>
+          <option>Masculino</option>
+          <option>No binario</option>
+          <option>Otro</option>
+          <option>Prefiero no especificar</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label>Ocupación</label>
+        <select id="pJob"></select>
+      </div>
+      <div class="field">
+        <label>ID RP</label>
+        <input id="pId" readonly>
+      </div>
+      <div class="field">
+        <label>Cuenta BANCOMCRP26</label>
+        <input id="pBank" readonly>
+      </div>
+      <div class="field full">
+        <label>CB / Clave bancaria RP</label>
+        <input id="pCB" readonly>
+      </div>
+    </div>
+    <button class="btn" onclick="savePlayer()">GUARDAR REGISTRO</button>
+  </div>
+</section>
+
+<section id="page-hogar" class="page">
+  <div class="page-head">
+    <div><h2>Hogar</h2><p>Registra la propiedad de tu personaje.</p></div>
+  </div>
+  <div class="panel">
+    <div class="form-grid">
+      <div class="field">
+        <label>Tipo</label>
+        <select id="houseType" onchange="valueHouse()">
+          <option>Casa</option><option>Departamento</option>
+          <option>Mansión</option><option>Rancho</option><option>Villa</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Ciudad</label>
+        <select id="houseCity" onchange="valueHouse()"></select>
+      </div>
+      <div class="field">
+        <label>Valor MXN</label><input id="houseMxn" readonly>
+      </div>
+      <div class="field">
+        <label>Valor RP</label><input id="houseRp" readonly>
+      </div>
+      <div class="field full">
+        <label>Domicilio RP</label><input id="houseAddress" readonly>
+      </div>
+    </div>
+    <button class="btn" onclick="saveHouse()">REGISTRAR HOGAR</button>
+  </div>
+</section>
+
+<section id="page-transporte" class="page">
+  <div class="page-head">
+    <div><h2>Transporte</h2><p>Un vehículo por personaje.</p></div>
+  </div>
+  <div class="panel">
+    <div class="form-grid">
+      <div class="field">
+        <label>Tipo</label>
+        <select id="vType" onchange="fillVehicles()">
+          <option>Automóvil</option><option>SUV</option><option>Pickup</option>
+          <option>Deportivo</option><option>Superdeportivo</option>
+          <option>Clásico</option><option>Motocicleta</option>
+          <option>Motocicleta deportiva</option><option>Van</option>
+          <option>Vehículo de lujo</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Modelo</label><select id="vModel" onchange="valueVehicle()"></select>
+      </div>
+      <div class="field"><label>Año</label><input id="vYear" type="number" value="2026"></div>
+      <div class="field">
+        <label>Color</label>
+        <select id="vColor">
+          <option>Negro</option><option>Blanco</option><option>Rojo</option>
+          <option>Azul</option><option>Verde</option><option>Gris</option>
+          <option>Plata</option><option>Dorado</option>
+        </select>
+      </div>
+      <div class="field"><label>Ciudad</label><select id="vCity"></select></div>
+      <div class="field"><label>Placas</label><input id="vPlate" readonly></div>
+      <div class="field"><label>Valor MXN</label><input id="vMxn" readonly></div>
+      <div class="field"><label>Valor RP</label><input id="vRp" readonly></div>
+    </div>
+    <button class="btn" onclick="saveVehicle()">REGISTRAR TRANSPORTE</button>
+  </div>
+</section>
+
+<section id="page-familia" class="page">
+  <div class="page-head">
+    <div><h2>Familia</h2><p>Información familiar del personaje.</p></div>
+  </div>
+  <div class="panel">
+    <div class="field">
+      <label>¿Perteneces a una familia?</label>
+      <select id="hasFamily" onchange="toggleSection('familyFields',this.value==='Sí')">
+        <option>No</option><option>Sí</option>
+      </select>
+    </div>
+    <div id="familyFields" class="hidden">
+      <div class="form-grid">
+        <div class="field"><label>Apellido familiar</label><input id="familyName"></div>
+        <div class="field">
+          <label>Rol familiar</label>
+          <select id="familyRole">
+            <option>Padre</option><option>Madre</option><option>Hijo</option>
+            <option>Hija</option><option>Hermano</option><option>Hermana</option>
+            <option>Pareja</option><option>Otro</option>
+          </select>
         </div>
+      </div>
+    </div>
+    <button class="btn" onclick="saveFamily()">GUARDAR FAMILIA</button>
+  </div>
+</section>
 
+<section id="page-menores" class="page">
+  <div class="page-head">
+    <div><h2>Menores</h2><p>Registro familiar de personajes menores.</p></div>
+  </div>
+  <div class="panel">
+    <div class="notice">
+      Esta sección queda preparada para conectar posteriormente los registros
+      de menores con las tablas correspondientes de tu sistema.
+    </div>
+  </div>
+</section>
 
-        <div class="feature">
+<section id="page-empresa" class="page">
+  <div class="page-head">
+    <div><h2>Empresa / Trabajo</h2><p>Registra la situación laboral de tu personaje.</p></div>
+  </div>
+  <div class="panel">
+    <div class="field">
+      <label>Situación laboral</label>
+      <select id="workType" onchange="workMode()">
+        <option>Otro</option>
+        <option>Empresario local</option>
+        <option>Empleado</option>
+        <option>Director de gobierno</option>
+      </select>
+    </div>
+    <div id="workFields"></div>
+    <button class="btn" onclick="saveWork()">GUARDAR INFORMACIÓN</button>
+  </div>
+</section>
 
-            <div class="feature-icon">
-                ◈
-            </div>
-
-            <div>
-
-                <div class="feature-title">
-                    Ambiente Realista
-                </div>
-
-                <div class="feature-text">
-                    Un roleplay serio<br>
-                    y organizado
-                </div>
-
-            </div>
-
+<section id="page-organizacion" class="page">
+  <div class="page-head">
+    <div><h2>Organización</h2><p>Registro dentro del universo de roleplay.</p></div>
+  </div>
+  <div class="panel">
+    <div class="field">
+      <label>¿Perteneces a una organización?</label>
+      <select id="hasOrg" onchange="toggleSection('orgFields',this.value==='Sí')">
+        <option>No</option><option>Sí</option>
+      </select>
+    </div>
+    <div id="orgFields" class="hidden">
+      <div class="form-grid">
+        <div class="field"><label>Nombre</label><input id="orgName"></div>
+        <div class="field"><label>Alias</label><input id="orgAlias"></div>
+        <div class="field">
+          <label>Tipo</label>
+          <select id="orgType"><option>Organización</option><option>Pandilla</option></select>
         </div>
-
-
-        <div class="feature">
-
-            <div class="feature-icon">
-                ♜
-            </div>
-
-            <div>
-
-                <div class="feature-title">
-                    Infinitas Posibilidades
-                </div>
-
-                <div class="feature-text">
-                    Crea, trabaja,<br>
-                    emprende e interactúa
-                </div>
-
-            </div>
-
+        <div class="field">
+          <label>Cargo</label>
+          <select id="orgRole">
+            <option>Miembro</option><option>Operador</option>
+            <option>Encargado</option><option>Líder</option>
+          </select>
         </div>
+      </div>
+    </div>
+    <button class="btn" onclick="saveOrg()">GUARDAR ORGANIZACIÓN</button>
+  </div>
+</section>
 
+<section id="page-finanzas" class="page">
+  <div class="page-head">
+    <div><h2>BANCOMCRP26</h2><p>Cuenta bancaria ficticia del universo MexCity RP.</p></div>
+  </div>
+  <div class="panel">
+    <div class="stat-list">
+      <div class="stat-box"><small>BANCO</small><b>BANCOMCRP26</b></div>
+      <div class="stat-box"><small>CUENTA</small><b id="financeBank">—</b></div>
+      <div class="stat-box"><small>CB</small><b id="financeCB">—</b></div>
+      <div class="stat-box"><small>SALDO</small><b id="financeBalance">$100,000 RP</b></div>
+    </div>
+    <div class="notice" style="margin-top:12px">
+      El dinero y los movimientos forman parte del sistema ficticio de MexCity RP.
+    </div>
+  </div>
+</section>
 
-        <div class="feature">
-
-            <div class="feature-icon">
-                ☆
-            </div>
-
-            <div>
-
-                <div class="feature-title">
-                    Eventos Exclusivos
-                </div>
-
-                <div class="feature-text">
-                    Participa en eventos<br>
-                    de toda la ciudad
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="feature">
-
-            <div class="feature-icon">
-                ♜
-            </div>
-
-            <div>
-
-                <div class="feature-title">
-                    Organizaciones
-                </div>
-
-                <div class="feature-text">
-                    Empresas, gobierno,<br>
-                    fuerzas y más
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
+<section id="page-registros" class="page">
+  <div class="page-head">
+    <div><h2>Mis registros</h2><p>Resumen de los datos asociados a tu sesión.</p></div>
+  </div>
+  <div class="panel"><div id="records" class="records"></div></div>
+</section>
 
 </main>
 
-
-
 <!-- =========================================================
-     FOOTER
+     RIGHTBAR
 ========================================================= -->
+<aside class="rightbar">
 
-<footer>
-
-    <p>
-
-        © 2026
-        <strong>MexCity RP</strong>.
-        Todos los derechos reservados.
-
-    </p>
-
-</footer>
-
-
-
-<!-- =========================================================
-     MODAL GENERAL
-========================================================= -->
-
-<div
-    class="modal"
-    id="modal"
->
-
-    <div class="modal-box">
-
-
-        <button
-            class="modal-close"
-            id="closeModal"
-        >
-            ×
-        </button>
-
-
-        <div
-            class="modal-icon"
-            id="modalIcon"
-        >
-            ★
-        </div>
-
-
-        <h2
-            class="modal-title"
-            id="modalTitle"
-        >
-            MexCity RP
-        </h2>
-
-
-        <div
-            class="modal-content"
-            id="modalContent"
-        >
-        </div>
-
+  <div class="panel">
+    <div class="panel-title">
+      <h3>ACTIVIDAD DEL SERVIDOR</h3>
+      <a>EN VIVO</a>
     </div>
+    <div class="stat-list">
+      <div class="stat-box green"><b><span class="dot"></span>128</b><small>En línea</small></div>
+      <div class="stat-box purple"><b><span class="dot"></span>24</b><small>En rol</small></div>
+      <div class="stat-box blue"><b><span class="dot"></span>15</b><small>En llamada</small></div>
+      <div class="stat-box orange"><b><span class="dot"></span>8</b><small>En eventos</small></div>
+    </div>
+  </div>
 
+  <div class="panel">
+    <div class="panel-title">
+      <h3>PRÓXIMOS EVENTOS</h3>
+      <a onclick="showPage('eventos')">Ver todos</a>
+    </div>
+    <div class="event"><div class="event-icon">🗳</div><div><b>Elecciones Presidenciales</b><small>Próximamente</small></div></div>
+    <div class="event"><div class="event-icon">👗</div><div><b>Desfile de Modas R-MEX</b><small>Próximamente</small></div></div>
+    <div class="event"><div class="event-icon">🛡</div><div><b>Operativo de Seguridad</b><small>Próximamente</small></div></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">
+      <h3>JUGADORES EN LÍNEA</h3>
+      <a onclick="showPage('directorio')">Ver todos</a>
+    </div>
+    <div id="onlinePlayers"></div>
+  </div>
+
+  <div class="panel chat">
+    <div class="panel-title">
+      <h3>💬 chat-general</h3>
+      <a>128 en línea</a>
+    </div>
+    <div id="chatList" class="chat-list"></div>
+    <div class="chat-input">
+      <input id="chatInput" placeholder="Escribe un mensaje..."
+             onkeydown="if(event.key==='Enter')sendChat()">
+      <button class="btn" onclick="sendChat()">➤</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="radio">
+      <div class="mic">🎙</div>
+      <div>
+        <b>MEXCITY RADIO <span style="color:#ef4444">● EN VIVO</span></b>
+        <div class="muted" style="font-size:11px">Alex Morgan</div>
+      </div>
+      <div class="wave"></div>
+      <button class="play" onclick="toggleRadio(this)">▶</button>
+    </div>
+  </div>
+
+</aside>
 </div>
 
+<nav class="bottom-nav">
+  <button data-page="inicio" class="active" onclick="showPage('inicio',this)">
+    <span>⌂</span>Inicio
+  </button>
+  <button data-page="explorar" onclick="showPage('explorar',this)">
+    <span>⌕</span>Explorar
+  </button>
+  <button onclick="openComposer()"><span>＋</span>Crear</button>
+  <button data-page="mensajes" onclick="showPage('mensajes',this)">
+    <span>▱</span>Mensajes
+  </button>
+  <button data-page="jugador" onclick="showPage('jugador',this)">
+    <span>●</span>Perfil
+  </button>
+</nav>
+</div>
 
+<!-- =========================================================
+     CREATE POST MODAL
+========================================================= -->
+<div id="composerModal" class="modal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3>Nueva publicación</h3>
+      <button class="close" onclick="closeComposer()">×</button>
+    </div>
+
+    <div class="field">
+      <label>Tipo</label>
+      <select id="postType">
+        <option>Rol</option>
+        <option>Historia</option>
+        <option>Evento</option>
+        <option>Anuncio</option>
+        <option>Negocio</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Título</label>
+      <input id="postTitle" placeholder="Título de tu publicación">
+    </div>
+
+    <div class="field">
+      <label>Descripción</label>
+      <textarea id="postText" rows="5"
+                placeholder="Escribe lo que está ocurriendo en tu rol..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Imagen</label>
+      <input id="postImage" type="url" placeholder="https://...">
+    </div>
+
+    <div style="display:flex;gap:8px">
+      <button class="btn secondary" onclick="closeComposer()">Cancelar</button>
+      <button class="btn" onclick="publishPost()">PUBLICAR</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
 
 <script>
-
 /* =========================================================
-   CONFIGURACIÓN DE SUPABASE (REEMPLAZA LA URL CON LA DE TU PROYECTO)
+   SUPABASE
+   IMPORTANTE:
+   Estas son las mismas credenciales públicas de tu página actual.
+   NO se utiliza service_role.
 ========================================================= */
-
-const SUPABASE_URL = "https://ogiupysmhnzvizesqcxr.supabase.co"; 
+const SUPABASE_URL = "https://ogiupysmhnzvizesqcxr.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_QZ1vQjZQ-7vbkBJLmouMzQ_PUmI8U2c";
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+const supabaseClient =
+  window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+let currentUser = null;
+let profile = null;
 
 /* =========================================================
-   INFORMACIÓN DE LOS MODALES
+   CATÁLOGOS
 ========================================================= */
-
-const modalData = {
-
-
-    "que-es": {
-
-        icon:"🏙",
-
-        title:"¿Qué es MexCity?",
-
-        content:`
-
-            <p>
-                <strong>MexCity RP</strong> es una comunidad
-                de roleplay inspirada en México donde cada
-                jugador puede crear su propio personaje y
-                desarrollar una historia dentro de la ciudad.
-            </p>
-
-            <p>
-                La ciudad está diseñada para que diferentes
-                tipos de personajes puedan convivir,
-                trabajar, crear negocios, pertenecer a
-                organizaciones y desarrollar historias.
-            </p>
-
-        `
-    },
-
-
-    "comunidad": {
-
-        icon:"👥",
-
-        title:"Nuestra Comunidad",
-
-        content:`
-
-            <p>
-                MexCity RP busca construir una comunidad
-                activa, organizada y respetuosa.
-            </p>
-
-            <div class="modal-grid">
-
-                <div class="info-card">
-
-                    <h3>
-                        Ciudadanos
-                    </h3>
-
-                    <p>
-                        Personajes que forman parte
-                        de la vida cotidiana de MexCity.
-                    </p>
-
-                </div>
-
-
-                <div class="info-card">
-
-                    <h3>
-                        Empresas
-                    </h3>
-
-                    <p>
-                        Negocios y proyectos creados
-                        dentro de la ciudad.
-                    </p>
-
-                </div>
-
-
-                <div class="info-card">
-
-                    <h3>
-                        Gobierno
-                    </h3>
-
-                    <p>
-                        Instituciones encargadas de
-                        diferentes funciones de la ciudad.
-                    </p>
-
-                </div>
-
-
-                <div class="info-card">
-
-                    <h3>
-                        Organizaciones
-                    </h3>
-
-                    <p>
-                        Diferentes grupos con objetivos
-                        específicos.
-                    </p>
-
-                </div>
-
-            </div>
-
-        `
-    },
-
-
-    "funciona": {
-
-        icon:"☆",
-
-        title:"Cómo funciona el Roleplay",
-
-        content:`
-
-            <p>
-                El roleplay consiste en interpretar a un
-                personaje dentro de un universo ficticio,
-                respetando la historia y las situaciones
-                creadas dentro de la comunidad.
-            </p>
-
-            <div class="modal-grid">
-
-                <div class="info-card">
-
-                    <h3>
-                        01 · Crea
-                    </h3>
-
-                    <p>
-                        Diseña tu personaje y define
-                        su identidad.
-                    </p>
-
-                </div>
-
-
-                <div class="info-card">
-
-                    <h3>
-                        02 · Presenta
-                    </h3>
-
-                    <p>
-                        Presenta tu personaje y establece
-                        el inicio de su historia.
-                    </p>
-
-                </div>
-
-
-                <div class="info-card">
-
-                    <h3>
-                        03 · Interactúa
-                    </h3>
-
-                    <p>
-                        Convive y desarrolla situaciones
-                        con otros personajes.
-                    </p>
-
-                </div>
-
-
-                <div class="info-card">
-
-                    <h3>
-                        04 · Construye
-                    </h3>
-
-                    <p>
-                        Haz crecer la historia de tu
-                        personaje dentro de MexCity.
-                    </p>
-
-                </div>
-
-            </div>
-
-        `
-    },
-
-
-    "politica": {
-
-        icon:"♙",
-
-        title:"Política y Privacidad",
-
-        content:`
-
-            <p>
-                La privacidad de los integrantes de la
-                comunidad es una prioridad.
-            </p>
-
-            <p>
-                La información proporcionada para participar
-                en MexCity RP debe manejarse de manera
-                responsable.
-            </p>
-
-        `
-    },
-
-
-    "reglas": {
-
-        icon:"♢",
-
-        title:"Reglas y Convivencia",
-
-        content:`
-
-            <p>
-                Para mantener una comunidad organizada,
-                todos los integrantes deben respetar las
-                normas establecidas por MexCity RP.
-            </p>
-
-            <div class="modal-grid">
-
-                <div class="info-card">
-
-                    <h3>
-                        Respeto
-                    </h3>
-
-                    <p>
-                        Mantén una convivencia respetuosa
-                        con los demás integrantes.
-                    </p>
-
-                </div>
-
-
-                <div class="info-card">
-
-                    <h3>
-                        Roleplay
-                    </h3>
-
-                    <p>
-                        Respeta la lógica y continuidad
-                        de las historias.
-                    </p>
-
-                </div>
-
-
-                <div class="info-card">
-
-                    <h3>
-                        Administración
-                    </h3>
-
-                    <p>
-                        Sigue las indicaciones administrativas.
-                    </p>
-
-                </div>
-
-
-                <div class="info-card">
-
-                    <h3>
-                        Convivencia
-                    </h3>
-
-                    <p>
-                        No utilices la comunidad para generar
-                        conflictos fuera del roleplay.
-                    </p>
-
-                </div>
-
-            </div>
-
-        `
-    },
-
-
-    "staff": {
-
-        icon:"★",
-
-        title:"Staff MexCity RP",
-
-        content:`
-
-            <p>
-                Acceso exclusivo para el equipo administrativo.
-                Ingresa tu nombre y código para acceder al sistema.
-            </p>
-
-            <form
-                class="auth-form"
-                id="staffForm"
-            >
-
-                <div class="form-group">
-                    <label>
-                        Nombre
-                    </label>
-                    <input
-                        type="text"
-                        id="staffName"
-                        placeholder="Tu nombre de Staff"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label>
-                        Código de acceso
-                    </label>
-                    <input
-                        type="password"
-                        id="staffCode"
-                        placeholder="Ej: MXC-ADMIN-001"
-                        required
-                    >
-                </div>
-
-                <button
-                    type="submit"
-                    class="auth-submit"
-                >
-                    INGRESAR
-                </button>
-
-                <div
-                    class="form-message"
-                    id="staffMessage"
-                ></div>
-
-            </form>
-
-            <div style="margin: 30px 0; border-top: 1px solid rgba(218,166,43,.28);"></div>
-
-            <p>
-                El equipo administrativo es responsable
-                de mantener el orden y supervisar el
-                funcionamiento de la comunidad.
-            </p>
-
-            <div class="staff-list">
-
-                <div class="staff-card">
-
-                    <div class="staff-role">
-                        Administrador
-                    </div>
-
-                    <div class="staff-name">
-                        CARTSH
-                    </div>
-
-                    <div class="staff-code">
-                        MXC-ADMIN-001
-                    </div>
-
-                </div>
-
-
-                <div class="staff-card">
-
-                    <div class="staff-role">
-                        Staff
-                    </div>
-
-                    <div class="staff-name">
-                        NOMBRE DEL ADMINISTRADOR
-                    </div>
-
-                    <div class="staff-code">
-                        MXC-STAFF-002
-                    </div>
-
-                </div>
-
-            </div>
-
-        `
-    },
-
-
-    "soporte": {
-
-        icon:"◉",
-
-        title:"Soporte",
-
-        content:`
-
-            <p>
-                ¿Tienes algún problema o necesitas ayuda?
-                El equipo de soporte puede ayudarte con
-                situaciones relacionadas con MexCity RP.
-            </p>
-
-        `
-    },
-
-
-    /* =====================================================
-       REGISTRO (CON SUPABASE AUTH)
-    ====================================================== */
-
-    "registro": {
-
-        icon:"✚",
-
-        title:"Crear cuenta",
-
-        content:`
-
-            <p>
-                Crea tu cuenta para comenzar tu experiencia
-                dentro de <strong>MexCity RP</strong>.
-            </p>
-
-
-            <form
-                class="auth-form"
-                id="registerForm"
-            >
-
-
-                <div class="form-group">
-
-                    <label>
-                        Correo electrónico
-                    </label>
-
-                    <input
-                        type="email"
-                        id="registerEmail"
-                        placeholder="tucorreo@ejemplo.com"
-                        autocomplete="email"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Crear contraseña
-                    </label>
-
-                    <input
-                        type="password"
-                        id="registerPassword"
-                        placeholder="Mínimo 8 caracteres"
-                        minlength="8"
-                        autocomplete="new-password"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Confirmar contraseña
-                    </label>
-
-                    <input
-                        type="password"
-                        id="registerConfirmPassword"
-                        placeholder="Repite tu contraseña"
-                        minlength="8"
-                        autocomplete="new-password"
-                        required
-                    >
-
-                </div>
-
-
-                <button
-                    type="submit"
-                    class="auth-submit"
-                    id="registerButton"
-                >
-
-                    CREAR CUENTA
-
-                </button>
-
-
-                <div
-                    class="form-message"
-                    id="registerMessage"
-                ></div>
-
-
-                <div class="auth-note">
-
-                    Tu contraseña no se enviará por correo.
-
-                    <br>
-
-                    Después de registrarte recibirás
-                    un correo de confirmación de Supabase.
-
-                </div>
-
-
-            </form>
-
-        `
-    },
-
-
-    /* =====================================================
-       LOGIN Y RECUPERACIÓN (CON SUPABASE AUTH)
-    ====================================================== */
-
-    "login": {
-
-        icon:"⇥",
-
-        title:"Iniciar sesión",
-
-        content:`
-
-            <p>
-                Ingresa a tu cuenta de
-                <strong>MexCity RP</strong>.
-            </p>
-
-
-            <form
-                class="auth-form"
-                id="loginForm"
-            >
-
-
-                <div class="form-group">
-
-                    <label>
-                        Correo electrónico
-                    </label>
-
-                    <input
-                        type="email"
-                        id="loginEmail"
-                        placeholder="tucorreo@ejemplo.com"
-                        autocomplete="email"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Contraseña
-                    </label>
-
-                    <input
-                        type="password"
-                        id="loginPassword"
-                        placeholder="Tu contraseña"
-                        autocomplete="current-password"
-                        required
-                    >
-
-                </div>
-
-
-                <button
-                    type="submit"
-                    class="auth-submit"
-                    id="loginButton"
-                >
-
-                    INICIAR SESIÓN
-
-                </button>
-
-
-                <div
-                    class="form-message"
-                    id="loginMessage"
-                ></div>
-
-            </form>
-
-
-            <div style="margin-top: 25px; border-top: 1px solid rgba(218,166,43,.28); padding-top: 20px;">
-                <p style="font-size: 14px; margin-bottom: 10px; color: var(--dorado-brillo);">¿Olvidaste tu contraseña?</p>
-                
-                <form class="auth-form" id="recoveryForm" style="margin-top: 10px;">
-                    <div class="form-group">
-                        <input
-                            type="email"
-                            id="recoveryEmail"
-                            placeholder="Ingresa tu correo registrado"
-                            required
-                        >
-                    </div>
-
-                    <button
-                        type="submit"
-                        class="auth-submit"
-                        id="recoveryButton"
-                    >
-                        RECUPERAR CONTRASEÑA
-                    </button>
-
-                    <div
-                        class="form-message"
-                        id="recoveryMessage"
-                    ></div>
-                </form>
-            </div>
-
-        `
-    }
-
+const cities = [
+"Aguascalientes, Aguascalientes","Mexicali, Baja California",
+"Tijuana, Baja California","La Paz, Baja California Sur",
+"Campeche, Campeche","Tuxtla Gutiérrez, Chiapas",
+"Chihuahua, Chihuahua","Ciudad Juárez, Chihuahua",
+"Saltillo, Coahuila","Torreón, Coahuila","Colima, Colima",
+"Manzanillo, Colima","Durango, Durango","León, Guanajuato",
+"Irapuato, Guanajuato","Acapulco, Guerrero","Chilpancingo, Guerrero",
+"Pachuca, Hidalgo","Guadalajara, Jalisco","Puerto Vallarta, Jalisco",
+"Toluca, Estado de México","Ecatepec, Estado de México",
+"Morelia, Michoacán","Cuernavaca, Morelos","Tepic, Nayarit",
+"Monterrey, Nuevo León","Oaxaca de Juárez, Oaxaca","Puebla, Puebla",
+"Querétaro, Querétaro","Cancún, Quintana Roo","Chetumal, Quintana Roo",
+"San Luis Potosí, San Luis Potosí","Culiacán, Sinaloa",
+"Mazatlán, Sinaloa","Hermosillo, Sonora","Villahermosa, Tabasco",
+"Tampico, Tamaulipas","Ciudad Victoria, Tamaulipas",
+"Tlaxcala, Tlaxcala","Veracruz, Veracruz","Xalapa, Veracruz",
+"Mérida, Yucatán","Zacatecas, Zacatecas","Ciudad de México, CDMX"
+];
+
+const jobs = [
+"Empresario","Comerciante","Director","Gerente","Abogado","Médico",
+"Enfermero","Psicólogo","Arquitecto","Ingeniero","Maestro","Profesor",
+"Policía","Militar","Agente","Paramédico","Bombero","Mecánico",
+"Electricista","Plomero","Constructor","Diseñador","Fotógrafo",
+"Modelo","Periodista","Chef","Cocinero","Mesero","Barista","Conductor",
+"Taxista","Repartidor","Piloto","Funcionario","Empleado","Agricultor",
+"Ganadero","Veterinario","Programador","Creador de contenido",
+"Músico","Cantante","Artista","Deportista","Seguridad privada",
+"Investigador","Científico","Técnico","Contador","Economista",
+"Banquero","Productor","Actor","Estilista","Barbero","Panadero",
+"Joyero","Dentista","Capitán","Marinero","Transportista","Consultor",
+"Analista","Administrador","Desarrollador web","Desarrollador de software",
+"Streamer","Influencer","Locutor","DJ","Guía turístico",
+"Agente inmobiliario","Detective","Notario","Juez","Fiscal","Otro"
+];
+
+const houseValues = {
+  "Casa":1500000,
+  "Departamento":1100000,
+  "Mansión":8500000,
+  "Rancho":5000000,
+  "Villa":4200000
 };
 
-
-
-/* =========================================================
-   ELEMENTOS
-========================================================= */
-
-const modal =
-    document.getElementById("modal");
-
-const modalTitle =
-    document.getElementById("modalTitle");
-
-const modalContent =
-    document.getElementById("modalContent");
-
-const modalIcon =
-    document.getElementById("modalIcon");
-
-const closeModal =
-    document.getElementById("closeModal");
-
-
+const vehicleData = {
+  "Automóvil":[["Toyota","Corolla",450000],["Honda","Civic",520000],["Nissan","Sentra",390000],["Volkswagen","Jetta",480000],["Mazda","Mazda3",520000]],
+  "SUV":[["Toyota","RAV4",650000],["Honda","CR-V",700000],["Mazda","CX-5",680000],["Jeep","Grand Cherokee",1200000]],
+  "Pickup":[["Ford","F-150",950000],["Toyota","Hilux",650000],["Chevrolet","Silverado",980000],["RAM","1500",1100000]],
+  "Deportivo":[["Ford","Mustang",900000],["Chevrolet","Camaro",1000000],["Toyota","GR86",800000]],
+  "Superdeportivo":[["Porsche","911",3200000],["Ferrari","Roma",5000000],["Lamborghini","Huracán",6000000],["McLaren","750S",6500000]],
+  "Clásico":[["Ford","Mustang 1967",1500000],["Chevrolet","Impala 1964",1200000]],
+  "Motocicleta":[["Honda","CB190R",65000],["Yamaha","MT-03",150000],["Kawasaki","Ninja 400",190000]],
+  "Motocicleta deportiva":[["Yamaha","R7",300000],["Kawasaki","Ninja ZX-6R",330000],["Honda","CBR600RR",350000]],
+  "Van":[["Toyota","Hiace",750000],["Mercedes-Benz","Sprinter",1300000]],
+  "Vehículo de lujo":[["Mercedes-Benz","Clase S",3200000],["BMW","Serie 7",2800000],["Audi","A8",2600000]]
+};
 
 /* =========================================================
-   ABRIR MODAL (CORREGIDO CON TIMEOUT PARA EL DOM)
+   DATOS VISUALES INICIALES
+   Estos son únicamente contenido de presentación del dashboard.
 ========================================================= */
+const demoPosts = [
+  {
+    name:"Vlad Hemingway",
+    city:"Tijuana, México",
+    tag:"ROL - HISTORIA",
+    title:"Nuevos negocios en la ciudad",
+    text:"El mercado cambia constantemente, y para mantenerse en la cima, hay que tomar decisiones...",
+    hash:"#NegociosRP",
+    image:"https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1400&q=85"
+  },
+  {
+    name:"Daniela Golden",
+    city:"Guadalajara, México",
+    tag:"ROL - LLEGADA",
+    title:"Llegada a MexCity",
+    text:"Después de un largo viaje, finalmente llegué a Sonora, una nueva etapa comienza en mi vida...",
+    hash:"#HistoriaRP",
+    image:"https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1400&q=85"
+  },
+  {
+    name:"Cartshking",
+    city:"Sonora, México",
+    tag:"ANUNCIO",
+    title:"MexCity es de todos",
+    text:"Gracias a todos por hacer crecer esta comunidad cada día más. ¡La ciudad sigue creciendo!",
+    hash:"#MexCityRP",
+    image:"https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1400&q=85"
+  }
+];
 
-function openModal(section) {
+const players = [
+  "Vlad Hemingway",
+  "Daniela Golden",
+  "Raven Black",
+  "Vito Atomik",
+  "Isael Montana"
+];
 
-    const data =
-        modalData[section];
+const chats = [
+  ["Alejandro RP","¡Buenas noches a todos! ¿Cómo va la ciudad?"],
+  ["Valeria RP","Todo tranquilo por aquí, trabajando en mi rol 📸"],
+  ["Mateo RP","Se viene algo grande para el fin de semana 😈"],
+  ["Sofía RP","Ya quiero ver las nuevas historias que están preparando 🔥"],
+  ["Cartshking","Gracias a todos por hacer crecer esta comunidad cada día más. ¡MexCity es de todos! 👑"]
+];
 
-    if(!data) return;
+/* =========================================================
+   UTILIDADES
+========================================================= */
+const $ = id => document.getElementById(id);
 
-    modalIcon.textContent =
-        data.icon;
-
-    modalTitle.textContent =
-        data.title;
-
-    modalContent.innerHTML =
-        data.content;
-
-    modal.classList.add("active");
-
-    document.body.style.overflow =
-        "hidden";
-
-
-    setTimeout(() => {
-        if(section === "registro") {
-            setupRegister();
-        }
-
-        if(section === "login") {
-            setupLogin();
-            setupRecovery();
-        }
-
-        if(section === "staff") {
-            setupStaff();
-        }
-    }, 50);
-
+function esc(value){
+  return String(value ?? "").replace(/[&<>"']/g, m => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[m]));
 }
 
-
-
-/* =========================================================
-   CERRAR MODAL
-========================================================= */
-
-function closeCurrentModal() {
-
-    modal.classList.remove("active");
-
-    document.body.style.overflow =
-        "";
-
+function initials(name){
+  return String(name || "Jugador")
+    .trim().split(/\s+/).slice(0,2)
+    .map(x => x[0]).join("").toUpperCase() || "J";
 }
 
+function money(value){
+  return "$" + Number(value || 0).toLocaleString("es-MX") + " RP";
+}
 
+function mxn(value){
+  return "$" + Number(value || 0).toLocaleString("es-MX") + " MXN";
+}
+
+function toast(text){
+  const el = $("toast");
+  el.textContent = text;
+  el.style.display = "block";
+  clearTimeout(window.__toast);
+  window.__toast = setTimeout(() => el.style.display = "none", 2500);
+}
+
+function fill(id, array){
+  const el = $(id);
+  if(!el) return;
+  el.innerHTML = array.map(x => `<option>${esc(x)}</option>`).join("");
+}
+
+function setAvatar(el,url,name){
+  if(!el) return;
+  if(url){
+    el.innerHTML = `<img src="${esc(url)}" alt="Avatar">`;
+  }else{
+    el.textContent = initials(name);
+  }
+}
+
+function playerName(){
+  return profile?.character_name ||
+         profile?.display_name ||
+         profile?.username ||
+         currentUser?.user_metadata?.character_name ||
+         currentUser?.user_metadata?.full_name ||
+         currentUser?.email?.split("@")[0] ||
+         "Jugador";
+}
+
+function playerCity(){
+  return profile?.city || profile?.character_city || "México";
+}
 
 /* =========================================================
-   BOTONES DE NAVEGACIÓN
+   INICIALIZACIÓN
 ========================================================= */
+async function init(){
+  fill("pCity",cities);
+  fill("houseCity",cities);
+  fill("vCity",cities);
+  fill("pJob",jobs);
 
-document
-.querySelectorAll(".nav-button")
-.forEach(button => {
+  fillVehicles();
+  valueHouse();
+  workMode();
 
-    button.addEventListener(
-        "click",
-        () => {
+  renderFeed(demoPosts);
+  renderOnline();
+  renderChat();
+  renderExtras();
 
-            document
-            .querySelectorAll(".nav-button")
-            .forEach(btn =>
-                btn.classList.remove("active")
-            );
+  const {data:{session}} = await supabaseClient.auth.getSession();
 
-            button.classList.add("active");
+  if(session){
+    await openApp(session.user);
+  }else{
+    showLogin();
+  }
 
-            openModal(
-                button.dataset.modal
-            );
-
-        }
-    );
-
-});
-
-
-
-/* =========================================================
-   BOTON ÚNETE
-========================================================= */
-
-document
-.querySelector(".join-button")
-.addEventListener(
-    "click",
-    () => {
-
-        openModal("registro");
-
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
+    if(session){
+      openApp(session.user);
+    }else{
+      showLogin();
     }
-);
-
-
-
-/* =========================================================
-   CERRAR
-========================================================= */
-
-closeModal.addEventListener(
-    "click",
-    closeCurrentModal
-);
-
-
-
-/* =========================================================
-   CERRAR AL CLICK FUERA
-========================================================= */
-
-modal.addEventListener(
-    "click",
-    event => {
-
-        if(event.target === modal) {
-
-            closeCurrentModal();
-
-        }
-
-    }
-);
-
-
-
-/* =========================================================
-   ESC
-========================================================= */
-
-document.addEventListener(
-    "keydown",
-    event => {
-
-        if(
-            event.key === "Escape" &&
-            modal.classList.contains("active")
-        ) {
-
-            closeCurrentModal();
-
-        }
-
-    }
-);
-
-
-
-/* =========================================================
-   REGISTRO CON SUPABASE AUTH (ENVÍO DE CORREO AUTOMÁTICO)
-========================================================= */
-
-function setupRegister() {
-
-    const form =
-        document.getElementById(
-            "registerForm"
-        );
-
-    if(!form) return;
-
-
-    form.addEventListener(
-        "submit",
-        async event => {
-
-            event.preventDefault();
-
-
-            const email =
-                document
-                .getElementById(
-                    "registerEmail"
-                )
-                .value
-                .trim();
-
-
-            const password =
-                document
-                .getElementById(
-                    "registerPassword"
-                )
-                .value;
-
-
-            const confirmPassword =
-                document
-                .getElementById(
-                    "registerConfirmPassword"
-                )
-                .value;
-
-
-            const button =
-                document.getElementById(
-                    "registerButton"
-                );
-
-
-            const message =
-                document.getElementById(
-                    "registerMessage"
-                );
-
-
-            const emailPattern =
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
-            if(!emailPattern.test(email)) {
-
-                showMessage(
-                    message,
-                    "Introduce un correo electrónico válido.",
-                    "error"
-                );
-
-                return;
-
-            }
-
-
-            if(password.length < 8) {
-
-                showMessage(
-                    message,
-                    "La contraseña debe tener al menos 8 caracteres.",
-                    "error"
-                );
-
-                return;
-
-            }
-
-
-            if(password !== confirmPassword) {
-
-                showMessage(
-                    message,
-                    "Las contraseñas no coinciden.",
-                    "error"
-                );
-
-                return;
-
-            }
-
-
-            button.disabled = true;
-
-            button.textContent =
-                "REGISTRANDO...";
-
-
-            try {
-
-                const { data, error } = await supabaseClient.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: {
-                        emailRedirectTo: window.location.href
-                    }
-                });
-
-                if (error) throw error;
-
-
-                showMessage(
-
-                    message,
-
-                    "¡Cuenta creada con éxito! Revisa tu correo electrónico para confirmar tu cuenta.",
-
-                    "success"
-
-                );
-
-
-                form.reset();
-
-
-                button.textContent =
-                    "REGISTRO EXITOSO";
-
-
-            }
-
-            catch(error) {
-
-                console.error("Supabase Error:", error);
-
-                showMessage(
-
-                    message,
-
-                    error.message || "No fue posible registrar la cuenta.",
-
-                    "error"
-
-                );
-
-                button.disabled = false;
-
-                button.textContent =
-                    "CREAR CUENTA";
-
-            }
-
-        }
-    );
-
+  });
 }
 
-
-
-/* =========================================================
-   LOGIN CON SUPABASE AUTH
-========================================================= */
-
-function setupLogin() {
-
-    const form =
-        document.getElementById(
-            "loginForm"
-        );
-
-    if(!form) return;
-
-
-    form.addEventListener(
-        "submit",
-        async event => {
-
-            event.preventDefault();
-
-
-            const email =
-                document
-                .getElementById(
-                    "loginEmail"
-                )
-                .value
-                .trim();
-
-
-            const password =
-                document
-                .getElementById(
-                    "loginPassword"
-                )
-                .value;
-
-
-            const button =
-                document.getElementById(
-                    "loginButton"
-                );
-
-
-            const message =
-                document.getElementById(
-                    "loginMessage"
-                );
-
-
-            if(!email || !password) {
-
-                showMessage(
-                    message,
-                    "Completa todos los campos.",
-                    "error"
-                );
-
-                return;
-
-            }
-
-
-            button.disabled = true;
-            button.textContent = "INICIANDO SESIÓN...";
-
-
-            try {
-
-                const { data, error } = await supabaseClient.auth.signInWithPassword({
-                    email: email,
-                    password: password,
-                });
-
-                if (error) throw error;
-
-                showMessage(
-                    message,
-                    "¡Inicio de sesión exitoso! Bienvenido a MexCity RP.",
-                    "success"
-                );
-
-                setTimeout(() => {
-                    closeCurrentModal();
-                }, 1500);
-
-            } catch (error) {
-
-                console.error("Login Error:", error);
-
-                showMessage(
-                    message,
-                    error.message || "Credenciales incorrectas o correo sin confirmar.",
-                    "error"
-                );
-
-                button.disabled = false;
-                button.textContent = "INICIAR SESIÓN";
-
-            }
-
-        }
-    );
-
+function showLogin(){
+  $("loginScreen").style.display = "grid";
+  $("app").style.display = "none";
 }
 
+async function login(){
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
 
+  if(!email || !password){
+    $("loginMsg").textContent = "Introduce correo y contraseña.";
+    return;
+  }
 
-/* =========================================================
-   RECUPERACIÓN DE CONTRASEÑA CON SUPABASE
-========================================================= */
+  $("loginMsg").textContent = "Iniciando sesión...";
 
-function setupRecovery() {
+  const {data,error} =
+    await supabaseClient.auth.signInWithPassword({email,password});
 
-    const form =
-        document.getElementById(
-            "recoveryForm"
-        );
+  if(error){
+    $("loginMsg").textContent = error.message;
+    return;
+  }
 
-    if(!form) return;
-
-
-    form.addEventListener(
-        "submit",
-        async event => {
-
-            event.preventDefault();
-
-            const email =
-                document
-                .getElementById(
-                    "recoveryEmail"
-                )
-                .value
-                .trim();
-
-            const button =
-                document.getElementById(
-                    "recoveryButton"
-                );
-
-            const message =
-                document.getElementById(
-                    "recoveryMessage"
-                );
-
-            if(!email) {
-                showMessage(message, "Introduce tu correo electrónico.", "error");
-                return;
-            }
-
-            button.disabled = true;
-            button.textContent = "ENVIANDO...";
-
-            try {
-
-                const { data, error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-                    redirectTo: window.location.href,
-                });
-
-                if (error) throw error;
-
-                showMessage(
-                    message,
-                    "Correo de recuperación enviado. Revisa tu bandeja de entrada.",
-                    "success"
-                );
-
-                form.reset();
-                button.disabled = false;
-                button.textContent = "RECUPERAR CONTRASEÑA";
-
-            } catch (error) {
-
-                console.error("Recovery Error:", error);
-
-                showMessage(
-                    message,
-                    error.message || "No se pudo enviar el correo de recuperación.",
-                    "error"
-                );
-
-                button.disabled = false;
-                button.textContent = "RECUPERAR CONTRASEÑA";
-
-            }
-
-        }
-    );
-
+  await openApp(data.user);
 }
 
+async function openApp(user){
+  currentUser = user;
+  $("loginScreen").style.display = "none";
+  $("app").style.display = "block";
 
-
-/* =========================================================
-   STAFF LOGIN
-========================================================= */
-
-function setupStaff() {
-
-    const form =
-        document.getElementById(
-            "staffForm"
-        );
-
-    if(!form) return;
-
-
-    form.addEventListener(
-        "submit",
-        async event => {
-
-            event.preventDefault();
-
-
-            const name =
-                document
-                .getElementById(
-                    "staffName"
-                )
-                .value
-                .trim();
-
-
-            const code =
-                document
-                .getElementById(
-                    "staffCode"
-                )
-                .value
-                .trim();
-
-
-            const message =
-                document.getElementById(
-                    "staffMessage"
-                );
-
-
-            if(!name || !code) {
-
-                showMessage(
-
-                    message,
-
-                    "Completa todos los campos.",
-
-                    "error"
-
-                );
-
-                return;
-
-            }
-
-            showMessage(
-
-                message,
-
-                "El sistema de acceso para Staff debe conectarse a la base de datos para verificar el código.",
-
-                "error"
-
-            );
-
-        }
-    );
-
+  await loadProfile();
+  loadPlayerFields();
+  renderFeed(demoPosts);
+  renderOnline();
+  renderChat();
+  renderExtras();
 }
 
+async function loadProfile(){
+  profile = null;
 
+  const {data,error} =
+    await supabaseClient
+      .from("profiles")
+      .select("*")
+      .eq("id",currentUser.id)
+      .maybeSingle();
+
+  if(!error && data){
+    profile = data;
+  }
+
+  const name = playerName();
+  const city = playerCity();
+
+  ["topName","sideName"].forEach(id => {
+    if($(id)) $(id).textContent = name;
+  });
+
+  $("sideCity").textContent = city;
+
+  ["topAvatar","sideAvatar","composerAvatar"].forEach(id => {
+    setAvatar($(id),profile?.avatar_url,name);
+  });
+}
 
 /* =========================================================
-   MENSAJES
+   NAVEGACIÓN
 ========================================================= */
+function showPage(name){
+  document.querySelectorAll(".page")
+    .forEach(x => x.classList.remove("active"));
 
-function showMessage(
-    element,
+  const page = $("page-" + name);
+  if(page) page.classList.add("active");
+
+  document.querySelectorAll(".nav button,.bottom-nav button")
+    .forEach(x => x.classList.remove("active"));
+
+  document.querySelectorAll(`[data-page="${name}"]`)
+    .forEach(x => x.classList.add("active"));
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* =========================================================
+   FEED
+========================================================= */
+function renderFeed(posts){
+  const feed = $("feed");
+  if(!feed) return;
+  feed.innerHTML = posts.map((p,i) => postHTML(p,i)).join("");
+}
+
+function postHTML(p,i){
+  return `
+  <article class="panel post"
+           data-search="${esc((p.title+" "+p.text+" "+p.name).toLowerCase())}">
+    <div class="post-head">
+      <div class="avatar">${esc(initials(p.name))}</div>
+      <div class="meta">
+        <b>${esc(p.name)} <span class="online">●</span></b>
+        <small>${esc(p.city)} · Hoy</small>
+      </div>
+      <button class="icon-btn" style="width:34px;height:34px">•••</button>
+    </div>
+
+    <div class="post-media">
+      <img src="${esc(p.image)}" alt="Publicación de ${esc(p.name)}" loading="lazy">
+    </div>
+
+    <div class="post-body">
+      <span class="tag">${esc(p.tag)}</span>
+      <h3>${esc(p.title)}</h3>
+      <p>${esc(p.text)}</p>
+      <div class="hashtag">${esc(p.hash)}</div>
+    </div>
+
+    <div class="post-actions">
+      <button onclick="this.classList.toggle('liked')">♡ <span>${45-i*9}</span></button>
+      <button>◯ <span>${12-i*4}</span></button>
+      <button>⤴ <span>${3+i}</span></button>
+      <button style="margin-left:auto">♧</button>
+    </div>
+  </article>`;
+}
+
+function searchFeed(query){
+  const q = query.trim().toLowerCase();
+  document.querySelectorAll("#feed .post").forEach(post => {
+    post.style.display =
+      !q || post.dataset.search.includes(q) ? "block" : "none";
+  });
+}
+
+/* =========================================================
+   ONLINE + CHAT
+========================================================= */
+function renderOnline(){
+  const html = players.map(name => `
+    <div class="player">
+      <div class="avatar">${esc(initials(name))}</div>
+      <div>
+        <b>${esc(name)}</b>
+        <small>● En línea</small>
+      </div>
+    </div>`).join("");
+
+  $("onlinePlayers").innerHTML = html;
+  $("explorePlayers").innerHTML = html;
+}
+
+function renderChat(){
+  $("chatList").innerHTML = chats.map(x => `
+    <div class="message">
+      <div class="avatar">${esc(initials(x[0]))}</div>
+      <div>
+        <b>${esc(x[0])}</b><small>Hoy</small>
+        <p>${esc(x[1])}</p>
+      </div>
+    </div>`).join("");
+}
+
+function sendChat(){
+  const input = $("chatInput");
+  const text = input.value.trim();
+  if(!text) return;
+
+  chats.push([playerName(),text]);
+  input.value = "";
+  renderChat();
+
+  $("chatList").scrollTop = $("chatList").scrollHeight;
+  toast("Mensaje enviado.");
+}
+
+/* =========================================================
+   PÁGINAS SECUNDARIAS
+========================================================= */
+function renderExtras(){
+  $("privateMessages").innerHTML = [
+    "Vlad Hemingway — Nos vemos en la reunión...",
+    "Daniela Golden — Claro, te envío la información.",
+    "Raven Black — Ok, entendido."
+  ].map(x => `
+    <div class="record">
+      <b>${esc(x.split(" — ")[0])}</b>
+      <small>${esc(x.split(" — ")[1])}</small>
+    </div>`).join("");
+
+  $("notifications").innerHTML = [
+    "Tu registro de jugador está listo para revisión.",
+    "Nuevo evento publicado por administración.",
+    "Vlad Hemingway reaccionó a tu historia."
+  ].map(x => `
+    <div class="record">
+      <b>●</b><small>${esc(x)}</small>
+    </div>`).join("");
+
+  $("eventsPage").innerHTML = [
+    "Elecciones Presidenciales",
+    "Desfile de Modas R-MEX",
+    "Operativo de Seguridad"
+  ].map(x => `
+    <div class="record">
+      <b>${esc(x)}</b>
+      <small>Próximamente</small>
+    </div>`).join("");
+
+  $("directory").innerHTML = players.map(p => `
+    <div class="record">
+      <b>${esc(p)}</b>
+      <small>Jugador · En línea</small>
+    </div>`).join("");
+
+  $("rankings").innerHTML = players.map((p,i) => `
+    <div class="record">
+      <b>#${i+1} ${esc(p)}</b>
+      <small>${128-i*11} puntos de actividad</small>
+    </div>`).join("");
+
+  $("exploreFeed").innerHTML =
+    demoPosts.map((p,i) => postHTML(p,i)).join("");
+}
+
+/* =========================================================
+   REGISTRO
+========================================================= */
+function loadPlayerFields(){
+  const p = profile || {};
+
+  $("pName").value =
+    p.first_name ||
+    p.name ||
+    p.character_name?.split(" ")[0] || "";
+
+  $("pLast").value =
+    p.last_name ||
+    p.character_name?.split(" ").slice(1).join(" ") || "";
+
+  $("pAge").value = p.age || 18;
+  $("pAgeUnit").value = p.age_unit || "Años";
+  $("pCity").value = p.city || cities[0];
+  $("pGender").value = p.gender || "Femenino";
+  $("pJob").value = p.job || jobs[0];
+
+  const id = p.rp_id ||
+             p.id_rp ||
+             ("MXRP-26-" + String(currentUser.id).slice(0,8).toUpperCase());
+
+  const bank = p.bank_account || p.bank_number || "Pendiente";
+  const cb = p.cb || p.clabe_rp || "Pendiente";
+
+  $("pId").value = id;
+  $("pBank").value = bank;
+  $("pCB").value = cb;
+
+  $("financeBank").textContent = bank;
+  $("financeCB").textContent = cb;
+
+  const balance = p.balance ?? 100000;
+  $("bankBalance").textContent = money(balance);
+  $("financeBalance").textContent = money(balance);
+
+  renderRecords();
+}
+
+async function savePlayer(){
+  if(!currentUser) return;
+
+  const payload = {
+    first_name:$("pName").value.trim(),
+    last_name:$("pLast").value.trim(),
+    age:Number($("pAge").value || 0),
+    age_unit:$("pAgeUnit").value,
+    city:$("pCity").value,
+    gender:$("pGender").value,
+    job:$("pJob").value,
+    display_name:($("pName").value+" "+$("pLast").value).trim()
+  };
+
+  const {data,error} =
+    await supabaseClient
+      .from("profiles")
+      .upsert({id:currentUser.id,...payload},{onConflict:"id"})
+      .select()
+      .single();
+
+  if(error){
+    toast("No se pudo guardar: " + error.message);
+    return;
+  }
+
+  profile = {...(profile || {}),...data};
+  loadPlayerFields();
+  loadProfile();
+
+  toast("Registro guardado correctamente.");
+}
+
+function renderRecords(){
+  const p = profile || {};
+  const rows = [];
+
+  if(p.first_name || p.name || p.character_name)
+    rows.push(["Jugador",playerName()+" · "+(p.job||"Sin ocupación")]);
+
+  if(p.city) rows.push(["Ciudad",p.city]);
+  if(p.rp_id) rows.push(["ID RP",p.rp_id]);
+  if(p.bank_account) rows.push(["BANCOMCRP26",p.bank_account]);
+
+  $("records").innerHTML = rows.length
+    ? rows.map(r => `
+      <div class="record">
+        <b>${esc(r[0])}</b>
+        <small>${esc(r[1])}</small>
+      </div>`).join("")
+    : `<div class="empty">Todavía no hay información guardada.</div>`;
+}
+
+/* =========================================================
+   HOGAR
+========================================================= */
+function valueHouse(){
+  const type = $("houseType")?.value || "Casa";
+  const value = houseValues[type] || 0;
+
+  if($("houseMxn")) $("houseMxn").value = mxn(value);
+  if($("houseRp")) $("houseRp").value = money(value);
+
+  const city = $("houseCity")?.value || cities[0];
+
+  if($("houseAddress"))
+    $("houseAddress").value =
+      "Av. MexCity #" +
+      (100 + Math.floor(Math.random()*8900)) +
+      ", " + city;
+}
+
+function saveHouse(){
+  toast("Hogar preparado. La persistencia requiere conectar la tabla de hogares.");
+}
+
+/* =========================================================
+   VEHÍCULOS
+========================================================= */
+function fillVehicles(){
+  const data = vehicleData[$("vType").value] || [];
+
+  $("vModel").innerHTML = data.map((x,i) =>
+    `<option value="${i}">${esc(x[0]+" "+x[1])}</option>`
+  ).join("");
+
+  valueVehicle();
+}
+
+function valueVehicle(){
+  const data = vehicleData[$("vType").value] || [];
+  const x = data[Number($("vModel").value) || 0];
+
+  if(!x) return;
+
+  $("vMxn").value = mxn(x[2]);
+  $("vRp").value = money(x[2]);
+
+  if(!$("vPlate").value)
+    $("vPlate").value = "MXR-" + Math.floor(100 + Math.random()*900);
+}
+
+function saveVehicle(){
+  toast("Transporte preparado. La persistencia requiere conectar la tabla de vehículos.");
+}
+
+/* =========================================================
+   FAMILIA / EMPRESA / ORGANIZACIÓN
+========================================================= */
+function toggleSection(id,on){
+  $(id).classList.toggle("hidden",!on);
+}
+
+function saveFamily(){
+  toast("Información familiar preparada para guardarse.");
+}
+
+function workMode(){
+  const type = $("workType").value;
+  let html = "";
+
+  if(type === "Empresario local"){
+    html = `
+      <div class="form-grid">
+        <div class="field"><label>Empresa</label><input id="bizName"></div>
+        <div class="field"><label>Giro</label><input id="bizType" placeholder="Restaurante, agencia, etc."></div>
+        <div class="field"><label>Ciudad</label><select id="bizCity"></select></div>
+        <div class="field"><label>Sueldo base RP</label><input id="bizSalary" type="number"></div>
+      </div>`;
+  }else if(type === "Empleado"){
+    html = `
+      <div class="form-grid">
+        <div class="field"><label>Empresa</label><input id="employeeBiz"></div>
+        <div class="field"><label>Cargo</label><input id="employeeRole"></div>
+        <div class="field"><label>Sueldo RP</label><input id="employeeSalary" type="number"></div>
+      </div>`;
+  }else if(type === "Director de gobierno"){
+    html = `
+      <div class="form-grid">
+        <div class="field"><label>Institución</label><input id="govCompany"></div>
+        <div class="field"><label>Cargo</label><input id="govRole" value="Director"></div>
+        <div class="field"><label>Sueldo automático</label><input readonly value="$500,000 RP"></div>
+      </div>`;
+  }else{
+    html = `<div class="notice">Puedes actualizar tu situación laboral cuando corresponda.</div>`;
+  }
+
+  $("workFields").innerHTML = html;
+
+  if($("bizCity")) fill("bizCity",cities);
+}
+
+function saveWork(){
+  toast("Información laboral preparada para guardarse.");
+}
+
+function saveOrg(){
+  toast("Organización preparada para guardarse.");
+}
+
+/* =========================================================
+   PUBLICACIÓN
+========================================================= */
+function openComposer(type){
+  $("composerModal").classList.add("show");
+
+  if(type && ["Rol","Historia","Evento","Anuncio","Negocio"].includes(type))
+    $("postType").value = type;
+}
+
+function closeComposer(){
+  $("composerModal").classList.remove("show");
+}
+
+function publishPost(){
+  const title = $("postTitle").value.trim();
+  const text = $("postText").value.trim();
+  const image = $("postImage").value.trim();
+
+  if(!title || !text){
+    toast("Completa título y descripción.");
+    return;
+  }
+
+  const type = $("postType").value;
+
+  const post = {
+    name:playerName(),
+    city:playerCity(),
+    tag:"ROL - " + type.toUpperCase(),
+    title,
     text,
-    type
-) {
+    hash:"#MexCityRP",
+    image:image ||
+      "https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1400&q=85"
+  };
 
-    element.textContent =
-        text;
+  demoPosts.unshift(post);
+  renderFeed(demoPosts);
 
-    element.className =
-        "form-message show " +
-        type;
+  closeComposer();
 
+  $("postTitle").value = "";
+  $("postText").value = "";
+  $("postImage").value = "";
+
+  toast("Publicación creada en el feed.");
 }
 
+/* =========================================================
+   RADIO
+========================================================= */
+function toggleRadio(button){
+  button.textContent = button.textContent === "▶" ? "Ⅱ" : "▶";
+  toast(button.textContent === "Ⅱ" ? "Radio iniciada" : "Radio pausada");
+}
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+async function logout(){
+  await supabaseClient.auth.signOut();
+  currentUser = null;
+  profile = null;
+  $("loginPassword").value = "";
+  showLogin();
+}
+
+/* =========================================================
+   ARRANQUE
+========================================================= */
+document.addEventListener("DOMContentLoaded",init);
 </script>
 
 </body>
-
 </html>
