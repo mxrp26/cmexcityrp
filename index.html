@@ -1932,6 +1932,7 @@ footer strong {
                 <div class="feature-text">
                     Empresas, gobierno,<br>
                     fuerzas y más
+                   
                 </div>
 
             </div>
@@ -1942,6 +1943,7 @@ footer strong {
 
 </main>
 
+   
 
 
 <!-- =========================================================
@@ -2767,45 +2769,49 @@ document.addEventListener("keydown", event => {
 ========================================================= */
 
 function showMessage(element, text, type) {
-    if(!element) return;
+    if (!element) return;
+
     element.textContent = text;
     element.className = "form-message show " + type;
 }
 
 
-
 /* =========================================================
-   LÓGICA DE REGISTRO
+   REGISTRO — SUPABASE AUTH
 ========================================================= */
 
 function setupRegister() {
 
     const form = document.getElementById("registerForm");
-    if(!form) return;
+    if (!form) return;
+
+    /* Evita registrar dos veces el mismo formulario */
+    if (form.dataset.supabaseReady === "1") return;
+    form.dataset.supabaseReady = "1";
 
     form.addEventListener("submit", async event => {
         event.preventDefault();
 
-        const email = document.getElementById("registerEmail").value.trim();
-        const password = document.getElementById("registerPassword").value;
-        const confirmPassword = document.getElementById("registerConfirmPassword").value;
+        const email = document.getElementById("registerEmail")?.value.trim() || "";
+        const password = document.getElementById("registerPassword")?.value || "";
+        const confirmPassword = document.getElementById("registerConfirmPassword")?.value || "";
         const button = document.getElementById("registerButton");
         const message = document.getElementById("registerMessage");
 
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        if(!emailPattern.test(email)) {
-            showMessage(message,"Introduce un correo electrónico válido.","error");
+        if (!emailPattern.test(email)) {
+            showMessage(message, "Introduce un correo electrónico válido.", "error");
             return;
         }
 
-        if(password.length < 8) {
-            showMessage(message,"La contraseña debe tener al menos 8 caracteres.","error");
+        if (password.length < 8) {
+            showMessage(message, "La contraseña debe tener al menos 8 caracteres.", "error");
             return;
         }
 
-        if(password !== confirmPassword) {
-            showMessage(message,"Las contraseñas no coinciden.","error");
+        if (password !== confirmPassword) {
+            showMessage(message, "Las contraseñas no coinciden.", "error");
             return;
         }
 
@@ -2813,6 +2819,7 @@ function setupRegister() {
         button.textContent = "CREANDO CUENTA...";
 
         try {
+
             const { data, error } = await supabaseClient.auth.signUp({
                 email,
                 password,
@@ -2821,20 +2828,52 @@ function setupRegister() {
                 }
             });
 
-            if(error) throw error;
+            if (error) throw error;
 
-            showMessage(
-                message,
-                "¡Cuenta creada! Revisa tu bandeja de entrada (y spam) para confirmar tu correo y acceder a MexCity RP.",
-                "success"
-            );
+            /*
+               Si en Supabase está activada la confirmación por correo,
+               normalmente data.session será null hasta que el usuario
+               confirme su correo.
+            */
 
-            form.reset();
-            button.textContent = "CUENTA CREADA";
+            if (data?.session) {
 
-        } catch(error) {
+                showMessage(
+                    message,
+                    "¡Cuenta creada correctamente! Ya puedes entrar a MexCity RP.",
+                    "success"
+                );
+
+                button.textContent = "CUENTA CREADA";
+
+                setTimeout(() => {
+                    window.location.href = "./dashboard.html";
+                }, 1000);
+
+            } else {
+
+                showMessage(
+                    message,
+                    "¡Cuenta creada! Revisa tu correo y confirma tu cuenta antes de iniciar sesión.",
+                    "success"
+                );
+
+                form.reset();
+                button.textContent = "CUENTA CREADA";
+            }
+
+        } catch (error) {
+
             console.error("Supabase registro:", error);
-            showMessage(message, error?.message || "No fue posible crear la cuenta.", "error");
+
+            let text = error?.message || "No fue posible crear la cuenta.";
+
+            if (/already registered/i.test(text)) {
+                text = "Este correo ya está registrado. Intenta iniciar sesión.";
+            }
+
+            showMessage(message, text, "error");
+
             button.disabled = false;
             button.textContent = "CREAR CUENTA";
         }
@@ -2842,26 +2881,36 @@ function setupRegister() {
 }
 
 
-
 /* =========================================================
-   LÓGICA DE INICIO DE SESIÓN
+   INICIO DE SESIÓN — SUPABASE AUTH
 ========================================================= */
 
 function setupLogin() {
 
     const form = document.getElementById("loginForm");
-    if(!form) return;
+    if (!form) return;
+
+    /* Evita listeners duplicados al abrir/cerrar el modal */
+    if (form.dataset.supabaseReady === "1") return;
+    form.dataset.supabaseReady = "1";
 
     form.addEventListener("submit", async event => {
         event.preventDefault();
 
-        const email = document.getElementById("loginEmail").value.trim();
-        const password = document.getElementById("loginPassword").value;
+        const email = document.getElementById("loginEmail")?.value.trim() || "";
+        const password = document.getElementById("loginPassword")?.value || "";
         const message = document.getElementById("loginMessage");
         const button = form.querySelector('button[type="submit"]');
 
-        if(!email || !password) {
-            showMessage(message,"Completa todos los campos.","error");
+        if (!email || !password) {
+            showMessage(message, "Completa todos los campos.", "error");
+            return;
+        }
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailPattern.test(email)) {
+            showMessage(message, "Introduce un correo electrónico válido.", "error");
             return;
         }
 
@@ -2869,33 +2918,49 @@ function setupLogin() {
         button.textContent = "VERIFICANDO...";
 
         try {
+
             const { data, error } = await supabaseClient.auth.signInWithPassword({
                 email,
                 password
             });
 
-            if(error) throw error;
-            if(!data.session) throw new Error("No se pudo crear una sesión activa.");
+            if (error) throw error;
 
-            showMessage(message,"Inicio de sesión correcto. Entrando a MexCity RP...","success");
+            if (!data?.session) {
+                throw new Error("No se pudo crear una sesión activa.");
+            }
+
+            showMessage(
+                message,
+                "Inicio de sesión correcto. Entrando a MexCity RP...",
+                "success"
+            );
+
             button.textContent = "ENTRANDO...";
 
+            /*
+               IMPORTANTE:
+               El dashboard NO aparece en el menú principal.
+               Solo se abre después de un login correcto.
+            */
             setTimeout(() => {
                 window.location.href = "./dashboard.html";
-            }, 500);
+            }, 700);
 
-        } catch(error) {
+        } catch (error) {
+
             console.error("Supabase login:", error);
 
             let text = error?.message || "No fue posible iniciar sesión.";
 
-            if(/email not confirmed/i.test(text)) {
+            if (/email not confirmed/i.test(text)) {
                 text = "Tu correo todavía no está confirmado. Revisa tu bandeja de entrada y confirma tu cuenta.";
-            } else if(/invalid login credentials/i.test(text)) {
+            } else if (/invalid login credentials/i.test(text)) {
                 text = "Correo o contraseña incorrectos.";
             }
 
             showMessage(message, text, "error");
+
             button.disabled = false;
             button.textContent = "INICIAR SESIÓN";
         }
@@ -2903,24 +2968,28 @@ function setupLogin() {
 }
 
 
-
 /* =========================================================
-   LÓGICA DE RECUPERACIÓN DE CONTRASEÑA
+   RECUPERACIÓN DE CONTRASEÑA
 ========================================================= */
 
 function setupPasswordRecovery() {
+
     const form = document.getElementById("recoveryForm");
-    if(!form) return;
+    if (!form) return;
+
+    if (form.dataset.supabaseReady === "1") return;
+    form.dataset.supabaseReady = "1";
 
     form.addEventListener("submit", async event => {
         event.preventDefault();
 
-        const email = document.getElementById("recoveryEmail").value.trim();
+        const email = document.getElementById("recoveryEmail")?.value.trim() || "";
         const message = document.getElementById("recoveryMessage");
         const button = document.getElementById("recoveryButton");
 
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if(!emailPattern.test(email)) {
+
+        if (!emailPattern.test(email)) {
             showMessage(message, "Introduce un correo electrónico válido.", "error");
             return;
         }
@@ -2929,23 +2998,33 @@ function setupPasswordRecovery() {
         button.textContent = "ENVIANDO...";
 
         try {
+
             const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-                redirectTo: window.location.origin + window.location.pathname,
+                redirectTo: window.location.origin + window.location.pathname
             });
 
-            if(error) throw error;
+            if (error) throw error;
 
             showMessage(
                 message,
                 "¡Correo enviado! Revisa tu bandeja de entrada para restablecer tu contraseña.",
                 "success"
             );
+
             form.reset();
 
-        } catch(error) {
+        } catch (error) {
+
             console.error("Error al recuperar contraseña:", error);
-            showMessage(message, error?.message || "No se pudo enviar el correo de recuperación.", "error");
+
+            showMessage(
+                message,
+                error?.message || "No se pudo enviar el correo de recuperación.",
+                "error"
+            );
+
         } finally {
+
             button.disabled = false;
             button.textContent = "ENVIAR ENLACE";
         }
@@ -2953,23 +3032,26 @@ function setupPasswordRecovery() {
 }
 
 
-
 /* =========================================================
-   LÓGICA DE ACTUALIZACIÓN DE CONTRASEÑA
+   ACTUALIZAR CONTRASEÑA
 ========================================================= */
 
 function setupUpdatePassword() {
+
     const form = document.getElementById("updatePasswordForm");
-    if(!form) return;
+    if (!form) return;
+
+    if (form.dataset.supabaseReady === "1") return;
+    form.dataset.supabaseReady = "1";
 
     form.addEventListener("submit", async event => {
         event.preventDefault();
 
-        const newPassword = document.getElementById("newPassword").value;
+        const newPassword = document.getElementById("newPassword")?.value || "";
         const message = document.getElementById("updatePasswordMessage");
         const button = document.getElementById("updatePasswordButton");
 
-        if(newPassword.length < 8) {
+        if (newPassword.length < 8) {
             showMessage(message, "La contraseña debe tener al menos 8 caracteres.", "error");
             return;
         }
@@ -2978,24 +3060,42 @@ function setupUpdatePassword() {
         button.textContent = "ACTUALIZANDO...";
 
         try {
+
             const { error } = await supabaseClient.auth.updateUser({
                 password: newPassword
             });
 
-            if(error) throw error;
+            if (error) throw error;
 
-            showMessage(message, "¡Contraseña actualizada con éxito! Ya puedes iniciar sesión.", "success");
+            showMessage(
+                message,
+                "¡Contraseña actualizada con éxito! Ya puedes iniciar sesión.",
+                "success"
+            );
+
             button.textContent = "LISTO";
-            
-            window.history.replaceState({}, document.title, window.location.pathname);
+
+            window.history.replaceState(
+                {},
+                document.title,
+                window.location.pathname
+            );
 
             setTimeout(() => {
+                closeCurrentModal();
                 openModal("login");
-            }, 2000);
+            }, 1800);
 
-        } catch(error) {
+        } catch (error) {
+
             console.error("Supabase update pass:", error);
-            showMessage(message, "Error al intentar actualizar la contraseña.", "error");
+
+            showMessage(
+                message,
+                error?.message || "Error al intentar actualizar la contraseña.",
+                "error"
+            );
+
             button.disabled = false;
             button.textContent = "ACTUALIZAR CONTRASEÑA";
         }
@@ -3003,17 +3103,65 @@ function setupUpdatePassword() {
 }
 
 
-
 /* =========================================================
-   DETECTOR DE RECUPERACIÓN (SUPABASE AUTH)
+   DETECTOR DE RECUPERACIÓN DE CONTRASEÑA
 ========================================================= */
 
 supabaseClient.auth.onAuthStateChange((event, session) => {
-    if(event === 'PASSWORD_RECOVERY') {
+
+    if (event === "PASSWORD_RECOVERY") {
+
         setTimeout(() => {
             openModal("nueva-password");
         }, 500);
     }
+
+});
+
+
+/* =========================================================
+   COMPROBAR SESIÓN ACTUAL
+========================================================= */
+
+async function checkAuthSession() {
+
+    try {
+
+        const { data, error } = await supabaseClient.auth.getSession();
+
+        if (error) throw error;
+
+        if (data?.session) {
+
+            console.log(
+                "Sesión activa detectada:",
+                data.session.user.email
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Error al verificar la sesión:",
+            error
+        );
+    }
+}
+
+
+/* =========================================================
+   INICIALIZAR
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    setupRegister();
+    setupLogin();
+    setupPasswordRecovery();
+    setupUpdatePassword();
+    checkAuthSession();
+
 });
 
 </script>
