@@ -1415,11 +1415,6 @@ footer strong {
         font-size:7px;
     }
 
-    /*
-       En móvil mantenemos los botones
-       esenciales accesibles.
-    */
-
     .nav-button:nth-child(6),
     .nav-button:nth-child(7) {
 
@@ -1718,9 +1713,7 @@ footer strong {
     </button>
 
 
-    <!-- =====================================================
-         NUEVO: REGISTRARSE
-    ====================================================== -->
+    <!-- REGISTRARSE -->
 
     <button
         class="nav-button register"
@@ -1738,9 +1731,7 @@ footer strong {
     </button>
 
 
-    <!-- =====================================================
-         NUEVO: INICIAR SESIÓN
-    ====================================================== -->
+    <!-- INICIAR SESIÓN -->
 
     <button
         class="nav-button login"
@@ -1847,7 +1838,7 @@ footer strong {
             <div>
 
                 <div class="feature-title">
-                    Comunidad Activa 
+                    Comunidad Activa
                 </div>
 
                 <div class="feature-text">
@@ -2021,11 +2012,13 @@ footer strong {
 
 <script>
 
-
-/* SUPABASE — PROYECTO REAL DE MEXCITY RP */
+/* =========================================================
+   SUPABASE — CREDENCIALES OFICIALES
+========================================================= */
 const SUPABASE_URL = "https://ogiupysmhnzvizesqcxr.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_QZ1vQjZQ-7vbkBJLmouMzQ_PUmI8U2c";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 
 
 /* =========================================================
@@ -2044,14 +2037,10 @@ const modalData = {
         content:`
 
             <p>
-                <strong>MexCity RP</strong>MexCity RP es una comunidad de roleplay totalmente gratuita inspirada en México, 
-                creada por y para jugadores de Avakin Life. Funciona como un proyecto independiente y no oficial
-                diseñado para expandir la diversión del juego original,
-                permitiendo a los usuarios darle una nueva identidad y trasfondo a sus avatares.
-                Dentro de esta ciudad virtual,
-                los jugadores pueden interactuar, trabajar, emprender negocios,
-                unirse a organizaciones y desarrollar historias inmersivas, 
-                todo sin alterar ni sustituir la plataforma original de Avakin Life.
+                <strong>MexCity RP</strong> es una comunidad
+                de roleplay inspirada en México donde cada
+                jugador puede crear su propio personaje y
+                desarrollar una historia dentro de la ciudad.
             </p>
 
             <p>
@@ -2161,14 +2150,12 @@ const modalData = {
                 <div class="info-card">
 
                     <h3>
-                        -Crea tu identidad
-
+                        01 · Crea
                     </h3>
 
                     <p>
-                     Todo comienza en tu imaginación. Diseña a tu personaje desde cero: define su nombre, su estilo, su personalidad.
-Decide quién quiere ser en la ciudad. ¿Será un emprendedor, un servidor público, o formará parte de una organización civil?
-Tú tienes el control absoluto de su identidad.
+                        Diseña tu personaje y define
+                        su identidad.
                     </p>
 
                 </div>
@@ -2177,13 +2164,12 @@ Tú tienes el control absoluto de su identidad.
                 <div class="info-card">
 
                     <h3>
-                      - Presenta tu historia
+                        02 · Presenta
                     </h3>
 
                     <p>
-                       Una vez que tu personaje está listo, es momento de introducirlo a la sociedad de MexCity.
-                       Presenta a tu avatar y establece el punto de partida de su narrativa.
-                       Este es el primer paso para que los demás habitantes sepan quién eres y qué intenciones tienes al llegar a la ciudad.
+                        Presenta tu personaje y establece
+                        el inicio de su historia.
                     </p>
 
                 </div>
@@ -2192,14 +2178,12 @@ Tú tienes el control absoluto de su identidad.
                 <div class="info-card">
 
                     <h3>
-                        -Interactúa y convive
+                        03 · Interactúa
                     </h3>
 
                     <p>
-                       El corazón del roleplay es la convivencia.
-                       Relaciónate con otros personajes de la comunidad, 
-                       participa en eventos exclusivos de la ciudad, haz negocios o forja amistades. 
-                       Cada conversación y cada encuentro son piezas clave para darle realismo y profundidad a la vida de tu personaje.
+                        Convive y desarrolla situaciones
+                        con otros personajes.
                     </p>
 
                 </div>
@@ -2208,13 +2192,12 @@ Tú tienes el control absoluto de su identidad.
                 <div class="info-card">
 
                     <h3>
-                        -Construye tu legado
+                        04 · Construye
                     </h3>
 
                     <p>
-                       Con el paso del tiempo, haz crecer la historia de tu personaje dentro de MexCity. 
-                       Las decisiones que tomes, los trabajos que realices y las alianzas que formes moldearán su futuro.
-                       Aquí no hay un final escrito; tu historia estará en constante evolución.
+                        Haz crecer la historia de tu
+                        personaje dentro de MexCity.
                     </p>
 
                 </div>
@@ -2233,8 +2216,9 @@ Tú tienes el control absoluto de su identidad.
 
         content:`
 
-           impulsado por la pasión de la comunidad por el diseño de avatares, la moda digital y la creación de historias conjuntas.
-
+            <p>
+                La privacidad de los integrantes de la
+                comunidad es una prioridad y está protegida bajo un marco de entretenimiento seguro.
             </p>
 
             <p>
@@ -2261,12 +2245,8 @@ Tú tienes el control absoluto de su identidad.
                 • La plataforma opera de manera independiente y libre, sin fines de lucro.<br>
                 • Cualquier duda o aclaración sobre las normas de convivencia puede ser consultada directamente con el equipo de administración y moderación (Staff) encargado de supervisar el correcto funcionamiento de la comunidad.
             </p>
-            con el equipo de administración y moderación (Staff) encargado de supervisar el correcto funcionamiento de la comunidad.
 
- </p>
-
-            <p>
-
+        `
     },
 
 
@@ -2279,9 +2259,8 @@ Tú tienes el control absoluto de su identidad.
         content:`
 
             <p>
-                Para mantener una comunidad organizada,
-                todos los integrantes deben respetar las
-                normas establecidas por MexCity RP.
+                <strong>Normas de Convivencia en MexCity RP:</strong><br>
+                Para mantener una comunidad sana, organizada y basada en el respeto mutuo, todos los ciudadanos e integrantes deben seguir estas normas básicas dentro de la plataforma.
             </p>
 
             <div class="modal-grid">
@@ -2289,12 +2268,11 @@ Tú tienes el control absoluto de su identidad.
                 <div class="info-card">
 
                     <h3>
-                        Respeto
+                        01 · Respeto Absoluto
                     </h3>
 
                     <p>
-                        Mantén una convivencia respetuosa
-                        con los demás integrantes y administración.
+                        Mantén una convivencia cordial y respetuosa con todos los integrantes, tanto dentro del roleplay como en los espacios de la comunidad.
                     </p>
 
                 </div>
@@ -2303,12 +2281,11 @@ Tú tienes el control absoluto de su identidad.
                 <div class="info-card">
 
                     <h3>
-                        Roleplay
+                        02 · Coherencia de Roleplay
                     </h3>
 
                     <p>
-                        Respeta la lógica y continuity
-                        de las historias.
+                        Respeta la lógica, la continuidad y el desarrollo de las historias de los demás personajes sin alterar tramas sin previo acuerdo.
                     </p>
 
                 </div>
@@ -2317,11 +2294,11 @@ Tú tienes el control absoluto de su identidad.
                 <div class="info-card">
 
                     <h3>
-                        Administración
+                        03 · Orden Administrativo
                     </h3>
 
                     <p>
-                        Sigue las indicaciones administrativas.
+                        Sigue las indicaciones del equipo de administración y moderación (Staff) para garantizar el correcto funcionamiento de la ciudad.
                     </p>
 
                 </div>
@@ -2330,12 +2307,11 @@ Tú tienes el control absoluto de su identidad.
                 <div class="info-card">
 
                     <h3>
-                        Convivencia
+                        04 · Convivencia Sana
                     </h3>
 
                     <p>
-                        No utilices la comunidad para generar
-                        conflictos fuera del roleplay.
+                        No utilices la comunidad ni los espacios virtuales para generar conflictos personales, toxicidad o situaciones fuera del entorno de juego.
                     </p>
 
                 </div>
@@ -2346,7 +2322,7 @@ Tú tienes el control absoluto de su identidad.
     },
 
 
-   "staff": {
+    "staff": {
 
         icon:"★",
 
@@ -2365,15 +2341,15 @@ Tú tienes el control absoluto de su identidad.
                 <div class="staff-card">
 
                     <div class="staff-role">
-                        Staff
+                        Staff Principal
                     </div>
 
                     <div class="staff-name">
-                        NOMBRE DEL ADMINISTRADOR
+                        EQUIPO ADMINISTRATIVO
                     </div>
 
                     <div class="staff-code">
-                        MXC-STAFF-002
+                        MXC-STAFF-001
                     </div>
 
                 </div>
@@ -2382,6 +2358,7 @@ Tú tienes el control absoluto de su identidad.
 
         `
     },
+
 
     "soporte": {
 
@@ -2401,72 +2378,119 @@ Tú tienes el control absoluto de su identidad.
     },
 
 
-   /* =========================================================
-   REGISTRO (Envía correo automático de confirmación/bienvenida)
-========================================================= */
+    /* =====================================================
+       REGISTRO
+    ====================================================== */
 
-function setupRegister() {
+    "registro": {
 
-    const form = document.getElementById("registerForm");
-    if(!form) return;
+        icon:"✚",
 
-    form.addEventListener("submit", async event => {
-        event.preventDefault();
+        title:"Crear cuenta",
 
-        const email = document.getElementById("registerEmail").value.trim();
-        const password = document.getElementById("registerPassword").value;
-        const confirmPassword = document.getElementById("registerConfirmPassword").value;
-        const button = document.getElementById("registerButton");
-        const message = document.getElementById("registerMessage");
+        content:`
 
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            <p>
+                Crea tu cuenta para comenzar tu experiencia
+                dentro de <strong>MexCity RP</strong>.
+            </p>
 
-        if(!emailPattern.test(email)) {
-            showMessage(message,"Introduce un correo electrónico válido.","error");
-            return;
-        }
 
-        if(password.length < 8) {
-            showMessage(message,"La contraseña debe tener al menos 8 caracteres.","error");
-            return;
-        }
+            <form
+                class="auth-form"
+                id="registerForm"
+            >
 
-        if(password !== confirmPassword) {
-            showMessage(message,"Las contraseñas no coinciden.","error");
-            return;
-        }
 
-        button.disabled = true;
-        button.textContent = "CREANDO CUENTA...";
+                <div class="form-group">
 
-        try {
-            const { data, error } = await supabaseClient.auth.signUp({
-                email,
-                password,
-                options: {
-                    emailRedirectTo: window.location.origin + window.location.pathname
-                }
-            });
+                    <label>
+                        Correo electrónico
+                    </label>
 
-            if(error) throw error;
+                    <input
+                        type="email"
+                        id="registerEmail"
+                        name="user_email"
+                        placeholder="tucorreo@ejemplo.com"
+                        autocomplete="email"
+                        required
+                    >
 
-            showMessage(
-                message,
-                "¡Cuenta creada! Revisa tu bandeja de entrada (y la carpeta de spam) para confirmar tu correo y acceder a MexCity RP.",
-                "success"
-            );
+                </div>
 
-            form.reset();
-            button.textContent = "CUENTA CREADA";
 
-        } catch(error) {
-            console.error("Supabase registro:",error);
-            showMessage(message,error?.message || "No fue posible crear la cuenta.","error");
-            button.disabled = false;
-            button.textContent = "CREAR CUENTA";
-        }
-    });
-}
+                <div class="form-group">
+
+                    <label>
+                        Crear contraseña
+                    </label>
+
+                    <input
+                        type="password"
+                        id="registerPassword"
+                        name="user_password"
+                        placeholder="Mínimo 8 caracteres"
+                        minlength="8"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Confirmar contraseña
+                    </label>
+
+                    <input
+                        type="password"
+                        id="registerConfirmPassword"
+                        placeholder="Repite tu contraseña"
+                        minlength="8"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="auth-submit"
+                    id="registerButton"
+                >
+
+                    CREAR CUENTA
+
+                </button>
+
+
+                <div
+                    class="form-message"
+                    id="registerMessage"
+                ></div>
+
+
+                <div class="auth-note">
+
+                    Tu contraseña no se enviará por correo.
+
+                    <br>
+
+                    Después de registrarte recibirás
+                    un correo de confirmación y bienvenida.
+
+                </div>
+
+
+            </form>
+
+        `
+    },
+
 
     /* =====================================================
        LOGIN
@@ -2522,7 +2546,7 @@ function setupRegister() {
                         autocomplete="current-password"
                         required
                     >
-                    
+
                     <a href="#" class="auth-link" onclick="openModal('recuperar'); return false;">¿Olvidaste tu contraseña?</a>
 
                 </div>
@@ -2557,165 +2581,122 @@ function setupRegister() {
         `
     },
 
-   /* =========================================================
-   RECUPERAR CONTRASEÑA (Lógica completa dentro del modal)
-========================================================= */
 
-function setupPasswordRecovery() {
-    const form = document.getElementById("recoveryForm");
-    if(!form) return;
+    /* =====================================================
+       RECUPERAR CONTRASEÑA
+    ====================================================== */
 
-    form.addEventListener("submit", async event => {
-        event.preventDefault();
+    "recuperar": {
 
-        const email = document.getElementById("recoveryEmail").value.trim();
-        const message = document.getElementById("recoveryMessage");
-        const button = document.getElementById("recoveryButton");
+        icon:"✉",
 
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if(!emailPattern.test(email)) {
-            showMessage(message, "Introduce un correo electrónico válido.", "error");
-            return;
-        }
+        title:"Recuperar contraseña",
 
-        button.disabled = true;
-        button.textContent = "ENVIANDO...";
+        content:`
 
-        try {
-            const { data, error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-                redirectTo: window.location.origin + window.location.pathname,
-            });
+            <p>
+                Ingresa tu correo y te enviaremos un enlace para que puedas 
+                cambiar tu contraseña.
+            </p>
 
-            if(error) throw error;
+            <form
+                class="auth-form"
+                id="recoveryForm"
+            >
 
-            showMessage(
-                message,
-                "¡Correo enviado! Revisa tu bandeja de entrada para restablecer tu contraseña.",
-                "success"
-            );
-            form.reset();
+                <div class="form-group">
+                    <label>Correo electrónico</label>
+                    <input
+                        type="email"
+                        id="recoveryEmail"
+                        placeholder="tucorreo@ejemplo.com"
+                        required
+                    >
+                </div>
 
-        } catch(error) {
-            console.error("Error al recuperar contraseña:", error);
-            showMessage(message, error?.message || "No se pudo enviar el correo de recuperación.", "error");
-        } finally {
-            button.disabled = false;
-            button.textContent = "RECUPERAR CONTRASEÑA";
-        }
-    });
-}
+                <button type="submit" class="auth-submit" id="recoveryButton">
+                    ENVIAR ENLACE
+                </button>
 
-   /* =========================================================
-   ACTUALIZAR CONTRASEÑA NUEVA
-========================================================= */
+                <div class="form-message" id="recoveryMessage"></div>
 
-function setupUpdatePassword() {
-    const form = document.getElementById("updatePasswordForm"); // ID del formulario de nueva contraseña
-    if(!form) return;
+                <div class="auth-note">
+                    <a href="#" class="auth-link" onclick="openModal('login'); return false;">Volver a Iniciar Sesión</a>
+                </div>
 
-    form.addEventListener("submit", async event => {
-        event.preventDefault();
+            </form>
+        `
+    },
 
-        const newPassword = document.getElementById("newPassword").value;
-        const confirmPassword = document.getElementById("confirmNewPassword").value;
-        const message = document.getElementById("updateMessage");
-        const button = document.getElementById("updateButton");
 
-        if(newPassword.length < 8) {
-            showMessage(message, "La contraseña debe tener al menos 8 caracteres.", "error");
-            return;
-        }
+    /* =====================================================
+       NUEVA CONTRASEÑA
+    ====================================================== */
 
-        if(newPassword !== confirmPassword) {
-            showMessage(message, "Las contraseñas no coinciden.", "error");
-            return;
-        }
+    "nueva-password": {
 
-        button.disabled = true;
-        button.textContent = "ACTUALIZANDO...";
+        icon:"🔑",
 
-        try {
-            // Actualiza la contraseña del usuario autenticado por el token del correo
-            const { data, error } = await supabaseClient.auth.updateUser({
-                password: newPassword
-            });
+        title:"Nueva contraseña",
 
-            if(error) throw error;
+        content:`
 
-            showMessage(
-                message,
-                "¡Contraseña actualizada con éxito! Ya puedes iniciar sesión.",
-                "success"
-            );
-            form.reset();
+            <p>
+                Ingresa tu nueva contraseña para acceder a tu cuenta.
+            </p>
 
-            // Opcional: Redirigir al login después de unos segundos
-            setTimeout(() => {
-                window.location.href = "login.html";
-            }, 3000);
+            <form
+                class="auth-form"
+                id="updatePasswordForm"
+            >
 
-        } catch(error) {
-            console.error("Error al actualizar contraseña:", error);
-            showMessage(message, error?.message || "No se pudo actualizar la contraseña.", "error");
-            button.disabled = false;
-            button.textContent = "ACTUALIZAR CONTRASEÑA";
-        }
-    });
-}
+                <div class="form-group">
+                    <label>Nueva contraseña</label>
+                    <input
+                        type="password"
+                        id="newPassword"
+                        placeholder="Mínimo 8 caracteres"
+                        minlength="8"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="auth-submit" id="updatePasswordButton">
+                    ACTUALIZAR CONTRASEÑA
+                </button>
+
+                <div class="form-message" id="updatePasswordMessage"></div>
+
+            </form>
+        `
+    }
+
+};
 
 
 
 /* =========================================================
-   ELEMENTOS
+   ELEMENTOS Y CONTROL DE MODALES
 ========================================================= */
 
-const modal =
-    document.getElementById("modal");
-
-const modalTitle =
-    document.getElementById("modalTitle");
-
-const modalContent =
-    document.getElementById("modalContent");
-
-const modalIcon =
-    document.getElementById("modalIcon");
-
-const closeModal =
-    document.getElementById("closeModal");
-
-
-
-/* =========================================================
-   ABRIR MODAL
-========================================================= */
+const modal = document.getElementById("modal");
+const modalTitle = document.getElementById("modalTitle");
+const modalContent = document.getElementById("modalContent");
+const modalIcon = document.getElementById("modalIcon");
+const closeModal = document.getElementById("closeModal");
 
 function openModal(section) {
 
-    const data =
-        modalData[section];
+    const data = modalData[section];
 
     if(!data) return;
 
-    modalIcon.textContent =
-        data.icon;
-
-    modalTitle.textContent =
-        data.title;
-
-    modalContent.innerHTML =
-        data.content;
+    modalIcon.textContent = data.icon;
+    modalTitle.textContent = data.title;
+    modalContent.innerHTML = data.content;
 
     modal.classList.add("active");
-
-    document.body.style.overflow =
-        "hidden";
-
-
-    /*
-       Después de insertar el HTML,
-       conectamos los formularios.
-    */
+    document.body.style.overflow = "hidden";
 
     if(section === "registro") {
         setupRegister();
@@ -2726,7 +2707,7 @@ function openModal(section) {
     }
 
     if(section === "recuperar") {
-        setupReset();
+        setupPasswordRecovery();
     }
 
     if(section === "nueva-password") {
@@ -2734,12 +2715,6 @@ function openModal(section) {
     }
 
 }
-
-
-
-/* =========================================================
-   CERRAR MODAL
-========================================================= */
 
 function closeCurrentModal() {
     modal.classList.remove("active");
@@ -2749,54 +2724,29 @@ function closeCurrentModal() {
 
 
 /* =========================================================
-   BOTONES DE NAVEGACIÓN
+   EVENTOS DE NAVEGACIÓN Y CIERRE
 ========================================================= */
 
-document
-.querySelectorAll(".nav-button")
-.forEach(button => {
-
-    button.addEventListener(
-        "click",
-        () => {
-            document
-            .querySelectorAll(".nav-button")
-            .forEach(btn =>
-                btn.classList.remove("active")
-            );
-
-            button.classList.add("active");
-
-            openModal(
-                button.dataset.modal
-            );
-        }
-    );
-
+document.querySelectorAll(".nav-button").forEach(button => {
+    button.addEventListener("click", () => {
+        document.querySelectorAll(".nav-button").forEach(btn =>
+            btn.classList.remove("active")
+        );
+        button.classList.add("active");
+        openModal(button.dataset.modal);
+    });
 });
 
-
-
-/* =========================================================
-   BOTON ÚNETE
-========================================================= */
-
-document
-.querySelector(".join-button")
-.addEventListener(
-    "click",
-    () => {
+const joinBtn = document.querySelector(".join-button");
+if(joinBtn) {
+    joinBtn.addEventListener("click", () => {
         openModal("registro");
-    }
-);
+    });
+}
 
-
-
-/* =========================================================
-   CERRAR Y ESCAPE
-========================================================= */
-
-closeModal.addEventListener("click", closeCurrentModal);
+if(closeModal) {
+    closeModal.addEventListener("click", closeCurrentModal);
+}
 
 modal.addEventListener("click", event => {
     if(event.target === modal) {
@@ -2813,7 +2763,19 @@ document.addEventListener("keydown", event => {
 
 
 /* =========================================================
-   REGISTRO
+   UTILIDAD DE MENSAJES
+========================================================= */
+
+function showMessage(element, text, type) {
+    if(!element) return;
+    element.textContent = text;
+    element.className = "form-message show " + type;
+}
+
+
+
+/* =========================================================
+   LÓGICA DE REGISTRO
 ========================================================= */
 
 function setupRegister() {
@@ -2863,9 +2825,7 @@ function setupRegister() {
 
             showMessage(
                 message,
-                data.session
-                    ? "Cuenta creada correctamente. Ya puedes iniciar sesión."
-                    : "¡Cuenta creada! Revisa tu correo (incluyendo SPAM) para confirmar y darte la bienvenida.",
+                "¡Cuenta creada! Revisa tu bandeja de entrada (y spam) para confirmar tu correo y acceder a MexCity RP.",
                 "success"
             );
 
@@ -2873,8 +2833,8 @@ function setupRegister() {
             button.textContent = "CUENTA CREADA";
 
         } catch(error) {
-            console.error("Supabase registro:",error);
-            showMessage(message,error?.message || "No fue posible crear la cuenta.","error");
+            console.error("Supabase registro:", error);
+            showMessage(message, error?.message || "No fue posible crear la cuenta.", "error");
             button.disabled = false;
             button.textContent = "CREAR CUENTA";
         }
@@ -2884,7 +2844,7 @@ function setupRegister() {
 
 
 /* =========================================================
-   LOGIN
+   LÓGICA DE INICIO DE SESIÓN
 ========================================================= */
 
 function setupLogin() {
@@ -2922,10 +2882,10 @@ function setupLogin() {
 
             setTimeout(() => {
                 window.location.href = "./dashboard.html";
-            },500);
+            }, 500);
 
         } catch(error) {
-            console.error("Supabase login:",error);
+            console.error("Supabase login:", error);
 
             let text = error?.message || "No fue posible iniciar sesión.";
 
@@ -2935,7 +2895,7 @@ function setupLogin() {
                 text = "Correo o contraseña incorrectos.";
             }
 
-            showMessage(message,text,"error");
+            showMessage(message, text, "error");
             button.disabled = false;
             button.textContent = "INICIAR SESIÓN";
         }
@@ -2943,42 +2903,49 @@ function setupLogin() {
 }
 
 
+
 /* =========================================================
-   RECUPERAR CONTRASEÑA (ENVIAR CORREO)
+   LÓGICA DE RECUPERACIÓN DE CONTRASEÑA
 ========================================================= */
 
-function setupReset() {
-    const form = document.getElementById("resetForm");
+function setupPasswordRecovery() {
+    const form = document.getElementById("recoveryForm");
     if(!form) return;
 
     form.addEventListener("submit", async event => {
         event.preventDefault();
 
-        const email = document.getElementById("resetEmail").value.trim();
-        const message = document.getElementById("resetMessage");
-        const button = form.querySelector('button[type="submit"]');
+        const email = document.getElementById("recoveryEmail").value.trim();
+        const message = document.getElementById("recoveryMessage");
+        const button = document.getElementById("recoveryButton");
 
-        if(!email) {
-            showMessage(message, "Por favor ingresa tu correo.", "error");
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(!emailPattern.test(email)) {
+            showMessage(message, "Introduce un correo electrónico válido.", "error");
             return;
         }
 
         button.disabled = true;
-        button.textContent = "ENVIANDO CORREO...";
+        button.textContent = "ENVIANDO...";
 
         try {
             const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-                redirectTo: window.location.origin + window.location.pathname
+                redirectTo: window.location.origin + window.location.pathname,
             });
 
-            if (error) throw error;
+            if(error) throw error;
 
-            showMessage(message, "¡Enviado! Revisa tu correo electrónico para restablecer tu contraseña.", "success");
-            button.textContent = "ENVIADO";
+            showMessage(
+                message,
+                "¡Correo enviado! Revisa tu bandeja de entrada para restablecer tu contraseña.",
+                "success"
+            );
+            form.reset();
 
         } catch(error) {
-            console.error("Supabase reset:", error);
-            showMessage(message, "No pudimos enviar el correo. Verifica que el correo esté registrado.", "error");
+            console.error("Error al recuperar contraseña:", error);
+            showMessage(message, error?.message || "No se pudo enviar el correo de recuperación.", "error");
+        } finally {
             button.disabled = false;
             button.textContent = "ENVIAR ENLACE";
         }
@@ -2986,8 +2953,9 @@ function setupReset() {
 }
 
 
+
 /* =========================================================
-   ACTUALIZAR CONTRASEÑA (DESPUÉS DEL CLIC EN EL CORREO)
+   LÓGICA DE ACTUALIZACIÓN DE CONTRASEÑA
 ========================================================= */
 
 function setupUpdatePassword() {
@@ -2999,7 +2967,7 @@ function setupUpdatePassword() {
 
         const newPassword = document.getElementById("newPassword").value;
         const message = document.getElementById("updatePasswordMessage");
-        const button = form.querySelector('button[type="submit"]');
+        const button = document.getElementById("updatePasswordButton");
 
         if(newPassword.length < 8) {
             showMessage(message, "La contraseña debe tener al menos 8 caracteres.", "error");
@@ -3014,17 +2982,16 @@ function setupUpdatePassword() {
                 password: newPassword
             });
 
-            if (error) throw error;
+            if(error) throw error;
 
             showMessage(message, "¡Contraseña actualizada con éxito! Ya puedes iniciar sesión.", "success");
             button.textContent = "LISTO";
             
-            // Borrar los datos de recuperación de la barra de URL
             window.history.replaceState({}, document.title, window.location.pathname);
 
             setTimeout(() => {
                 openModal("login");
-            }, 2500);
+            }, 2000);
 
         } catch(error) {
             console.error("Supabase update pass:", error);
@@ -3036,38 +3003,18 @@ function setupUpdatePassword() {
 }
 
 
+
 /* =========================================================
-   DETECTAR CLIC EN ENLACE DE RECUPERACIÓN
+   DETECTOR DE RECUPERACIÓN (SUPABASE AUTH)
 ========================================================= */
 
 supabaseClient.auth.onAuthStateChange((event, session) => {
-    // Si Supabase detecta que el usuario acaba de llegar desde el link de "Reset password" del correo:
-    if (event === 'PASSWORD_RECOVERY') {
+    if(event === 'PASSWORD_RECOVERY') {
         setTimeout(() => {
             openModal("nueva-password");
         }, 500);
     }
 });
-
-
-/* =========================================================
-   MENSAJES UI
-========================================================= */
-
-function showMessage(
-    element,
-    text,
-    type
-) {
-
-    element.textContent =
-        text;
-
-    element.className =
-        "form-message show " +
-        type;
-
-}
 
 </script>
 
