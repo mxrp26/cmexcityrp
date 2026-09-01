@@ -5,30 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#05080c">
 <title>MEXCITY RP — Dashboard</title>
+<!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- FontAwesome para los nuevos iconos de la barra superior -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
 :root{
-  --bg:#03070b;
-  --panel:#071017;
-  --panel2:#0a141b;
-  --panel3:#0d1820;
-  --line:rgba(255,255,255,.09);
-  --line2:rgba(255,255,255,.16);
-  --text:#f4f5f6;
-  --muted:#89959c;
-  --gold:#d8a52e;
-  --gold2:#f2c85b;
-  --green:#16c66b;
-  --red:#ef4444;
-  --purple:#9257df;
-  --blue:#26a9d9;
+  --bg:#03070b; --panel:#071017; --panel2:#0a141b; --panel3:#0d1820;
+  --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.16);
+  --text:#f4f5f6; --muted:#89959c; --gold:#d8a52e; --gold2:#f2c85b;
+  --green:#16c66b; --red:#ef4444; --purple:#9257df; --blue:#26a9d9;
   --shadow:0 20px 60px rgba(0,0,0,.38);
 }
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:
-radial-gradient(circle at 50% -20%,#17252c 0,#071017 35%,#020406 100%);
-color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
+html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% -20%,#17252c 0,#071017 35%,#020406 100%);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
 body{overflow-x:hidden}
 button,input,textarea,select{font:inherit}
 button{cursor:pointer}
@@ -38,360 +29,118 @@ button:disabled{opacity:.55;cursor:not-allowed}
 a{color:inherit;text-decoration:none}
 
 /* ================= LOGIN ================= */
-#loginScreen{
-  min-height:100vh;
-  display:grid;
-  place-items:center;
-  padding:24px;
-}
-.login-card{
-  width:min(430px,100%);
-  padding:32px;
-  border:1px solid var(--line2);
-  border-radius:24px;
-  background:rgba(7,16,23,.94);
-  box-shadow:var(--shadow);
-  backdrop-filter:blur(20px)
-}
+#loginScreen{min-height:100vh;display:grid;place-items:center;padding:24px;}
+.login-card{width:min(430px,100%);padding:32px;border:1px solid var(--line2);border-radius:24px;background:rgba(7,16,23,.94);box-shadow:var(--shadow);backdrop-filter:blur(20px)}
 .brand{text-align:center;margin-bottom:25px}
 .crown{font-size:48px;color:var(--gold);line-height:1}
 .brand h1{margin:7px 0 4px;font-size:28px;letter-spacing:2px}
 .brand p{margin:0;color:var(--muted);font-size:12px}
 .field{margin:14px 0}
 .field label{display:block;color:#b8c1c5;font-size:12px;margin-bottom:7px}
-.field input,.field textarea,.field select{
-  width:100%;padding:12px 13px;
-  color:var(--text);background:#050b10;
-  border:1px solid var(--line2);border-radius:11px;outline:none
-}
-.field input:focus,.field textarea:focus,.field select:focus{
-  border-color:rgba(216,165,46,.65)
-}
-.btn{
-  border:1px solid transparent;border-radius:11px;
-  padding:11px 16px;background:linear-gradient(135deg,var(--gold2),var(--gold));
-  color:#111;font-weight:800
-}
+.field input,.field textarea,.field select{width:100%;padding:12px 13px;color:var(--text);background:#050b10;border:1px solid var(--line2);border-radius:11px;outline:none}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:rgba(216,165,46,.65)}
+.btn{border:1px solid transparent;border-radius:11px;padding:11px 16px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#111;font-weight:800;width:100%;text-align:center}
 .btn.secondary{background:#ffffff07;color:#fff;border-color:var(--line2)}
 .btn.danger{background:#42151a;color:#ff9a9a;border-color:#ef444433}
 .login-msg{min-height:20px;margin-top:10px;color:#ff9c9c;font-size:13px}
 
 /* ================= APP ================= */
 #app{display:none;min-height:100vh}
+/* NUEVA BARRA SUPERIOR */
 .topbar{
-  height:76px;position:sticky;top:0;z-index:50;
-  display:grid;grid-template-columns:250px minmax(240px,1fr) 330px;
-  gap:20px;align-items:center;padding:0 18px;
+  height:70px;position:sticky;top:0;z-index:50;
+  display:flex;justify-content:space-between;align-items:center;padding:0 18px;
   border-bottom:1px solid var(--line);
   background:rgba(3,8,12,.92);backdrop-filter:blur(22px)
 }
-.brand-small{display:flex;align-items:center;gap:10px}
-.brand-small .m{font-size:36px;color:var(--gold)}
-.brand-small strong{display:block;font-size:19px;letter-spacing:1px}
-.brand-small span{display:block;color:#aab3b7;font-size:10px}
-.search{max-width:540px;width:100%;margin:auto;position:relative}
-.search input{
-  width:100%;padding:12px 42px 12px 16px;
-  background:#071017;border:1px solid var(--line2);
-  color:#fff;border-radius:12px;outline:none
+.brand-small{display:flex;align-items:center;gap:10px;cursor:pointer}
+.nav-icons{display:flex;gap:15px;align-items:center;overflow-x:auto}
+.nav-btn{
+  background:transparent;border:none;color:#89959c;display:flex;flex-direction:column;
+  align-items:center;font-size:18px;gap:4px;transition:0.2s;position:relative;
 }
-.search-icon{position:absolute;right:15px;top:9px;color:#aab3b7;font-size:22px}
-.top-actions{display:flex;justify-content:flex-end;align-items:center;gap:9px}
-.icon-btn{
-  width:42px;height:42px;border-radius:12px;
-  border:1px solid var(--line);background:#ffffff06;color:#fff;
-  position:relative
-}
-.badge{
-  position:absolute;right:-5px;top:-6px;min-width:20px;height:20px;
-  padding:2px 5px;border-radius:20px;background:#e33b43;
-  color:#fff;font-size:11px;font-weight:800
-}
-.profile-mini{display:flex;align-items:center;gap:9px;margin-left:7px}
-.avatar{
-  width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
-  overflow:hidden;flex:none;border:1px solid rgba(216,165,46,.65);
-  background:radial-gradient(circle at 35% 30%,#8b6839,#271e10 60%,#090b0c);
-  color:#fff;font-weight:800
-}
-.avatar img{width:100%;height:100%;object-fit:cover}
-.profile-mini .name{font-size:13px}
-.profile-mini small{display:block;color:var(--green);font-size:10px;margin-top:2px}
+.nav-btn:hover, .nav-btn.active{color:var(--gold2)}
+.nav-btn span{font-size:9px;font-weight:bold;text-transform:uppercase}
+.nav-btn .badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:9px;padding:2px 4px;border-radius:10px;}
 
 /* ================= LAYOUT ================= */
-.shell{
-  display:grid;grid-template-columns:250px minmax(0,1fr) 350px;
-  gap:14px;max-width:1600px;margin:auto;padding:14px
-}
-.sidebar,.rightbar{min-width:0}
-.sidebar{
-  position:sticky;top:90px;height:calc(100vh - 104px);overflow:auto
-}
-.rightbar{
-  position:sticky;top:90px;height:calc(100vh - 104px);overflow:auto
-}
-.side-card,.panel{
-  border:1px solid var(--line);
-  background:linear-gradient(180deg,rgba(9,18,24,.94),rgba(5,11,15,.94));
-  border-radius:15px;box-shadow:0 10px 35px rgba(0,0,0,.2)
-}
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr) 350px;gap:14px;max-width:1600px;margin:auto;padding:14px}
+.sidebar,.rightbar{min-width:0;position:sticky;top:90px;height:calc(100vh - 104px);overflow:auto}
+.side-card,.panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(9,18,24,.94),rgba(5,11,15,.94));border-radius:15px;box-shadow:0 10px 35px rgba(0,0,0,.2)}
 .side-card{padding:14px;margin-bottom:12px}
-.side-profile{
-  display:flex;gap:11px;align-items:center;
-  padding-bottom:13px;border-bottom:1px solid var(--line)
-}
-.side-profile b{font-size:14px}
-.side-profile small{display:block;color:var(--muted);margin-top:3px}
-.status{color:var(--green);font-size:11px;margin-top:3px}
+.side-profile{display:flex;gap:11px;align-items:center;padding-bottom:13px;border-bottom:1px solid var(--line)}
+.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;overflow:hidden;flex:none;border:1px solid rgba(216,165,46,.65);background:radial-gradient(circle at 35% 30%,#8b6839,#271e10 60%,#090b0c);color:#fff;font-weight:800}
+.avatar img{width:100%;height:100%;object-fit:cover}
 .nav{margin-top:12px}
-.nav button{
-  width:100%;display:flex;align-items:center;gap:12px;
-  text-align:left;background:transparent;border:1px solid transparent;
-  color:#aeb8bd;padding:10px 11px;border-radius:10px;margin:3px 0
-}
-.nav button:hover,.nav button.active{
-  color:#fff;background:rgba(216,165,46,.08);
-  border-color:rgba(216,165,46,.3)
-}
-.nav .ico{width:22px;text-align:center;font-size:18px}
-.bank-card{
-  padding:15px;border:1px solid rgba(22,198,107,.18);
-  background:#061a12;border-radius:13px
-}
+.nav button{width:100%;display:flex;align-items:center;gap:12px;text-align:left;background:transparent;border:1px solid transparent;color:#aeb8bd;padding:10px 11px;border-radius:10px;margin:3px 0}
+.nav button:hover,.nav button.active{color:#fff;background:rgba(216,165,46,.08);border-color:rgba(216,165,46,.3)}
+.bank-card{padding:15px;border:1px solid rgba(22,198,107,.18);background:#061a12;border-radius:13px;margin-bottom:10px}
 .bank-card .green{color:#17c56c;font-size:11px}
 .bank-card strong{display:block;font-size:22px;margin:5px 0 12px}
-.logout{width:100%;margin-top:8px}
 
-/* ================= FEED ================= */
+/* ================= FEED Y POSTS ================= */
 .main{min-width:0}
-.stories{
-  display:flex;gap:8px;padding:6px 0 14px;overflow-x:auto
-}
-.story{min-width:82px;text-align:center;color:#aeb8bd;font-size:11px}
-.story-circle{
-  width:65px;height:65px;border-radius:50%;margin:0 auto 6px;padding:2px;
-  background:linear-gradient(135deg,var(--gold),#e72e7b,#7542d7)
-}
-.story-circle>div{
-  width:100%;height:100%;border-radius:50%;
-  background:#071017;border:2px solid #071017;
-  display:grid;place-items:center;font-size:22px
-}
-.story:first-child .story-circle{background:var(--line2)}
 .composer{padding:12px;margin-bottom:12px}
-.composer-row{display:flex;gap:10px;align-items:center}
-.composer input{
-  flex:1;border:1px solid var(--line);background:#050b0f;
-  color:#fff;border-radius:12px;padding:12px;outline:none
-}
-.composer-actions{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
-.chip{
-  border:1px solid var(--line2);background:#ffffff05;
-  color:#b9c1c4;border-radius:10px;padding:8px 10px;font-size:12px
-}
+.composer input{width:100%;border:1px solid var(--line);background:#050b0f;color:#fff;border-radius:12px;padding:12px;outline:none;margin-bottom:10px}
+.composer-actions{display:flex;gap:7px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:#ffffff05;color:#b9c1c4;border-radius:10px;padding:8px 10px;font-size:12px}
 .gold-chip{background:rgba(216,165,46,.1);border-color:rgba(216,165,46,.35);color:#f0c65a}
+.ia-chip{background:rgba(146, 87, 223, 0.1);border-color:rgba(146, 87, 223, 0.5);color:var(--purple)}
 .feed{display:flex;flex-direction:column;gap:12px}
 .post{overflow:hidden}
 .post-head{display:flex;align-items:center;gap:10px;padding:13px}
 .post-head .meta{flex:1}
-.post-head b{font-size:14px}
-.post-head small{display:block;color:var(--muted);margin-top:2px}
-.online{color:var(--green)}
-.post-media{
-  width:100%;aspect-ratio:16/8.5;background:#081116;overflow:hidden
-}
-.post-media img{width:100%;height:100%;object-fit:cover}
+.post-media{width:100%;background:#081116;overflow:hidden}
+.post-media img{width:100%;max-height:400px;object-fit:cover}
 .post-body{padding:12px 14px}
-.tag{
-  display:inline-block;padding:5px 8px;border-radius:20px;
-  background:rgba(13,92,56,.16);border:1px solid rgba(22,183,104,.32);
-  color:#3edb91;font-size:10px;font-weight:800
-}
+.tag{display:inline-block;padding:5px 8px;border-radius:20px;background:rgba(13,92,56,.16);border:1px solid rgba(22,183,104,.32);color:#3edb91;font-size:10px;font-weight:800}
 .post h3{margin:8px 0 4px;font-size:19px}
-.post p{margin:0;color:#aeb8bd;font-size:13px;line-height:1.5}
-.hashtag{color:#32a9dd;margin-top:8px;font-size:12px}
-.post-actions{
-  display:flex;gap:16px;border-top:1px solid var(--line);
-  padding:10px 14px;color:#aeb8bd
-}
-.post-actions button{background:none;border:0;color:inherit;padding:0}
-.post-actions button:hover{color:#fff}
-.liked{color:#ef5261!important}
+.post-actions{display:flex;gap:16px;border-top:1px solid var(--line);padding:10px 14px;color:#aeb8bd}
+.post-actions button{background:none;border:0;color:inherit;padding:0;display:flex;align-items:center;gap:4px}
+.liked-player{color:var(--gold2)!important}
+.liked-admin{color:var(--purple)!important}
 
-/* ================= RIGHT ================= */
+/* ================= COMPONENTES ================= */
 .panel{padding:14px;margin-bottom:12px}
-.panel-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.panel-title h3{margin:0;font-size:13px;letter-spacing:.4px}
-.panel-title a{color:#9fa9ad;font-size:11px;cursor:pointer}
-.stat-list{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.stat-box{
-  padding:10px;border-radius:11px;background:#ffffff05;border:1px solid var(--line)
-}
-.stat-box b{display:block;font-size:17px}
-.stat-box small{color:var(--muted);font-size:10px}
-.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px}
-.green{color:#18c66e}.green .dot{background:#18c66e}
-.purple{color:#a363eb}.purple .dot{background:#a363eb}
-.blue{color:#2bb5dc}.blue .dot{background:#2bb5dc}
-.orange{color:#ee9143}.orange .dot{background:#ee9143}
-.event{
-  padding:10px 0;border-bottom:1px solid var(--line);
-  display:flex;gap:10px
-}
-.event:last-child{border-bottom:0}
-.event-icon{
-  width:34px;height:34px;border-radius:9px;background:#ffffff08;
-  display:grid;place-items:center
-}
-.event b{font-size:12px}
-.event small{display:block;color:var(--muted);margin-top:4px}
-.player{
-  display:flex;gap:9px;align-items:center;
-  padding:8px 0;border-bottom:1px solid var(--line)
-}
-.player:last-child{border-bottom:0}
-.player .avatar{width:34px;height:34px}
-.player b{font-size:12px}
-.player small{display:block;color:var(--green);font-size:10px}
-.chat{height:360px;display:flex;flex-direction:column}
-.chat-list{overflow:auto;flex:1}
-.message{display:flex;gap:8px;padding:8px 0}
-.message .avatar{width:30px;height:30px}
-.message b{font-size:11px}
-.message small{color:var(--muted);font-size:9px;margin-left:5px}
-.message p{margin:3px 0 0;color:#c6cdd0;font-size:11px;line-height:1.4}
-.chat-input{display:flex;gap:6px;margin-top:8px}
-.chat-input input{
-  flex:1;min-width:0;background:#050b0f;border:1px solid var(--line2);
-  border-radius:10px;color:#fff;padding:9px;outline:none
-}
-.radio{display:flex;align-items:center;gap:12px}
-.mic{
-  width:48px;height:48px;border:2px solid #f04444;
-  border-radius:50%;display:grid;place-items:center;font-size:22px
-}
-.wave{
-  flex:1;height:30px;
-  background:repeating-linear-gradient(90deg,transparent 0 4px,#d7a52f 5px 7px,transparent 8px 12px);
-  opacity:.8
-}
-.play{
-  width:40px;height:40px;border-radius:50%;
-  border:1px solid var(--line2);background:#ffffff0a;color:#fff
-}
-
-/* ================= PAGES ================= */
 .page{display:none}
 .page.active{display:block}
-.page-head{
-  display:flex;justify-content:space-between;gap:10px;
-  align-items:flex-end;margin:8px 0 14px
-}
+.page-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-end;margin:8px 0 14px}
 .page-head h2{margin:0;font-size:25px}
-.page-head p{margin:5px 0 0;color:var(--muted);font-size:13px}
-.grid2{display:grid;grid-template-columns:1.35fr 1fr;gap:12px}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .full{grid-column:1/-1}
-.records{display:flex;flex-direction:column;gap:8px}
-.record{
-  padding:12px;border:1px solid var(--line);
-  border-radius:11px;background:#ffffff04
-}
-.record b{font-size:13px}
-.record small{display:block;color:var(--muted);margin-top:4px}
-.empty{padding:35px 10px;text-align:center;color:var(--muted)}
 
-/* ================= MODAL ================= */
-.modal{
-  position:fixed;inset:0;background:rgba(0,0,0,.75);
-  display:none;place-items:center;padding:18px;z-index:100
-}
-.modal.show{display:grid}
-.modal-card{
-  width:min(620px,100%);max-height:90vh;overflow:auto;
-  background:#071015;border:1px solid var(--line2);
-  border-radius:18px;padding:18px;box-shadow:var(--shadow)
-}
-.modal-head{display:flex;justify-content:space-between;align-items:center}
-.modal-head h3{margin:0}
-.close{background:none;border:0;color:#fff;font-size:25px}
-.toast{
-  position:fixed;right:18px;bottom:82px;z-index:120;
-  background:#0c171c;border:1px solid var(--line2);
-  padding:12px 16px;border-radius:11px;display:none
-}
-.bottom-nav{display:none}
+/* ================= CHAT Y DISCORD PANEL ================= */
+.discord-panel{display:flex;flex-direction:column;height:100%}
+.chat-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:8px 0}
+.chat-tab{border:0;background:transparent;color:#8f9aa0;padding:8px 3px;border-radius:8px;font-size:10px}
+.chat-tab.active{background:#5865f215;color:#fff}
+.chat-pane{display:none;flex-direction:column;height:400px}
+.chat-pane.active{display:flex}
+.chat-list{flex:1;overflow:auto;padding-right:5px}
+.message{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+.message p{margin:4px 0 0;font-size:12px;color:#c6cdd0}
+.chat-input{display:flex;gap:6px;margin-top:8px}
+.chat-input input{flex:1;background:#050b0f;border:1px solid var(--line2);border-radius:10px;color:#fff;padding:9px;outline:none}
+.chat-command-note{font-size:10px;color:var(--blue);font-style:italic;display:block;margin-top:4px}
 
 /* ================= RESPONSIVE ================= */
-@media(max-width:1200px){
-  .topbar{grid-template-columns:220px 1fr 270px}
+@media(max-width:1100px){
   .shell{grid-template-columns:220px minmax(0,1fr)}
   .rightbar{display:none}
 }
 @media(max-width:800px){
-  .topbar{
-    height:65px;grid-template-columns:1fr auto;padding:0 12px
-  }
-  .brand-small .m{font-size:28px}
-  .brand-small strong{font-size:16px}
-  .brand-small span{display:none}
-  .search{display:none}
-  .profile-mini .name,.profile-mini small{display:none}
   .shell{display:block;padding:8px 8px 82px}
   .sidebar{display:none}
-  .main{width:100%}
-  .rightbar{display:none}
-  .bottom-nav{
-    position:fixed;display:flex;left:0;right:0;bottom:0;z-index:60;
-    height:62px;background:rgba(5,10,14,.95);
-    border-top:1px solid var(--line2);backdrop-filter:blur(20px);
-    justify-content:space-around;padding-bottom:env(safe-area-inset-bottom)
-  }
-  .bottom-nav button{
-    background:none;border:0;color:#929da2;font-size:10px;min-width:52px
-  }
-  .bottom-nav button.active{color:var(--gold2)}
-  .bottom-nav span{display:block;font-size:20px;margin-bottom:3px}
-  .stories{padding-top:4px}
-  .post-media{aspect-ratio:1.25/1}
-  .post h3{font-size:17px}
   .form-grid{grid-template-columns:1fr}
-  .full{grid-column:auto}
-  .grid2{grid-template-columns:1fr}
-  .page-head{align-items:flex-start;flex-direction:column}
-  .top-actions{gap:5px}
-  .top-actions .icon-btn:first-child{display:none}
+  .nav-btn span{display:none}
+  .topbar{padding:0 10px}
 }
-@media(max-width:430px){
-  .brand-small .m{font-size:25px}
-  .brand-small strong{font-size:14px}
-  .top-actions .icon-btn{width:38px;height:38px}
-  .avatar{width:38px;height:38px}
-  .composer-actions .chip{flex:1}
-  .post-head{padding:10px}
-  .post-body{padding:10px}
-  .post-actions{gap:11px;font-size:12px}
-}
-
-/* ===== MEXCITY SOCIAL / DISCORD STYLE ===== */
-.nav-logo{width:168px;max-height:58px;object-fit:contain;display:block}.logo-fallback{display:none}.logo-fallback.logo-fallback-visible{display:block}.brand-small{min-width:0}.brand-small span{white-space:nowrap}.composer{background:rgba(255,255,255,.05)!important;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.11)}
-.main-player-nav{padding-bottom:2px}.main-player-nav button{min-height:42px}.server-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.server-stats>div{padding:10px;border-radius:11px;background:#ffffff05;border:1px solid var(--line)}.server-stats b{display:block;font-size:19px}.server-stats small{color:var(--muted);font-size:10px}.news-mini{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.news-mini:last-child{border-bottom:0}.news-mini>span{font-size:10px;color:var(--gold2);font-weight:900}.news-mini b{font-size:12px;line-height:1.35;display:block}.news-mini small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.discord-panel{overflow:hidden}.discord-head{display:flex;justify-content:space-between;gap:8px;align-items:center;padding-bottom:10px;border-bottom:1px solid var(--line)}.discord-head>div{display:flex;align-items:center;gap:8px}.discord-head small{font-size:10px;color:var(--muted)}.discord-dot{width:9px;height:9px;background:#5865f2;border-radius:50%;box-shadow:0 0 12px #5865f2}.chat-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:8px 0}.chat-tab{border:0;background:transparent;color:#8f9aa0;padding:8px 3px;border-radius:8px;font-size:10px}.chat-tab.active{background:#5865f215;color:#fff}.chat-pane{display:none}.chat-pane.active{display:flex;flex-direction:column}.chat-pane-title{display:flex;justify-content:space-between;align-items:center;padding:4px 0 8px}.chat-pane-title b{font-size:12px}.chat-pane-title span{font-size:9px;color:var(--muted)}.chat-list{min-height:180px;max-height:280px;overflow:auto}.role-toggle{border:1px solid #ef444455;background:#ef444414;color:#ff8888;border-radius:20px;padding:5px 8px;font-size:9px}.role-toggle.on{background:#16c66b14;border-color:#16c66b55;color:#42dc91}.role-radio{display:flex;align-items:center;gap:8px;padding:8px;border:1px solid rgba(216,165,46,.18);background:rgba(216,165,46,.05);border-radius:10px;margin-bottom:8px}.role-radio .mic{width:28px;height:28px;font-size:15px}.role-radio b{font-size:10px}.role-radio small{display:block;color:var(--muted);font-size:9px}.role-radio .wave{flex:1;height:16px;background:repeating-linear-gradient(90deg,transparent 0 3px,#d8a52e 3px 5px,transparent 5px 8px);opacity:.65}.admin-pending{font-size:10px;color:#e8c66a;background:#d8a52e10;border:1px solid #d8a52e33;border-radius:9px;padding:8px;margin-bottom:7px}.player-chat-list{max-height:300px;overflow:auto}.player-thread{display:flex;gap:9px;padding:10px 0;border-bottom:1px solid var(--line);align-items:center}.player-thread .avatar{width:34px;height:34px}.player-thread .thread-body{flex:1;min-width:0}.player-thread b{font-size:11px}.player-thread p{margin:3px 0 0;color:var(--muted);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.unread{min-width:17px;height:17px;border-radius:50%;display:grid;place-items:center;background:#16c66b;color:#071017;font-size:9px;font-weight:900}.post-actions .spark{font-size:17px;filter:drop-shadow(0 0 5px rgba(255,255,255,.75));transition:.2s}.post-actions .spark.active{filter:drop-shadow(0 0 9px #f5c85a);transform:scale(1.12)}.comment-box{display:flex;gap:7px;padding:0 14px 12px}.comment-box input{flex:1;min-width:0;background:#050b10;border:1px solid var(--line);color:#fff;border-radius:10px;padding:9px 10px;font-size:11px}.comment-box button{border:0;background:#ffffff08;color:#d8a52e;border-radius:9px;padding:0 10px}.comment-locked{padding:0 14px 12px;color:#7f898f;font-size:10px}.post-title-hidden,.post-image-hidden{display:none}.composer-modal-card{max-width:620px}.composer-preview{display:flex;gap:10px;align-items:center;margin-bottom:12px}.composer-preview b{display:block;font-size:13px}.composer-preview small{color:var(--muted);font-size:10px}.composer-modal-card textarea{width:100%;resize:vertical;background:#050b10;color:#fff;border:1px solid var(--line2);border-radius:13px;padding:12px;outline:none}.status-labels,.media-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.status-chip,.media-btn{border:1px solid var(--line2);background:#ffffff05;color:#b8c1c5;border-radius:10px;padding:8px 10px;font-size:10px}.status-chip.active{color:#43dc91;border-color:#16c66b55;background:#16c66b10}.media-btn{cursor:pointer}.post-media-preview{margin-top:10px;border-radius:12px;overflow:hidden;max-height:280px;background:#020406}.post-media-preview img,.post-media-preview video{width:100%;max-height:280px;object-fit:cover;display:block}.composer-footer{display:flex;align-items:center;justify-content:space-between;margin-top:13px}.composer-footer span{font-size:10px;color:#43dc91}.bottom-chat-dock{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);width:min(760px,calc(100% - 28px));z-index:80;display:none;background:rgba(6,12,17,.92);backdrop-filter:blur(18px);border:1px solid var(--line2);border-radius:16px;box-shadow:0 20px 70px rgba(0,0,0,.55)}.bottom-chat-dock.active{display:block}.dock-head{display:flex;gap:7px;padding:7px;border-bottom:1px solid var(--line)}.dock-head button{flex:1;border:0;background:transparent;color:#929da2;border-radius:9px;padding:8px;font-size:10px}.dock-head button.active{background:#ffffff08;color:#fff}.dock-content{padding:8px}.dock-pane{display:none}.dock-pane.active{display:block}.dock-message{max-height:140px;overflow:auto;padding:4px 2px}.dock-input{display:flex;gap:6px;margin-top:7px}.dock-input input{flex:1;background:#050b10;color:#fff;border:1px solid var(--line);border-radius:10px;padding:9px}.dock-input button{border:0;background:var(--gold);border-radius:9px;padding:0 13px}.dock-empty{font-size:10px;color:var(--muted);padding:8px}.profile-complete-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:20px;background:#16c66b10;color:#42dc91;border:1px solid #16c66b44;font-size:9px}.news-label{display:inline-block;color:#e6c45c;font-size:9px;font-weight:900;letter-spacing:1px}.news-post .post-body{background:linear-gradient(180deg,#0b1217,#070d11)}
-@media(max-width:1100px){.shell{grid-template-columns:220px minmax(0,1fr)}.rightbar{grid-column:1/-1;position:static;height:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.discord-panel{grid-column:1/-1}.topbar{grid-template-columns:220px minmax(180px,1fr) auto}.profile-mini .name{display:none}}
-@media(max-width:760px){.topbar{height:64px;grid-template-columns:1fr auto;padding:0 10px}.topbar .search{display:none}.nav-logo{width:145px;max-height:48px}.top-actions .icon-btn:first-child{display:none}.profile-mini small{display:none}.shell{display:block;padding:8px 8px 78px}.sidebar{display:none}.rightbar{display:block}.rightbar>.server-panel,.rightbar>.newspaper-panel,.rightbar>.online-panel{display:none}.discord-panel{position:fixed;left:8px;right:8px;bottom:66px;z-index:70;max-height:60vh;display:none}.discord-panel.mobile-open{display:block}.main{width:100%}.stories{padding-top:3px}.story{min-width:72px}.story-circle{width:58px;height:58px}.composer{margin-bottom:9px}.composer-actions .chip:nth-child(4){display:none}.post-media{aspect-ratio:1.15/1}.post h3{font-size:16px}.post-actions{padding-bottom:12px}.bottom-chat-dock{bottom:58px;width:calc(100% - 16px)}.bottom-nav{z-index:90}.page{padding-bottom:10px}.news-mini{padding:8px 0}}
-@media(min-width:761px){.discord-panel{display:block!important}}
-
-#page-radio{display:none!important}.player-thread-view{border-top:1px solid var(--line);margin-top:4px;padding-top:9px}.player-thread-view .thread-back{border:0;background:transparent;color:#d8a52e;font-size:10px;padding:0 0 8px}.dm-messages{max-height:170px;overflow:auto}.dm-bubble{max-width:82%;padding:7px 9px;border-radius:12px;background:#ffffff08;border:1px solid var(--line);margin:5px 0;font-size:10px}.dm-bubble.mine{margin-left:auto;background:rgba(216,165,46,.12);border-color:rgba(216,165,46,.25)}.dm-compose{display:flex;gap:5px;margin-top:7px}.dm-compose input{flex:1;min-width:0;background:#050b10;color:#fff;border:1px solid var(--line);border-radius:9px;padding:8px;font-size:10px}.dm-compose button{border:0;background:var(--gold);border-radius:9px;padding:0 10px}
 </style>
 </head>
 
 <body>
 
-<!-- =========================================================
-     LOGIN DE RESPALDO
-     La página principal de MexCity ya redirige a dashboard.html
-     después del login. Este bloque evita que dashboard quede
-     accesible sin sesión si alguien entra directamente a la URL.
-========================================================= -->
+<!-- ================= LOGIN ================= -->
 <section id="loginScreen">
   <div class="login-card">
     <div class="brand">
@@ -399,1504 +148,453 @@ a{color:inherit;text-decoration:none}
       <h1>MEXCITY RP</h1>
       <p>LA CIUDAD DONDE TU HISTORIA COMIENZA</p>
     </div>
-
     <div class="field">
       <label>Correo electrónico</label>
-      <input id="loginEmail" type="email" autocomplete="email" placeholder="correo@ejemplo.com">
+      <input id="loginEmail" type="email" placeholder="correo@ejemplo.com">
     </div>
-
     <div class="field">
       <label>Contraseña</label>
-      <input id="loginPassword" type="password" autocomplete="current-password"
-             placeholder="••••••••"
-             onkeydown="if(event.key==='Enter') login()">
+      <input id="loginPassword" type="password" onkeydown="if(event.key==='Enter') login()">
     </div>
-
-    <button class="btn" style="width:100%" onclick="login()">INICIAR SESIÓN</button>
+    <button class="btn" onclick="login()">INICIAR SESIÓN</button>
     <div id="loginMsg" class="login-msg"></div>
   </div>
 </section>
 
-<!-- =========================================================
-     DASHBOARD PRIVADO
-========================================================= -->
+<!-- ================= APP DASHBOARD ================= -->
 <div id="app">
 
+<!-- NUEVA BARRA SUPERIOR ICONOGRAFÍADA -->
 <header class="topbar">
-  <div class="brand-small">
-    <img src="logo.png" alt="MexCity Logo" class="nav-logo" onerror="this.style.display='none';this.nextElementSibling.classList.add('logo-fallback-visible')">
-    <div class="logo-fallback">
-      <strong>MEXCITY RP</strong>
-      <span>LA CIUDAD DONDE TU HISTORIA COMIENZA</span>
-    </div>
+  <div class="brand-small" onclick="showPage('inicio')">
+    <div class="crown" style="font-size:24px;margin-right:5px">♛</div>
+    <strong style="font-size:18px">MXRP</strong>
   </div>
 
-  <div class="search">
-    <input id="searchInput" placeholder="Buscar en MexCity..." oninput="searchFeed(this.value)">
-    <span class="search-icon">⌕</span>
-  </div>
-
-  <div class="top-actions">
-    <button class="icon-btn" onclick="openComposer()">＋</button>
-    <button class="icon-btn" onclick="showPage('notificaciones')">
-      ♧<span class="badge">12</span>
+  <div class="nav-icons">
+    <button class="nav-btn" onclick="showPage('finanzas')" title="Bancormcrp">
+      <i class="fa-solid fa-building-columns"></i><span>Banco</span>
     </button>
-    <button class="icon-btn" onclick="showPage('mensajes')">
-      ▱<span class="badge">8</span>
+    <button class="nav-btn" onclick="showPage('jugador')" title="Jugador">
+      <i class="fa-solid fa-id-card"></i><span>Perfil</span>
     </button>
-    <div class="profile-mini">
-      <div class="avatar" id="topAvatar">C</div>
-      <div>
-        <div class="name" id="topName">Jugador</div>
-        <small>● En línea</small>
-      </div>
-    </div>
+    <button class="nav-btn" onclick="showPage('mensajes')" title="Mensajes">
+      <i class="fa-solid fa-envelope"></i><span>Mensajes</span><div class="badge">3</div>
+    </button>
+    <button class="nav-btn" onclick="showPage('chats')" title="Chats">
+      <i class="fa-solid fa-comments"></i><span>Chats</span>
+    </button>
+    <button class="nav-btn" onclick="showPage('empresas')" title="Empresas y Servicios">
+      <i class="fa-solid fa-briefcase"></i><span>Empleos</span>
+    </button>
+    <button class="nav-btn" onclick="showPage('radio')" title="Radio RP">
+      <i class="fa-solid fa-radio"></i><span>Radio</span>
+    </button>
+    <button class="nav-btn" onclick="showPage('asistenteia')" title="Asistente IA">
+      <i class="fa-solid fa-robot" style="color:var(--purple)"></i><span style="color:var(--purple)">IA</span>
+    </button>
+    <button class="nav-btn active" onclick="showPage('inicio')" title="Feed">
+      <i class="fa-solid fa-newspaper"></i><span>Feed</span>
+    </button>
   </div>
 </header>
 
 <div class="shell">
 
-<!-- =========================================================
-     SIDEBAR
-========================================================= -->
+<!-- ================= SIDEBAR ================= -->
 <aside class="sidebar">
-
   <div class="side-card">
     <div class="side-profile">
       <div class="avatar" id="sideAvatar">C</div>
       <div>
         <b id="sideName">Jugador</b>
         <small id="sideCity">México</small>
-        <div class="status">● En línea</div>
+        <div class="status" style="color:var(--green);font-size:11px;margin-top:3px" id="rolStatusText">● OFF ROL</div>
       </div>
     </div>
-
     <div class="nav main-player-nav">
-      <button class="active" data-page="inicio" onclick="showPage('inicio',this)"><span class="ico">⌂</span>Inicio</button>
-      <button data-page="mensajes" onclick="showPage('mensajes',this)"><span class="ico">▱</span>Mensajes</button>
-      <button data-page="jugador" onclick="showPage('jugador',this)"><span class="ico">♙</span>Menú del jugador</button>
-      <button data-page="hogar" onclick="showPage('hogar',this)"><span class="ico">⌂</span>Hogar</button>
-      <button data-page="transporte" onclick="showPage('transporte',this)"><span class="ico">▣</span>Transporte</button>
-      <button data-page="familia" onclick="showPage('familia',this)"><span class="ico">♧</span>Familia</button>
-      <button data-page="menores" onclick="showPage('menores',this)"><span class="ico">●</span>Menores</button>
-      <button data-page="empresa" onclick="showPage('empresa',this)"><span class="ico">▤</span>Empresa / Trabajo</button>
-      <button data-page="organizacion" onclick="showPage('organizacion',this)"><span class="ico">◆</span>Organización</button>
-      <button data-page="finanzas" onclick="showPage('finanzas',this)"><span class="ico">$</span>Finanzas RP</button>
-      <button data-page="registros" onclick="showPage('registros',this)"><span class="ico">☷</span>Mis registros</button>
+      <button onclick="toggleRolStatus()" style="background:var(--green);color:#fff;justify-content:center" id="btnToggleRol">ACTIVAR ON ROL</button>
+      <button data-page="hogar" onclick="showPage('hogar')">⌂ Hogar</button>
+      <button data-page="transporte" onclick="showPage('transporte')">▣ Transporte</button>
+      <button data-page="familia" onclick="showPage('familia')">♧ Familia & Menores</button>
+      <button data-page="organizacion" onclick="showPage('organizacion')">◆ Organización</button>
     </div>
   </div>
-
   <div class="bank-card">
     <div class="green">SALDO DISPONIBLE</div>
-    <strong id="bankBalance">$100,000 RP</strong>
-    <button class="btn secondary" style="width:100%" onclick="showPage('finanzas')">
-      Ver mi cuenta
-    </button>
+    <strong id="bankBalanceSidebar">$1,250,000 RP</strong>
+    <small style="display:block;margin-bottom:10px;color:var(--muted)" id="bankCbSidebar">CB: 001-992-883</small>
+    <button class="btn secondary" onclick="showPage('finanzas')">Ir al Banco</button>
   </div>
-
-  <button class="btn danger logout" onclick="logout()">↪ Cerrar sesión</button>
+  <button class="btn danger" onclick="logout()">↪ Cerrar sesión</button>
 </aside>
 
-<!-- =========================================================
-     MAIN
-========================================================= -->
+<!-- ================= MAIN CONTENT ================= -->
 <main class="main">
 
+<!-- FEED / INICIO -->
 <section id="page-inicio" class="page active">
-
-  <div class="stories">
-    <div class="story" onclick="openComposer()">
-      <div class="story-circle"><div>＋</div></div>Crear historia
-    </div>
-    <div class="story"><div class="story-circle"><div>📣</div></div>Anuncios</div>
-    <div class="story"><div class="story-circle"><div>▣</div></div>Eventos</div>
-    <div class="story"><div class="story-circle"><div>♛</div></div>Rol destacado</div>
-    <div class="story"><div class="story-circle"><div>🏆</div></div>Tops</div>
-    <div class="story"><div class="story-circle"><div>R-MEX</div></div>R-MEX Models</div>
-  </div>
-
   <div class="panel composer">
-    <div class="composer-row">
-      <div class="avatar" id="composerAvatar">C</div>
-      <input readonly onclick="openComposer()" placeholder="¿Qué estás roleando hoy?">
-    </div>
+    <input id="postText" placeholder="Comparte tu historia de rol... (#Lugar //Transporte)">
     <div class="composer-actions">
-      <button class="chip" onclick="openComposer('Imagen')">▧ Imagen</button>
-      <button class="chip" onclick="openComposer('Video')">▹ Video</button>
-      <button class="chip gold-chip" onclick="openComposer('Rol')">✓ Rol aceptado</button>
-      <button class="chip" onclick="openComposer('Historia')">✦ Historia</button>
-      <button class="btn" style="margin-left:auto" onclick="openComposer()">Publicar</button>
+      <button class="chip">▧ Imagen/Video</button>
+      <button class="chip ia-chip" onclick="alert('Generación de Video IA activada. Seleccione historia (Min. 4 min).')"><i class="fa-solid fa-wand-magic-sparkles"></i> Video IA</button>
+      <button class="btn" style="margin-left:auto;width:auto" onclick="publishFeed()">Publicar en Feed</button>
     </div>
   </div>
-
   <div id="feed" class="feed"></div>
 </section>
 
-<section id="page-explorar" class="page">
-  <div class="page-head">
-    <div>
-      <h2>Explorar MexCity</h2>
-      <p>Descubre historias, jugadores, empresas y eventos.</p>
-    </div>
-  </div>
-  <div class="grid2">
-    <div class="panel">
-      <h3>Contenido destacado</h3>
-      <div id="exploreFeed"></div>
-    </div>
-    <div class="panel">
-      <h3>Jugadores conectados</h3>
-      <div id="explorePlayers"></div>
-    </div>
-  </div>
-</section>
-
-<section id="page-mensajes" class="page">
-  <div class="page-head">
-    <div>
-      <h2>Mensajes</h2>
-      <p>Conversaciones privadas de tu comunidad.</p>
-    </div>
-  </div>
-  <div class="panel" id="privateMessages"></div>
-</section>
-
-<section id="page-notificaciones" class="page">
-  <div class="page-head">
-    <div>
-      <h2>Notificaciones</h2>
-      <p>Actividad reciente de tu cuenta.</p>
-    </div>
-  </div>
-  <div class="panel" id="notifications"></div>
-</section>
-
-<section id="page-eventos" class="page">
-  <div class="page-head">
-    <div>
-      <h2>Eventos</h2>
-      <p>Próximas actividades de MexCity RP.</p>
-    </div>
-  </div>
-  <div class="panel" id="eventsPage"></div>
-</section>
-
-<section id="page-directorio" class="page">
-  <div class="page-head">
-    <div>
-      <h2>Directorio</h2>
-      <p>Jugadores, empresas e instituciones.</p>
-    </div>
-  </div>
-  <div class="panel" id="directory"></div>
-</section>
-
-<section id="page-rankings" class="page">
-  <div class="page-head">
-    <div>
-      <h2>Rankings</h2>
-      <p>Clasificaciones de actividad de la comunidad.</p>
-    </div>
-  </div>
-  <div class="panel" id="rankings"></div>
-</section>
-
-<section id="page-radio" class="page">
-  <div class="page-head">
-    <div>
-      <h2>MexCity Radio</h2>
-      <p>Noticias y novedades de la comunidad.</p>
-    </div>
-  </div>
-  <div class="panel">
-    <div class="radio">
-      <div class="mic">🎙</div>
-      <div>
-        <b>MEXCITY RADIO <span style="color:#ef4444">● EN VIVO</span></b>
-        <div class="muted">Locutor: Alex Morgan</div>
-      </div>
-      <div class="wave"></div>
-      <button class="play" onclick="toggleRadio(this)">▶</button>
-    </div>
-  </div>
-</section>
-
-<section id="page-jugador" class="page">
-  <div class="page-head">
-    <div>
-      <h2>Registro del jugador</h2>
-      <p>Identidad oficial dentro de MexCity RP.</p>
-    </div>
-  </div>
-
-  <div class="panel">
-    <div class="form-grid">
-      <div class="field">
-        <label>Nombre</label>
-        <input id="pName">
-      </div>
-      <div class="field">
-        <label>Apellido</label>
-        <input id="pLast">
-      </div>
-      <div class="field">
-        <label>Edad</label>
-        <input id="pAge" type="number" min="0">
-      </div>
-      <div class="field">
-        <label>Unidad</label>
-        <select id="pAgeUnit">
-          <option>Días</option>
-          <option>Meses</option>
-          <option selected>Años</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Ciudad</label>
-        <select id="pCity"></select>
-      </div>
-      <div class="field">
-        <label>Sexo / Género</label>
-        <select id="pGender">
-          <option>Femenino</option>
-          <option>Masculino</option>
-          <option>No binario</option>
-          <option>Otro</option>
-          <option>Prefiero no especificar</option>
-        </select>
-      </div>
-      <div class="field full">
-        <label>Ocupación</label>
-        <select id="pJob"></select>
-      </div>
-      <div class="field">
-        <label>ID RP</label>
-        <input id="pId" readonly>
-      </div>
-      <div class="field">
-        <label>Cuenta BANCOMCRP26</label>
-        <input id="pBank" readonly>
-      </div>
-      <div class="field full">
-        <label>CB / Clave bancaria RP</label>
-        <input id="pCB" readonly>
-      </div>
-    </div>
-    <button class="btn" onclick="savePlayer()">GUARDAR REGISTRO</button>
-  </div>
-</section>
-
-<section id="page-hogar" class="page">
-  <div class="page-head">
-    <div><h2>Hogar</h2><p>Registra la propiedad de tu personaje.</p></div>
-  </div>
-  <div class="panel">
-    <div class="form-grid">
-      <div class="field">
-        <label>Tipo</label>
-        <select id="houseType" onchange="valueHouse()">
-          <option>Casa</option><option>Departamento</option>
-          <option>Mansión</option><option>Rancho</option><option>Villa</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Ciudad</label>
-        <select id="houseCity" onchange="valueHouse()"></select>
-      </div>
-      <div class="field">
-        <label>Valor MXN</label><input id="houseMxn" readonly>
-      </div>
-      <div class="field">
-        <label>Valor RP</label><input id="houseRp" readonly>
-      </div>
-      <div class="field full">
-        <label>Domicilio RP</label><input id="houseAddress" readonly>
-      </div>
-    </div>
-    <button class="btn" onclick="saveHouse()">REGISTRAR HOGAR</button>
-  </div>
-</section>
-
-<section id="page-transporte" class="page">
-  <div class="page-head">
-    <div><h2>Transporte</h2><p>Un vehículo por personaje.</p></div>
-  </div>
-  <div class="panel">
-    <div class="form-grid">
-      <div class="field">
-        <label>Tipo</label>
-        <select id="vType" onchange="fillVehicles()">
-          <option>Automóvil</option><option>SUV</option><option>Pickup</option>
-          <option>Deportivo</option><option>Superdeportivo</option>
-          <option>Clásico</option><option>Motocicleta</option>
-          <option>Motocicleta deportiva</option><option>Van</option>
-          <option>Vehículo de lujo</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Modelo</label><select id="vModel" onchange="valueVehicle()"></select>
-      </div>
-      <div class="field"><label>Año</label><input id="vYear" type="number" value="2026"></div>
-      <div class="field">
-        <label>Color</label>
-        <select id="vColor">
-          <option>Negro</option><option>Blanco</option><option>Rojo</option>
-          <option>Azul</option><option>Verde</option><option>Gris</option>
-          <option>Plata</option><option>Dorado</option>
-        </select>
-      </div>
-      <div class="field"><label>Ciudad</label><select id="vCity"></select></div>
-      <div class="field"><label>Placas</label><input id="vPlate" readonly></div>
-      <div class="field"><label>Valor MXN</label><input id="vMxn" readonly></div>
-      <div class="field"><label>Valor RP</label><input id="vRp" readonly></div>
-    </div>
-    <button class="btn" onclick="saveVehicle()">REGISTRAR TRANSPORTE</button>
-  </div>
-</section>
-
-<section id="page-familia" class="page">
-  <div class="page-head">
-    <div><h2>Familia</h2><p>Información familiar del personaje.</p></div>
-  </div>
-  <div class="panel">
-    <div class="field">
-      <label>¿Perteneces a una familia?</label>
-      <select id="hasFamily" onchange="toggleSection('familyFields',this.value==='Sí')">
-        <option>No</option><option>Sí</option>
-      </select>
-    </div>
-    <div id="familyFields" class="hidden">
-      <div class="form-grid">
-        <div class="field"><label>Apellido familiar</label><input id="familyName"></div>
-        <div class="field">
-          <label>Rol familiar</label>
-          <select id="familyRole">
-            <option>Padre</option><option>Madre</option><option>Hijo</option>
-            <option>Hija</option><option>Hermano</option><option>Hermana</option>
-            <option>Pareja</option><option>Otro</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <button class="btn" onclick="saveFamily()">GUARDAR FAMILIA</button>
-  </div>
-</section>
-
-<section id="page-menores" class="page">
-  <div class="page-head">
-    <div><h2>Menores</h2><p>Registro familiar de personajes menores.</p></div>
-  </div>
-  <div class="panel">
-    <div class="notice">
-      Esta sección queda preparada para conectar posteriormente los registros
-      de menores con las tablas correspondientes de tu sistema.
-    </div>
-  </div>
-</section>
-
-<section id="page-empresa" class="page">
-  <div class="page-head">
-    <div><h2>Empresa / Trabajo</h2><p>Registra la situación laboral de tu personaje.</p></div>
-  </div>
-  <div class="panel">
-    <div class="field">
-      <label>Situación laboral</label>
-      <select id="workType" onchange="workMode()">
-        <option>Otro</option>
-        <option>Empresario local</option>
-        <option>Empleado</option>
-        <option>Director de gobierno</option>
-      </select>
-    </div>
-    <div id="workFields"></div>
-    <button class="btn" onclick="saveWork()">GUARDAR INFORMACIÓN</button>
-  </div>
-</section>
-
-<section id="page-organizacion" class="page">
-  <div class="page-head">
-    <div><h2>Organización</h2><p>Registro dentro del universo de roleplay.</p></div>
-  </div>
-  <div class="panel">
-    <div class="field">
-      <label>¿Perteneces a una organización?</label>
-      <select id="hasOrg" onchange="toggleSection('orgFields',this.value==='Sí')">
-        <option>No</option><option>Sí</option>
-      </select>
-    </div>
-    <div id="orgFields" class="hidden">
-      <div class="form-grid">
-        <div class="field"><label>Nombre</label><input id="orgName"></div>
-        <div class="field"><label>Alias</label><input id="orgAlias"></div>
-        <div class="field">
-          <label>Tipo</label>
-          <select id="orgType"><option>Organización</option><option>Pandilla</option></select>
-        </div>
-        <div class="field">
-          <label>Cargo</label>
-          <select id="orgRole">
-            <option>Miembro</option><option>Operador</option>
-            <option>Encargado</option><option>Líder</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <button class="btn" onclick="saveOrg()">GUARDAR ORGANIZACIÓN</button>
-  </div>
-</section>
-
+<!-- BANCORMCRP -->
 <section id="page-finanzas" class="page">
-  <div class="page-head">
-    <div><h2>BANCOMCRP26</h2><p>Cuenta bancaria ficticia del universo MexCity RP.</p></div>
+  <div class="page-head"><div><h2>Bancormcrp</h2><p>Gestión financiera de MexCity.</p></div></div>
+  <div class="panel">
+    <div style="text-align:center;margin-bottom:20px">
+      <small style="color:var(--green)">SALDO ACTUAL</small>
+      <h1 id="bankBalanceMain" style="font-size:36px;margin:5px 0">$1,250,000 RP</h1>
+      <small style="color:var(--muted)" id="bankCbMain">Clave Bancaria: 001-992-883</small>
+    </div>
+    <div class="form-grid">
+      <button class="btn secondary" onclick="bancoEnviar()"><i class="fa-solid fa-paper-plane"></i> Enviar Dinero</button>
+      <button class="btn secondary" onclick="bancoServicios()"><i class="fa-solid fa-file-invoice"></i> Pagar Servicios</button>
+      <button class="btn secondary" onclick="bancoPrestamo()"><i class="fa-solid fa-hand-holding-dollar"></i> Pedir Préstamo</button>
+      <button class="btn secondary" onclick="alert('Sistema de venta de propiedades en mantenimiento.')"><i class="fa-solid fa-house-circle-xmark"></i> Vender Propiedad</button>
+    </div>
   </div>
   <div class="panel">
-    <div class="stat-list">
-      <div class="stat-box"><small>BANCO</small><b>BANCOMCRP26</b></div>
-      <div class="stat-box"><small>CUENTA</small><b id="financeBank">—</b></div>
-      <div class="stat-box"><small>CB</small><b id="financeCB">—</b></div>
-      <div class="stat-box"><small>SALDO</small><b id="financeBalance">$100,000 RP</b></div>
-    </div>
-    <div class="notice" style="margin-top:12px">
-      El dinero y los movimientos forman parte del sistema ficticio de MexCity RP.
+    <h3>Historial y Nómina</h3>
+    <div style="margin-top:10px;border-top:1px solid var(--line);padding-top:10px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+        <div><b>Nómina: Gobierno</b><small style="display:block;color:var(--muted)">Sueldo automático depositado</small></div>
+        <b style="color:var(--green)">+$50,000 RP</b>
+      </div>
+      <div style="display:flex;justify-content:space-between">
+        <div><b>Pago Servicios</b><small style="display:block;color:var(--muted)">Luz e Internet</small></div>
+        <b style="color:var(--red)">-$2,500 RP</b>
+      </div>
     </div>
   </div>
 </section>
 
-<section id="page-registros" class="page">
-  <div class="page-head">
-    <div><h2>Mis registros</h2><p>Resumen de los datos asociados a tu sesión.</p></div>
+<!-- ASISTENTE IA -->
+<section id="page-asistenteia" class="page">
+  <div class="page-head"><div><h2>IA MexCity</h2><p>Asistente seguro para creación de historias, avatares y entornos.</p></div></div>
+  <div class="panel" style="border:1px solid rgba(146, 87, 223, 0.4)">
+    <div id="iaChatBox" style="height:300px;overflow-y:auto;background:#050b10;padding:15px;border-radius:10px;margin-bottom:15px">
+      <div style="color:var(--purple);margin-bottom:10px"><b>[IA Asistente]:</b> Hola. Puedo ayudarte a crear guiones, carteles o imágenes de tu entorno. <i>(Nota: Prohibido pedir contraseñas o info privada).</i></div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <input id="iaInput" style="flex:1" placeholder="Ej. Crea una historia de un robo al banco..." onkeydown="if(event.key==='Enter') consultarIA()">
+      <button class="btn" style="width:auto;background:var(--purple);color:#fff" onclick="consultarIA()">Generar</button>
+    </div>
   </div>
-  <div class="panel"><div id="records" class="records"></div></div>
+</section>
+
+<!-- CHATS (Comandos de Rol) -->
+<section id="page-chats" class="page">
+  <div class="page-head"><div><h2>Chat General & Rol</h2><p>Conversaciones e interacciones de personaje.</p></div></div>
+  <div class="panel discord-panel">
+    <div class="chat-tabs">
+      <button class="chat-tab active" onclick="switchChat('general', this)">General</button>
+      <button class="chat-tab" onclick="switchChat('rol', this)">Rol (ON)</button>
+      <button class="chat-tab" onclick="switchChat('admin', this)">Admin</button>
+    </div>
+    <div class="chat-pane active" id="pane-general">
+      <div class="chat-list" id="chatGeneralList"></div>
+      <div class="chat-input"><input id="chatGeneralIn" placeholder="Platica general..." onkeydown="if(event.key==='Enter') sendChat('general')"></div>
+    </div>
+    <div class="chat-pane" id="pane-rol">
+      <div class="chat-list" id="chatRolList"></div>
+      <div class="chat-input"><input id="chatRolIn" placeholder="Comandos: #Lugar | //Transporte | /Servicio" onkeydown="if(event.key==='Enter') sendChat('rol')"></div>
+    </div>
+    <div class="chat-pane" id="pane-admin">
+      <div class="chat-list" id="chatAdminList"><p class="muted" style="padding:10px">Envía un ticket a la administración.</p></div>
+      <div class="chat-input"><input id="chatAdminIn" placeholder="Mensaje para admin..." onkeydown="if(event.key==='Enter') sendChat('admin')"></div>
+    </div>
+  </div>
+</section>
+
+<!-- EMPRESAS Y SERVICIOS -->
+<section id="page-empresas" class="page">
+  <div class="page-head"><div><h2>Empresas y Servicios</h2><p>Bolsa de trabajo, gobierno y corporativos.</p></div></div>
+  <div class="panel">
+    <h3 style="color:var(--gold2)">Servicios Activos</h3>
+    <div class="record" style="margin-top:10px;padding:10px;background:#050b10;border-radius:10px;border:1px solid var(--line)">
+      <b style="display:block">Policía de MexCity (Gobierno)</b>
+      <small style="color:var(--muted)">Agentes disponibles para rol activo. Salario pagado vía nómina automática.</small>
+      <button class="btn secondary" style="padding:5px;font-size:11px;margin-top:10px" onclick="alert('Notificación enviada a los agentes activos para iniciar rol.')">Solicitar Servicio</button>
+    </div>
+    <h3 style="color:var(--gold2);margin-top:20px">Bolsa de Trabajo</h3>
+    <div class="record" style="margin-top:10px;padding:10px;background:#050b10;border-radius:10px;border:1px solid var(--line)">
+      <b style="display:block">Agencia R-MEX Models</b>
+      <small style="color:var(--muted)">Se buscan 2 modelos. Sueldo base quincenal.</small>
+      <button class="btn secondary" style="padding:5px;font-size:11px;margin-top:10px" onclick="alert('Postulación enviada. Espera respuesta del empresario en tus mensajes.')">Postularse</button>
+    </div>
+  </div>
+</section>
+
+<!-- JUGADOR / IDENTIDAD -->
+<section id="page-jugador" class="page">
+  <div class="page-head"><div><h2>Registro de Identidad</h2><p>Datos oficiales y ciclo de vida del personaje.</p></div></div>
+  <div class="panel">
+    <div class="form-grid">
+      <div class="field"><label>Nombre del Personaje</label><input id="pName" value="Cartsh"></div>
+      <div class="field"><label>Edad</label><input type="number" id="pAge" value="25"></div>
+      <div class="field"><label>Ciudad (República Mexicana)</label><input id="pCity" value="Ciudad de México"></div>
+      <div class="field"><label>Género / Orientación</label><input id="pGender" value="Femenino"></div>
+      <div class="field"><label>Ocupación</label><input id="pJob" value="Fundadora R-MEX"></div>
+      <div class="field"><label>Tipo de Sangre</label><input id="pBlood" value="O+"></div>
+      <div class="field"><label>Discapacidad (Opcional)</label><input id="pDisability" value="Ninguna"></div>
+      <div class="field"><label>Domicilio (Ficticio Automático)</label><input id="pAddress" readonly value="Av. Insurgentes Sur #1024, CDMX"></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px">
+      <button class="btn" onclick="alert('Ficha de identidad actualizada exitosamente.')">GUARDAR REGISTRO</button>
+      <button class="btn danger" onclick="muertePersonaje()">FALLECER PERSONAJE (CK)</button>
+    </div>
+  </div>
+</section>
+
+<!-- RADIO -->
+<section id="page-radio" class="page">
+  <div class="page-head"><div><h2>Radio RP</h2><p>Transmisión en vivo y complacencias.</p></div></div>
+  <div class="panel" style="text-align:center">
+    <i class="fa-solid fa-tower-broadcast text-4xl" style="font-size:40px;color:var(--blue);margin-bottom:15px"></i>
+    <h3 style="margin:0 0 10px">Estación MexCity Central</h3>
+    <p class="muted">Locutor en turno activo.</p>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:20px">
+      <button class="btn secondary" onclick="radioPedir()"><i class="fa-solid fa-music"></i> Pedir Canción</button>
+      <button class="btn secondary" onclick="radioSaludo()"><i class="fa-solid fa-microphone"></i> Enviar Saludo</button>
+    </div>
+  </div>
+</section>
+
+<!-- MENSAJES BÁSICOS -->
+<section id="page-mensajes" class="page">
+  <div class="page-head"><div><h2>Buzón de Entrada</h2></div></div>
+  <div class="panel">
+    <div style="padding:10px;border-left:3px solid var(--red);background:#050b10;margin-bottom:10px"><b>ADMINISTRACIÓN:</b> Recuerda subir tu historial de rol al feed.</div>
+    <div style="padding:10px;border-left:3px solid var(--green);background:#050b10;margin-bottom:10px"><b>BANCORMCRP:</b> Deuda de luz próxima a vencer.</div>
+    <div style="padding:10px;border-left:3px solid var(--blue);background:#050b10;margin-bottom:10px"><b>R-MEX Models:</b> Cita agendada para casting a las 20:00.</div>
+  </div>
 </section>
 
 </main>
-
-<!-- =========================================================
-     RIGHTBAR
-========================================================= -->
-<aside class="rightbar">
-  <div class="panel server-panel">
-    <div class="panel-title"><h3>ACTIVIDAD DE MEXCITY</h3><a>EN VIVO</a></div>
-    <div class="server-stats">
-      <div><b>128</b><small>En línea</small></div>
-      <div><b>24</b><small>En rol</small></div>
-      <div><b>15</b><small>En llamada</small></div>
-    </div>
-  </div>
-
-  <div class="panel newspaper-panel">
-    <div class="panel-title"><h3>📰 NOTICIAS MEXCITY</h3><a>PERIÓDICO</a></div>
-    <article class="news-mini"><span>01</span><div><b>La ciudad se prepara para nuevos acontecimientos</b><small>Noticias de la comunidad · Hoy</small></div></article>
-    <article class="news-mini"><span>02</span><div><b>Próximos eventos y actividades de MexCity RP</b><small>Agenda comunitaria · Hoy</small></div></article>
-    <article class="news-mini"><span>03</span><div><b>Nuevas historias y roles comienzan en la ciudad</b><small>Actualidad RP · Hoy</small></div></article>
-  </div>
-
-  <div class="panel online-panel">
-    <div class="panel-title"><h3>JUGADORES EN LÍNEA</h3><a onclick="showPage('directorio')">Ver todos</a></div>
-    <div id="onlinePlayers"></div>
-  </div>
-
-  <div class="panel discord-panel">
-    <div class="discord-head">
-      <div><span class="discord-dot"></span><b>COMUNIDAD MEXCITY</b></div>
-      <small id="roleStatusSummary">Registro pendiente</small>
-    </div>
-    <div class="chat-tabs">
-      <button class="chat-tab active" data-chat-tab="general" onclick="switchChatTab('general')">💬 General</button>
-      <button class="chat-tab" data-chat-tab="rol" onclick="switchChatTab('rol')">🎭 Rol</button>
-      <button class="chat-tab" data-chat-tab="admin" onclick="switchChatTab('admin')">🛡 Admin</button>
-      <button class="chat-tab" data-chat-tab="jugadores" onclick="switchChatTab('jugadores')">👥 Jugadores</button>
-    </div>
-    <div id="chatGeneral" class="chat-pane active">
-      <div class="chat-pane-title"><b>chat-general</b><span>Solo conversación</span></div>
-      <div id="generalChatList" class="chat-list"></div>
-      <div class="chat-input"><input id="generalChatInput" placeholder="Platica con la comunidad..." onkeydown="if(event.key==='Enter')sendCommunityChat()"><button class="btn" onclick="sendCommunityChat()">➤</button></div>
-    </div>
-    <div id="chatRol" class="chat-pane">
-      <div class="chat-pane-title"><b>chat-de-rol</b><button id="roleToggle" class="role-toggle off" onclick="toggleRoleStatus()">● OFF ROL</button></div>
-      <div class="role-radio">
-        <div class="mic">🎙</div><div><b>MEXCITY RADIO</b><small>Noticias y avisos de rol</small></div><div class="wave"></div><button class="play" onclick="toggleRadio(this)">▶</button>
-      </div>
-      <div id="roleChatList" class="chat-list"></div>
-      <div class="chat-input"><input id="roleChatInput" placeholder="Coordina tu rol..." onkeydown="if(event.key==='Enter')sendRoleChat()"><button class="btn" onclick="sendRoleChat()">➤</button></div>
-    </div>
-    <div id="chatAdmin" class="chat-pane">
-      <div class="chat-pane-title"><b>chat con administración</b><span id="adminChatState">Atención</span></div>
-      <div id="adminChatList" class="chat-list"></div>
-      <div class="admin-pending hidden" id="adminPending">⏳ Tu mensaje queda pendiente. Administración responderá cuando active la conversación.</div>
-      <div class="chat-input"><input id="adminChatInput" placeholder="Escribe tu mensaje para administración..." onkeydown="if(event.key==='Enter')sendAdminChat()"><button class="btn" onclick="sendAdminChat()">➤</button></div>
-    </div>
-    <div id="chatJugadores" class="chat-pane">
-      <div class="chat-pane-title"><b>mensajes</b><span>Estilo Instagram</span></div>
-      <div id="playerChatList" class="player-chat-list"></div>
-      <div id="playerThreadView" class="player-thread-view hidden"></div>
-    </div>
-  </div>
-</aside>
 </div>
-
-<div id="bottomChatDock" class="bottom-chat-dock">
-  <div class="dock-head">
-    <button class="active" onclick="dockTab('general',this)">💬 General</button>
-    <button onclick="dockTab('rol',this)">🎭 Rol</button>
-    <button onclick="dockTab('admin',this)">🛡 Admin</button>
-    <button onclick="dockTab('jugadores',this)">👥 Jugadores</button>
-  </div>
-  <div class="dock-content">
-    <div id="dock-general" class="dock-pane active"><div class="dock-message">Chat general: conversación de la comunidad.</div><div class="dock-input"><input id="dockGeneralInput" placeholder="Escribe..."><button onclick="sendDockGeneral()">➤</button></div></div>
-    <div id="dock-rol" class="dock-pane"><div class="dock-message">Chat de rol: coordinación y estado ON/OFF.</div><div class="dock-input"><input id="dockRoleInput" placeholder="Coordina tu rol..."><button onclick="sendDockRole()">➤</button></div></div>
-    <div id="dock-admin" class="dock-pane"><div class="dock-message" id="dockAdminState">Tu conversación con administración queda pendiente hasta que administración la active.</div><div class="dock-input"><input id="dockAdminInput" placeholder="Mensaje para administración..."><button onclick="sendDockAdmin()">➤</button></div></div>
-    <div id="dock-jugadores" class="dock-pane"><div class="dock-empty">Selecciona un jugador desde el chat de jugadores para iniciar una conversación.</div></div>
-  </div>
 </div>
-
-<nav class="bottom-nav">
-  <button data-page="inicio" class="active" onclick="showPage('inicio',this)">
-    <span>⌂</span>Inicio
-  </button>
-  <button data-page="explorar" onclick="showPage('explorar',this)">
-    <span>⌕</span>Explorar
-  </button>
-  <button onclick="openComposer()"><span>＋</span>Crear</button>
-  <button data-page="mensajes" onclick="showPage('mensajes',this)">
-    <span>▱</span>Mensajes
-  </button>
-  <button data-page="jugador" onclick="showPage('jugador',this)">
-    <span>●</span>Perfil
-  </button>
-</nav>
-</div>
-
-<!-- =========================================================
-     CREATE POST MODAL
-========================================================= -->
-<div id="composerModal" class="modal">
-  <div class="modal-card composer-modal-card">
-    <div class="modal-head"><h3>Crear publicación</h3><button class="close" onclick="closeComposer()">×</button></div>
-    <div class="composer-preview">
-      <div class="avatar" id="modalComposerAvatar">C</div>
-      <div><b id="modalComposerName">Jugador</b><small id="modalComposerCity">México</small></div>
-    </div>
-    <textarea id="postText" rows="5" placeholder="¿Qué estás roleando hoy?"></textarea>
-    <div class="status-labels">
-      <button type="button" class="status-chip active" onclick="selectPostStatus(this,'Rol aceptado')">✓ Rol aceptado</button>
-      <button type="button" class="status-chip" onclick="selectPostStatus(this,'En revisión')">◷ En revisión</button>
-      <button type="button" class="status-chip" onclick="selectPostStatus(this,'Historia')">✦ Historia</button>
-      <button type="button" class="status-chip" onclick="selectPostStatus(this,'Anuncio')">📣 Anuncio</button>
-    </div>
-    <div class="media-row">
-      <label class="media-btn">▧ Imagen<input id="postImageFile" type="file" accept="image/*" hidden onchange="previewPostMedia(this)"></label>
-      <label class="media-btn">▹ Video<input id="postVideoFile" type="file" accept="video/*" hidden onchange="previewPostMedia(this)"></label>
-      <label class="media-btn">📎 Multimedia<input id="postMediaFile" type="file" accept="image/*,video/*" hidden onchange="previewPostMedia(this)"></label>
-    </div>
-    <div id="postMediaPreview" class="post-media-preview hidden"></div>
-    <input id="postTitle" class="post-title-hidden" placeholder="Título">
-    <input id="postImage" class="post-image-hidden" type="hidden">
-    <div class="composer-footer"><span id="postStatusPreview">✓ Rol aceptado</span><button class="btn" onclick="publishPost()">PUBLICAR</button></div>
-  </div>
-</div>
-
-<div id="toast" class="toast"></div>
 
 <script>
-/* =========================================================
-   SUPABASE
-   IMPORTANTE:
-   Estas son las mismas credenciales públicas de tu página actual.
-   NO se utiliza service_role.
-========================================================= */
+/* ================= VARIABLES GLOBALES Y SUPABASE ================= */
 const SUPABASE_URL = "https://ogiupysmhnzvizesqcxr.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_QZ1vQjZQ-7vbkBJLmouMzQ_PUmI8U2c";
-
-const supabaseClient =
-  window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let currentUser = null;
-let profile = null;
+let saldoActual = 1250000;
+let isRolOn = false;
 
-/* =========================================================
-   CATÁLOGOS
-========================================================= */
-const cities = [
-"Aguascalientes, Aguascalientes","Mexicali, Baja California",
-"Tijuana, Baja California","La Paz, Baja California Sur",
-"Campeche, Campeche","Tuxtla Gutiérrez, Chiapas",
-"Chihuahua, Chihuahua","Ciudad Juárez, Chihuahua",
-"Saltillo, Coahuila","Torreón, Coahuila","Colima, Colima",
-"Manzanillo, Colima","Durango, Durango","León, Guanajuato",
-"Irapuato, Guanajuato","Acapulco, Guerrero","Chilpancingo, Guerrero",
-"Pachuca, Hidalgo","Guadalajara, Jalisco","Puerto Vallarta, Jalisco",
-"Toluca, Estado de México","Ecatepec, Estado de México",
-"Morelia, Michoacán","Cuernavaca, Morelos","Tepic, Nayarit",
-"Monterrey, Nuevo León","Oaxaca de Juárez, Oaxaca","Puebla, Puebla",
-"Querétaro, Querétaro","Cancún, Quintana Roo","Chetumal, Quintana Roo",
-"San Luis Potosí, San Luis Potosí","Culiacán, Sinaloa",
-"Mazatlán, Sinaloa","Hermosillo, Sonora","Villahermosa, Tabasco",
-"Tampico, Tamaulipas","Ciudad Victoria, Tamaulipas",
-"Tlaxcala, Tlaxcala","Veracruz, Veracruz","Xalapa, Veracruz",
-"Mérida, Yucatán","Zacatecas, Zacatecas","Ciudad de México, CDMX"
-];
-
-const jobs = [
-"Empresario","Comerciante","Director","Gerente","Abogado","Médico",
-"Enfermero","Psicólogo","Arquitecto","Ingeniero","Maestro","Profesor",
-"Policía","Militar","Agente","Paramédico","Bombero","Mecánico",
-"Electricista","Plomero","Constructor","Diseñador","Fotógrafo",
-"Modelo","Periodista","Chef","Cocinero","Mesero","Barista","Conductor",
-"Taxista","Repartidor","Piloto","Funcionario","Empleado","Agricultor",
-"Ganadero","Veterinario","Programador","Creador de contenido",
-"Músico","Cantante","Artista","Deportista","Seguridad privada",
-"Investigador","Científico","Técnico","Contador","Economista",
-"Banquero","Productor","Actor","Estilista","Barbero","Panadero",
-"Joyero","Dentista","Capitán","Marinero","Transportista","Consultor",
-"Analista","Administrador","Desarrollador web","Desarrollador de software",
-"Streamer","Influencer","Locutor","DJ","Guía turístico",
-"Agente inmobiliario","Detective","Notario","Juez","Fiscal","Otro"
-];
-
-const houseValues = {
-  "Casa":1500000,
-  "Departamento":1100000,
-  "Mansión":8500000,
-  "Rancho":5000000,
-  "Villa":4200000
-};
-
-const vehicleData = {
-  "Automóvil":[["Toyota","Corolla",450000],["Honda","Civic",520000],["Nissan","Sentra",390000],["Volkswagen","Jetta",480000],["Mazda","Mazda3",520000]],
-  "SUV":[["Toyota","RAV4",650000],["Honda","CR-V",700000],["Mazda","CX-5",680000],["Jeep","Grand Cherokee",1200000]],
-  "Pickup":[["Ford","F-150",950000],["Toyota","Hilux",650000],["Chevrolet","Silverado",980000],["RAM","1500",1100000]],
-  "Deportivo":[["Ford","Mustang",900000],["Chevrolet","Camaro",1000000],["Toyota","GR86",800000]],
-  "Superdeportivo":[["Porsche","911",3200000],["Ferrari","Roma",5000000],["Lamborghini","Huracán",6000000],["McLaren","750S",6500000]],
-  "Clásico":[["Ford","Mustang 1967",1500000],["Chevrolet","Impala 1964",1200000]],
-  "Motocicleta":[["Honda","CB190R",65000],["Yamaha","MT-03",150000],["Kawasaki","Ninja 400",190000]],
-  "Motocicleta deportiva":[["Yamaha","R7",300000],["Kawasaki","Ninja ZX-6R",330000],["Honda","CBR600RR",350000]],
-  "Van":[["Toyota","Hiace",750000],["Mercedes-Benz","Sprinter",1300000]],
-  "Vehículo de lujo":[["Mercedes-Benz","Clase S",3200000],["BMW","Serie 7",2800000],["Audi","A8",2600000]]
-};
-
-/* =========================================================
-   DATOS VISUALES INICIALES
-   Estos son únicamente contenido de presentación del dashboard.
-========================================================= */
-const demoPosts = [
-  {
-    name:"Vlad Hemingway",
-    city:"Tijuana, México",
-    tag:"ROL - HISTORIA",
-    title:"Nuevos negocios en la ciudad",
-    text:"El mercado cambia constantemente, y para mantenerse en la cima, hay que tomar decisiones...",
-    hash:"#NegociosRP",
-    image:"https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1400&q=85"
-  },
-  {
-    name:"Daniela Golden",
-    city:"Guadalajara, México",
-    tag:"ROL - LLEGADA",
-    title:"Llegada a MexCity",
-    text:"Después de un largo viaje, finalmente llegué a Sonora, una nueva etapa comienza en mi vida...",
-    hash:"#HistoriaRP",
-    image:"https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1400&q=85"
-  },
-  {
-    name:"Cartshking",
-    city:"Sonora, México",
-    tag:"ANUNCIO",
-    title:"MexCity es de todos",
-    text:"Gracias a todos por hacer crecer esta comunidad cada día más. ¡La ciudad sigue creciendo!",
-    hash:"#MexCityRP",
-    image:"https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1400&q=85"
-  }
-];
-
-const players = [
-  "Vlad Hemingway",
-  "Daniela Golden",
-  "Raven Black",
-  "Vito Atomik",
-  "Isael Montana"
-];
-
-const chats = [
-  ["Alejandro RP","¡Buenas noches a todos! ¿Cómo va la ciudad?"],
-  ["Valeria RP","Todo tranquilo por aquí, trabajando en mi rol 📸"],
-  ["Mateo RP","Se viene algo grande para el fin de semana 😈"],
-  ["Sofía RP","Ya quiero ver las nuevas historias que están preparando 🔥"],
-  ["Cartshking","Gracias a todos por hacer crecer esta comunidad cada día más. ¡MexCity es de todos! 👑"]
-];
-
-/* =========================================================
-   UTILIDADES
-========================================================= */
-const $ = id => document.getElementById(id);
-
-function esc(value){
-  return String(value ?? "").replace(/[&<>"']/g, m => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[m]));
-}
-
-function initials(name){
-  return String(name || "Jugador")
-    .trim().split(/\s+/).slice(0,2)
-    .map(x => x[0]).join("").toUpperCase() || "J";
-}
-
-function money(value){
-  return "$" + Number(value || 0).toLocaleString("es-MX") + " RP";
-}
-
-function mxn(value){
-  return "$" + Number(value || 0).toLocaleString("es-MX") + " MXN";
-}
-
-function toast(text){
-  const el = $("toast");
-  el.textContent = text;
-  el.style.display = "block";
-  clearTimeout(window.__toast);
-  window.__toast = setTimeout(() => el.style.display = "none", 2500);
-}
-
-function fill(id, array){
-  const el = $(id);
-  if(!el) return;
-  el.innerHTML = array.map(x => `<option>${esc(x)}</option>`).join("");
-}
-
-function setAvatar(el,url,name){
-  if(!el) return;
-  if(url){
-    el.innerHTML = `<img src="${esc(url)}" alt="Avatar">`;
-  }else{
-    el.textContent = initials(name);
-  }
-}
-
-function playerName(){
-  return profile?.character_name ||
-         profile?.display_name ||
-         profile?.username ||
-         currentUser?.user_metadata?.character_name ||
-         currentUser?.user_metadata?.full_name ||
-         currentUser?.email?.split("@")[0] ||
-         "Jugador";
-}
-
-function playerCity(){
-  return profile?.city || profile?.character_city || "México";
-}
-
-/* =========================================================
-   INICIALIZACIÓN
-========================================================= */
-async function init(){
-  fill("pCity",cities);
-  fill("houseCity",cities);
-  fill("vCity",cities);
-  fill("pJob",jobs);
-
-  fillVehicles();
-  valueHouse();
-  workMode();
-
-  renderFeed(demoPosts);
-  renderOnline();
-  renderChat();
-  renderExtras();
-
-  const {data:{session}} = await supabaseClient.auth.getSession();
-
-  if(session){
-    await openApp(session.user);
-  }else{
-    showLogin();
-  }
-
-  supabaseClient.auth.onAuthStateChange((_event, session) => {
-    if(session){
-      openApp(session.user);
-    }else{
-      showLogin();
-    }
-  });
-}
-
-function showLogin(){
-  $("loginScreen").style.display = "grid";
-  $("app").style.display = "none";
+/* ================= INICIO Y NAVEGACIÓN ================= */
+function showPage(pageId){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + pageId).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  
+  // Resaltar icono activo si existe
+  const activeBtn = document.querySelector(`.nav-btn[onclick="showPage('${pageId}')"]`);
+  if(activeBtn) activeBtn.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
 }
 
 async function login(){
-  const email = $("loginEmail").value.trim();
-  const password = $("loginPassword").value;
-
-  if(!email || !password){
-    $("loginMsg").textContent = "Introduce correo y contraseña.";
-    return;
-  }
-
-  $("loginMsg").textContent = "Iniciando sesión...";
-
-  const {data,error} =
-    await supabaseClient.auth.signInWithPassword({email,password});
-
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+  if(!email || !password) return alert("Ingresa datos");
+  
+  document.getElementById("loginMsg").textContent = "Cargando...";
+  const {data, error} = await supabaseClient.auth.signInWithPassword({email, password});
+  
   if(error){
-    $("loginMsg").textContent = error.message;
-    return;
+    document.getElementById("loginMsg").textContent = error.message;
+  } else {
+    currentUser = data.user;
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    cargarFeedMockup();
+  }
+}
+function logout(){
+  supabaseClient.auth.signOut();
+  location.reload();
+}
+
+/* ================= SISTEMA BANCARIO ================= */
+function actualizarSaldoUI(){
+  const formateado = "$" + saldoActual.toLocaleString() + " RP";
+  document.getElementById("bankBalanceSidebar").textContent = formateado;
+  document.getElementById("bankBalanceMain").textContent = formateado;
+}
+function bancoEnviar(){
+  let id = prompt("Ingrese el ID del ciudadano receptor:");
+  if(id){
+    let cantidad = parseInt(prompt("Cantidad a enviar en $RP:"));
+    if(cantidad > saldoActual){
+      alert("Error: No puedes enviar más dinero del que posees en tu saldo actual.");
+    } else if(cantidad > 0) {
+      saldoActual -= cantidad;
+      actualizarSaldoUI();
+      alert(`Transferencia de $${cantidad} RP enviada con éxito a ${id}.`);
+    }
+  }
+}
+function bancoServicios(){
+  alert("Servicios actuales pendientes (Luz, Agua, Internet). Se pagarán en automático el día de corte.");
+}
+function bancoPrestamo(){
+  let monto = parseInt(prompt("Cantidad requerida (Min: $900,000 | Max: $1,000,000):"));
+  if(monto < 900000 || monto > 1000000){
+    return alert("Error: El monto debe estar entre 900 mil y 1 millón de $RP.");
+  }
+  let asunto = prompt("Especifique el asunto/motivo de su préstamo:");
+  if(asunto){
+    let freq = prompt("Seleccione opción de pago: semanal, quincena, mensual, o automatico");
+    alert("Préstamo solicitado exitosamente. La administración aceptará o rechazará su petición en breve.");
+  }
+}
+
+/* ================= ESTADO DE ROL ================= */
+function toggleRolStatus(){
+  isRolOn = !isRolOn;
+  const btn = document.getElementById("btnToggleRol");
+  const text = document.getElementById("rolStatusText");
+  if(isRolOn){
+    btn.textContent = "DESACTIVAR OFF ROL";
+    btn.style.background = "var(--red)";
+    text.textContent = "● ON ROL (Activo)";
+  } else {
+    btn.textContent = "ACTIVAR ON ROL";
+    btn.style.background = "var(--green)";
+    text.textContent = "● OFF ROL (Fuera de casa)";
+    alert("Has marcado que el personaje regresó a casa/dormir.");
+  }
+}
+
+/* ================= CHATS Y COMANDOS ================= */
+function switchChat(tab, btn){
+  document.querySelectorAll('.chat-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('pane-' + tab).classList.add('active');
+  btn.classList.add('active');
+}
+
+function sendChat(tipo){
+  let input = document.getElementById('chat' + (tipo.charAt(0).toUpperCase() + tipo.slice(1)) + 'In');
+  let val = input.value.trim();
+  if(!val) return;
+  
+  let notasComando = "";
+  if(tipo === 'rol'){
+    if(val.includes('#')) notasComando += "<br><span class='chat-command-note'>[Entorno actualizado por comando #]</span>";
+    if(val.includes('//')) notasComando += "<br><span class='chat-command-note'>[Calculando tiempo de transporte de < 2 hrs...]</span>";
+    if(val.includes('/')) notasComando += "<br><span class='chat-command-note'>[Acción de servicio ejecutada]</span>";
   }
 
-  await openApp(data.user);
-}
-
-async function openApp(user){
-  currentUser = user;
-  $("loginScreen").style.display = "none";
-  $("app").style.display = "block";
-
-  await loadProfile();
-  loadPlayerFields();
-  renderFeed(demoPosts);
-  renderOnline();
-  renderChat();
-  renderExtras();
-}
-
-async function loadProfile(){
-  profile = null;
-
-  const {data,error} =
-    await supabaseClient
-      .from("profiles")
-      .select("*")
-      .eq("id",currentUser.id)
-      .maybeSingle();
-
-  if(!error && data){
-    profile = data;
-  }
-
-  const name = playerName();
-  const city = playerCity();
-
-  ["topName","sideName"].forEach(id => {
-    if($(id)) $(id).textContent = name;
-  });
-
-  $("sideCity").textContent = city;
-
-  ["topAvatar","sideAvatar","composerAvatar"].forEach(id => {
-    setAvatar($(id),profile?.avatar_url,name);
-  });
-}
-
-/* =========================================================
-   NAVEGACIÓN
-========================================================= */
-function showPage(name){
-  document.querySelectorAll(".page")
-    .forEach(x => x.classList.remove("active"));
-
-  const page = $("page-" + name);
-  if(page) page.classList.add("active");
-
-  document.querySelectorAll(".nav button,.bottom-nav button")
-    .forEach(x => x.classList.remove("active"));
-
-  document.querySelectorAll(`[data-page="${name}"]`)
-    .forEach(x => x.classList.add("active"));
-
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-/* =========================================================
-   FEED
-========================================================= */
-function renderFeed(posts){
-  const feed = $("feed");
-  if(!feed) return;
-  feed.innerHTML = posts.map((p,i) => postHTML(p,i)).join("");
-}
-
-function postHTML(p,i){
-  return `
-  <article class="panel post"
-           data-search="${esc((p.title+" "+p.text+" "+p.name).toLowerCase())}">
-    <div class="post-head">
-      <div class="avatar">${esc(initials(p.name))}</div>
-      <div class="meta">
-        <b>${esc(p.name)} <span class="online">●</span></b>
-        <small>${esc(p.city)} · Hoy</small>
-      </div>
-      <button class="icon-btn" style="width:34px;height:34px">•••</button>
-    </div>
-
-    <div class="post-media">
-      <img src="${esc(p.image)}" alt="Publicación de ${esc(p.name)}" loading="lazy">
-    </div>
-
-    <div class="post-body">
-      <span class="tag">${esc(p.tag)}</span>
-      <h3>${esc(p.title)}</h3>
-      <p>${esc(p.text)}</p>
-      <div class="hashtag">${esc(p.hash)}</div>
-    </div>
-
-    <div class="post-actions">
-      <button onclick="this.classList.toggle('liked')">♡ <span>${45-i*9}</span></button>
-      <button>◯ <span>${12-i*4}</span></button>
-      <button>⤴ <span>${3+i}</span></button>
-      <button style="margin-left:auto">♧</button>
-    </div>
-  </article>`;
-}
-
-function searchFeed(query){
-  const q = query.trim().toLowerCase();
-  document.querySelectorAll("#feed .post").forEach(post => {
-    post.style.display =
-      !q || post.dataset.search.includes(q) ? "block" : "none";
-  });
-}
-
-/* =========================================================
-   ONLINE + CHAT
-========================================================= */
-function renderOnline(){
-  const html = players.map(name => `
-    <div class="player">
-      <div class="avatar">${esc(initials(name))}</div>
-      <div>
-        <b>${esc(name)}</b>
-        <small>● En línea</small>
-      </div>
-    </div>`).join("");
-
-  $("onlinePlayers").innerHTML = html;
-  $("explorePlayers").innerHTML = html;
-}
-
-function renderChat(){
-  $("chatList").innerHTML = chats.map(x => `
-    <div class="message">
-      <div class="avatar">${esc(initials(x[0]))}</div>
-      <div>
-        <b>${esc(x[0])}</b><small>Hoy</small>
-        <p>${esc(x[1])}</p>
-      </div>
-    </div>`).join("");
-}
-
-function sendChat(){
-  const input = $("chatInput");
-  const text = input.value.trim();
-  if(!text) return;
-
-  chats.push([playerName(),text]);
+  let html = `<div class="message"><div><b>Cartsh (Tú)</b><p>${val}${notasComando}</p></div></div>`;
+  let lista = document.getElementById('chat' + (tipo.charAt(0).toUpperCase() + tipo.slice(1)) + 'List');
+  lista.innerHTML += html;
+  lista.scrollTop = lista.scrollHeight;
   input.value = "";
-  renderChat();
-
-  $("chatList").scrollTop = $("chatList").scrollHeight;
-  toast("Mensaje enviado.");
 }
 
-/* =========================================================
-   PÁGINAS SECUNDARIAS
-========================================================= */
-function renderExtras(){
-  $("privateMessages").innerHTML = [
-    "Vlad Hemingway — Nos vemos en la reunión...",
-    "Daniela Golden — Claro, te envío la información.",
-    "Raven Black — Ok, entendido."
-  ].map(x => `
-    <div class="record">
-      <b>${esc(x.split(" — ")[0])}</b>
-      <small>${esc(x.split(" — ")[1])}</small>
-    </div>`).join("");
-
-  $("notifications").innerHTML = [
-    "Tu registro de jugador está listo para revisión.",
-    "Nuevo evento publicado por administración.",
-    "Vlad Hemingway reaccionó a tu historia."
-  ].map(x => `
-    <div class="record">
-      <b>●</b><small>${esc(x)}</small>
-    </div>`).join("");
-
-  $("eventsPage").innerHTML = [
-    "Elecciones Presidenciales",
-    "Desfile de Modas R-MEX",
-    "Operativo de Seguridad"
-  ].map(x => `
-    <div class="record">
-      <b>${esc(x)}</b>
-      <small>Próximamente</small>
-    </div>`).join("");
-
-  $("directory").innerHTML = players.map(p => `
-    <div class="record">
-      <b>${esc(p)}</b>
-      <small>Jugador · En línea</small>
-    </div>`).join("");
-
-  $("rankings").innerHTML = players.map((p,i) => `
-    <div class="record">
-      <b>#${i+1} ${esc(p)}</b>
-      <small>${128-i*11} puntos de actividad</small>
-    </div>`).join("");
-
-  $("exploreFeed").innerHTML =
-    demoPosts.map((p,i) => postHTML(p,i)).join("");
-}
-
-/* =========================================================
-   REGISTRO
-========================================================= */
-function loadPlayerFields(){
-  const p = profile || {};
-
-  $("pName").value =
-    p.first_name ||
-    p.name ||
-    p.character_name?.split(" ")[0] || "";
-
-  $("pLast").value =
-    p.last_name ||
-    p.character_name?.split(" ").slice(1).join(" ") || "";
-
-  $("pAge").value = p.age || 18;
-  $("pAgeUnit").value = p.age_unit || "Años";
-  $("pCity").value = p.city || cities[0];
-  $("pGender").value = p.gender || "Femenino";
-  $("pJob").value = p.job || jobs[0];
-
-  const id = p.rp_id ||
-             p.id_rp ||
-             ("MXRP-26-" + String(currentUser.id).slice(0,8).toUpperCase());
-
-  const bank = p.bank_account || p.bank_number || "Pendiente";
-  const cb = p.cb || p.clabe_rp || "Pendiente";
-
-  $("pId").value = id;
-  $("pBank").value = bank;
-  $("pCB").value = cb;
-
-  $("financeBank").textContent = bank;
-  $("financeCB").textContent = cb;
-
-  const balance = p.balance ?? 100000;
-  $("bankBalance").textContent = money(balance);
-  $("financeBalance").textContent = money(balance);
-
-  renderRecords();
-}
-
-async function savePlayer(){
-  if(!currentUser) return;
-
-  const payload = {
-    first_name:$("pName").value.trim(),
-    last_name:$("pLast").value.trim(),
-    age:Number($("pAge").value || 0),
-    age_unit:$("pAgeUnit").value,
-    city:$("pCity").value,
-    gender:$("pGender").value,
-    job:$("pJob").value,
-    display_name:($("pName").value+" "+$("pLast").value).trim()
-  };
-
-  const {data,error} =
-    await supabaseClient
-      .from("profiles")
-      .upsert({id:currentUser.id,...payload},{onConflict:"id"})
-      .select()
-      .single();
-
-  if(error){
-    toast("No se pudo guardar: " + error.message);
+/* ================= ASISTENTE IA SEGURIDAD ================= */
+let iaBloqueos = 0;
+function consultarIA(){
+  let input = document.getElementById("iaInput");
+  let val = input.value.trim().toLowerCase();
+  if(!val) return;
+  
+  const prohibidas = ["contraseña", "password", "privacidad", "admin", "supabase", "seguridad"];
+  if(prohibidas.some(p => val.includes(p))){
+    iaBloqueos++;
+    let msg = `<div style="color:var(--red);margin-bottom:10px"><b>[ADVERTENCIA]:</b> Has solicitado información privada/prohibida. Intento ${iaBloqueos}.</div>`;
+    document.getElementById("iaChatBox").innerHTML += msg;
+    
+    if(iaBloqueos >= 2){
+      alert("BLOQUEO APLICADO: Asistencia IA deshabilitada por 1 MES debido a intentos de vulnerar seguridad.");
+      input.disabled = true;
+    }
+    input.value = "";
     return;
   }
-
-  profile = {...(profile || {}),...data};
-  loadPlayerFields();
-  loadProfile();
-
-  toast("Registro guardado correctamente.");
+  
+  document.getElementById("iaChatBox").innerHTML += `<div style="text-align:right;color:#fff;margin-bottom:10px">Tú: ${val}</div>`;
+  setTimeout(()=>{
+    document.getElementById("iaChatBox").innerHTML += `<div style="color:var(--purple);margin-bottom:10px"><b>[IA Asistente]:</b> Generando historia de rol solicitada... (Usa el texto para publicarlo en tu feed).</div>`;
+    document.getElementById("iaChatBox").scrollTop = document.getElementById("iaChatBox").scrollHeight;
+  }, 1000);
+  input.value = "";
 }
 
-function renderRecords(){
-  const p = profile || {};
-  const rows = [];
-
-  if(p.first_name || p.name || p.character_name)
-    rows.push(["Jugador",playerName()+" · "+(p.job||"Sin ocupación")]);
-
-  if(p.city) rows.push(["Ciudad",p.city]);
-  if(p.rp_id) rows.push(["ID RP",p.rp_id]);
-  if(p.bank_account) rows.push(["BANCOMCRP26",p.bank_account]);
-
-  $("records").innerHTML = rows.length
-    ? rows.map(r => `
-      <div class="record">
-        <b>${esc(r[0])}</b>
-        <small>${esc(r[1])}</small>
-      </div>`).join("")
-    : `<div class="empty">Todavía no hay información guardada.</div>`;
+/* ================= FEED Y LIKES ================= */
+function cargarFeedMockup(){
+  const feed = document.getElementById("feed");
+  feed.innerHTML = `
+    <article class="panel post">
+      <div class="post-head">
+        <div class="avatar">V</div>
+        <div class="meta"><b>Vlad Hemingway <span style="color:var(--green)">●</span></b><small>Tijuana · Hoy</small></div>
+      </div>
+      <div class="post-body">
+        <span class="tag">ROL ACEPTADO</span>
+        <h3>Nuevos negocios</h3>
+        <p>El mercado cambia constantemente en MexCity...</p>
+      </div>
+      <div class="post-actions">
+        <button onclick="darLike(this, 'jugador')"><i class="fa-solid fa-shield-halved"></i> <span>Águilas (12)</span></button>
+        <button onclick="darLike(this, 'admin')"><i class="fa-solid fa-crown"></i> <span>Coronas (1)</span></button>
+        <button><i class="fa-solid fa-comment"></i> <span>Comentar</span></button>
+      </div>
+    </article>
+  `;
 }
-
-/* =========================================================
-   HOGAR
-========================================================= */
-function valueHouse(){
-  const type = $("houseType")?.value || "Casa";
-  const value = houseValues[type] || 0;
-
-  if($("houseMxn")) $("houseMxn").value = mxn(value);
-  if($("houseRp")) $("houseRp").value = money(value);
-
-  const city = $("houseCity")?.value || cities[0];
-
-  if($("houseAddress"))
-    $("houseAddress").value =
-      "Av. MexCity #" +
-      (100 + Math.floor(Math.random()*8900)) +
-      ", " + city;
-}
-
-function saveHouse(){
-  toast("Hogar preparado. La persistencia requiere conectar la tabla de hogares.");
-}
-
-/* =========================================================
-   VEHÍCULOS
-========================================================= */
-function fillVehicles(){
-  const data = vehicleData[$("vType").value] || [];
-
-  $("vModel").innerHTML = data.map((x,i) =>
-    `<option value="${i}">${esc(x[0]+" "+x[1])}</option>`
-  ).join("");
-
-  valueVehicle();
-}
-
-function valueVehicle(){
-  const data = vehicleData[$("vType").value] || [];
-  const x = data[Number($("vModel").value) || 0];
-
-  if(!x) return;
-
-  $("vMxn").value = mxn(x[2]);
-  $("vRp").value = money(x[2]);
-
-  if(!$("vPlate").value)
-    $("vPlate").value = "MXR-" + Math.floor(100 + Math.random()*900);
-}
-
-function saveVehicle(){
-  toast("Transporte preparado. La persistencia requiere conectar la tabla de vehículos.");
-}
-
-/* =========================================================
-   FAMILIA / EMPRESA / ORGANIZACIÓN
-========================================================= */
-function toggleSection(id,on){
-  $(id).classList.toggle("hidden",!on);
-}
-
-function saveFamily(){
-  toast("Información familiar preparada para guardarse.");
-}
-
-function workMode(){
-  const type = $("workType").value;
-  let html = "";
-
-  if(type === "Empresario local"){
-    html = `
-      <div class="form-grid">
-        <div class="field"><label>Empresa</label><input id="bizName"></div>
-        <div class="field"><label>Giro</label><input id="bizType" placeholder="Restaurante, agencia, etc."></div>
-        <div class="field"><label>Ciudad</label><select id="bizCity"></select></div>
-        <div class="field"><label>Sueldo base RP</label><input id="bizSalary" type="number"></div>
-      </div>`;
-  }else if(type === "Empleado"){
-    html = `
-      <div class="form-grid">
-        <div class="field"><label>Empresa</label><input id="employeeBiz"></div>
-        <div class="field"><label>Cargo</label><input id="employeeRole"></div>
-        <div class="field"><label>Sueldo RP</label><input id="employeeSalary" type="number"></div>
-      </div>`;
-  }else if(type === "Director de gobierno"){
-    html = `
-      <div class="form-grid">
-        <div class="field"><label>Institución</label><input id="govCompany"></div>
-        <div class="field"><label>Cargo</label><input id="govRole" value="Director"></div>
-        <div class="field"><label>Sueldo automático</label><input readonly value="$500,000 RP"></div>
-      </div>`;
-  }else{
-    html = `<div class="notice">Puedes actualizar tu situación laboral cuando corresponda.</div>`;
+function publishFeed(){
+  let text = document.getElementById("postText").value;
+  if(text){
+    alert("Publicación enviada. Los involucrados podrán subir fotos para el rol automático.");
+    document.getElementById("postText").value = "";
   }
-
-  $("workFields").innerHTML = html;
-
-  if($("bizCity")) fill("bizCity",cities);
 }
-
-function saveWork(){
-  toast("Información laboral preparada para guardarse.");
-}
-
-function saveOrg(){
-  toast("Organización preparada para guardarse.");
-}
-
-/* =========================================================
-   PUBLICACIÓN
-========================================================= */
-function openComposer(type){
-  $("composerModal").classList.add("show");
-
-  if(type && ["Rol","Historia","Evento","Anuncio","Negocio"].includes(type))
-    $("postType").value = type;
-}
-
-function closeComposer(){
-  $("composerModal").classList.remove("show");
-}
-
-function publishPost(){
-  const title = $("postTitle").value.trim();
-  const text = $("postText").value.trim();
-  const image = $("postImage").value.trim();
-
-  if(!title || !text){
-    toast("Completa título y descripción.");
-    return;
+function darLike(btn, tipo){
+  if(tipo === 'jugador'){
+    btn.classList.toggle('liked-player');
+  } else {
+    btn.classList.toggle('liked-admin');
   }
-
-  const type = $("postType").value;
-
-  const post = {
-    name:playerName(),
-    city:playerCity(),
-    tag:"ROL - " + type.toUpperCase(),
-    title,
-    text,
-    hash:"#MexCityRP",
-    image:image ||
-      "https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1400&q=85"
-  };
-
-  demoPosts.unshift(post);
-  renderFeed(demoPosts);
-
-  closeComposer();
-
-  $("postTitle").value = "";
-  $("postText").value = "";
-  $("postImage").value = "";
-
-  toast("Publicación creada en el feed.");
 }
 
-/* =========================================================
-   RADIO
-========================================================= */
-function toggleRadio(button){
-  button.textContent = button.textContent === "▶" ? "Ⅱ" : "▶";
-  toast(button.textContent === "Ⅱ" ? "Radio iniciada" : "Radio pausada");
+/* ================= RADIO ================= */
+function radioPedir(){
+  let artista = prompt("Ingresa Nombre del Artista y Canción:");
+  if(artista) alert("Petición enviada. El locutor la anunciará.");
+}
+function radioSaludo(){
+  let nombre = prompt("Nombre del personaje al que saludas (solo nombres de rol):");
+  if(nombre) alert("Saludo en cola para la transmisión.");
 }
 
-/* =========================================================
-   LOGOUT
-========================================================= */
-async function logout(){
-  await supabaseClient.auth.signOut();
-  currentUser = null;
-  profile = null;
-  $("loginPassword").value = "";
-  showLogin();
+/* ================= MUERTE PERSONAJE ================= */
+function muertePersonaje(){
+  if(confirm("¿Estás seguro de declarar la muerte (CK) de este personaje? Esto bloqueará los chats y generará la historia de defunción.")){
+    alert("El personaje ha fallecido. Chats desactivados. Se ha publicado un escrito en el feed. Procede a registrar un nuevo personaje para reiniciar la cuenta bancaria (CB) y continuar.");
+    document.getElementById("btnToggleRol").disabled = true;
+  }
 }
 
-/* =========================================================
-   ARRANQUE
-========================================================= */
-document.addEventListener("DOMContentLoaded",init);
-
-/* =========================================================
-   NUEVA CAPA SOCIAL: IG + DISCORD
-   No elimina el sistema Supabase existente.
-========================================================= */
-window.currentUser = currentUser;
-let selectedPostStatus = "Rol aceptado";
-let roleOnline = false;
-let adminPending = false;
-const socialState = {
-  general: JSON.parse(localStorage.getItem("mexcity_general_chat") || "null") || [
-    ["Alejandro RP","¡Buenas noches a todos! ¿Cómo va la ciudad?"],
-    ["Valeria RP","Todo tranquilo por aquí, trabajando en mi rol 📸"],
-    ["Mateo RP","Se viene algo grande para el fin de semana 😈"],
-    ["Sofía RP","Ya quiero ver las nuevas historias que están preparando 🔥"]
-  ],
-  rol: JSON.parse(localStorage.getItem("mexcity_role_chat") || "null") || [
-    ["Vlad Hemingway","Recuerden mantener el respeto y avisar cuando entren a rol."],
-    ["Daniela Golden","Estoy ON ROL preparando mi llegada a la ciudad."]
-  ],
-  admin: JSON.parse(localStorage.getItem("mexcity_admin_chat") || "null") || [],
-  players: [
-    ["Vlad Hemingway","Nos vemos en la reunión...",2],
-    ["Daniela Golden","Claro, te envío la información.",1],
-    ["Raven Black","Ok, entendido.",0]
-  ]
-};
-function isRegistered(){
-  if(!currentUser) return false;
-  const key = `mexcity_registration_${currentUser.id}`;
-  if(localStorage.getItem(key)==="complete") return true;
-  const p=profile||{};
-  return !!((p.first_name||p.name) && (p.last_name||String(p.character_name||"").trim().split(/\s+/).length>1) && p.city && p.job && Number(p.age)>0);
-}
-function syncSocialUser(){
-  window.currentUser=currentUser;
-  const name=playerName(), city=playerCity();
-  ["topName","sideName","modalComposerName"].forEach(id=>{if($(id))$(id).textContent=name});
-  ["sideCity","modalComposerCity"].forEach(id=>{if($(id))$(id).textContent=city});
-  ["topAvatar","sideAvatar","composerAvatar","modalComposerAvatar"].forEach(id=>setAvatar($(id),profile?.avatar_url,name));
-  const complete=isRegistered();
-  const dock=$("bottomChatDock"); if(dock)dock.classList.toggle("active",complete);
-  const sum=$("roleStatusSummary"); if(sum)sum.textContent=complete?(roleOnline?"ON ROL":"OFF ROL"):"Registro pendiente";
-  updateRoleToggle();
-}
-function updateRoleToggle(){
-  const b=$("roleToggle"); if(!b)return;
-  b.textContent=roleOnline?"● ON ROL":"● OFF ROL";
-  b.classList.toggle("on",roleOnline); b.classList.toggle("off",!roleOnline);
-}
-function switchChatTab(tab){
-  ["general","rol","admin","jugadores"].forEach(t=>{
-    const pane=$("chat"+t.charAt(0).toUpperCase()+t.slice(1));
-    if(pane)pane.classList.toggle("active",t===tab);
-    document.querySelectorAll(`[data-chat-tab="${t}"]`).forEach(b=>b.classList.toggle("active",t===tab));
-  });
-  if(tab==='general') renderSocialChat("generalChatList",socialState.general);
-  if(tab==='rol') renderSocialChat("roleChatList",socialState.rol);
-  if(tab==='admin') renderAdminChat();
-  if(tab==='jugadores') renderPlayerThreads();
-}
-function renderSocialChat(id,data){
-  const el=$(id); if(!el)return;
-  el.innerHTML=data.map(x=>`<div class="message"><div class="avatar">${esc(initials(x[0]))}</div><div><b>${esc(x[0])}</b><small>Hoy</small><p>${esc(x[1])}</p></div></div>`).join("");
-  el.scrollTop=el.scrollHeight;
-}
-function saveSocial(key){localStorage.setItem("mexcity_"+key+"_chat",JSON.stringify(socialState[key]));}
-function sendCommunityChat(){
-  if(!isRegistered()){toast("Completa tu registro para participar en los chats.");showPage('jugador');return}
-  const i=$("generalChatInput"),t=i.value.trim();if(!t)return;
-  socialState.general.push([playerName(),t]);i.value="";saveSocial("general");renderSocialChat("generalChatList",socialState.general);toast("Mensaje enviado al chat general.");
-}
-function sendRoleChat(){
-  if(!isRegistered()){toast("Completa tu registro para usar el chat de rol.");showPage('jugador');return}
-  const i=$("roleChatInput"),t=i.value.trim();if(!t)return;
-  socialState.rol.push([playerName(),t]);i.value="";saveSocial("role");renderSocialChat("roleChatList",socialState.rol);toast("Mensaje de rol enviado.");
-}
-function toggleRoleStatus(){
-  if(!isRegistered()){toast("Primero completa tu registro de jugador.");showPage('jugador');return}
-  roleOnline=!roleOnline; localStorage.setItem(`mexcity_role_status_${currentUser.id}`,roleOnline?"on":"off");syncSocialUser();toast(roleOnline?"Ahora apareces ON ROL.":"Ahora apareces OFF ROL.");
-}
-function renderAdminChat(){
-  const el=$("adminChatList");if(!el)return;
-  el.innerHTML=socialState.admin.length?socialState.admin.map(x=>`<div class="message"><div class="avatar">${esc(initials(x[0]))}</div><div><b>${esc(x[0])}</b><small>${esc(x[2]||"Pendiente")}</small><p>${esc(x[1])}</p></div></div>`).join(""):`<div class="dock-empty">No tienes conversaciones activas con administración.</div>`;
-  $("adminPending")?.classList.toggle("hidden",!adminPending);
-}
-function sendAdminChat(){
-  if(!isRegistered()){toast("Completa tu registro antes de contactar a administración.");showPage('jugador');return}
-  const i=$("adminChatInput"),t=i.value.trim();if(!t)return;
-  socialState.admin.push([playerName(),t,"Pendiente"]);saveSocial("admin");adminPending=true;i.value="";renderAdminChat();toast("Mensaje enviado. Queda pendiente de respuesta de administración.");
-}
-function renderPlayerThreads(){
-  const el=$("playerChatList");if(!el)return;
-  el.innerHTML=socialState.players.map((x,i)=>`<div class="player-thread" onclick="openPlayerThread(${i})"><div class="avatar">${esc(initials(x[0]))}</div><div class="thread-body"><b>${esc(x[0])} <span class="online">●</span></b><p>${esc(x[1])}</p></div>${x[2]?`<span class="unread">${x[2]}</span>`:""}</div>`).join("");
-}
-function openPlayerThread(i){
-  const x=socialState.players[i]; toast(`Conversación con ${x[0]} lista para abrir.`);
-}
-function selectPostStatus(btn,status){
-  selectedPostStatus=status;document.querySelectorAll(".status-chip").forEach(x=>x.classList.remove("active"));btn.classList.add("active");if($("postStatusPreview"))$("postStatusPreview").textContent="✓ "+status;
-}
-function previewPostMedia(input){
-  const file=input.files?.[0]; if(!file)return;
-  const box=$("postMediaPreview");if(!box)return;const url=URL.createObjectURL(file);box.classList.remove("hidden");
-  box.innerHTML=file.type.startsWith("video/")?`<video src="${url}" controls></video>`:`<img src="${url}" alt="Vista previa">`;
-  box.dataset.localUrl=url;box.dataset.fileName=file.name;
-}
-function openComposer(type){
-  $("composerModal")?.classList.add("show");syncSocialUser();
-  if(type){const map={Rol:"Rol aceptado",Historia:"Historia",Evento:"Anuncio",Anuncio:"Anuncio",Negocio:"Rol aceptado",Imagen:"Rol aceptado",Video:"Rol aceptado"};selectedPostStatus=map[type]||"Rol aceptado";document.querySelectorAll(".status-chip").forEach(b=>b.classList.toggle("active",b.textContent.includes(selectedPostStatus)));if($("postStatusPreview"))$("postStatusPreview").textContent="✓ "+selectedPostStatus;}
-}
-function closeComposer(){$("composerModal")?.classList.remove("show");}
-function publishPost(){
-  if(!isRegistered()){toast("Completa tu registro antes de publicar.");closeComposer();showPage('jugador');return}
-  const text=$("postText").value.trim(); if(!text){toast("Escribe algo antes de publicar.");return}
-  const media=$("postMediaPreview"); const image=media?.querySelector("img")?.src || "";
-  const post={name:playerName(),city:playerCity(),tag:selectedPostStatus.toUpperCase(),title:selectedPostStatus,text,hash:"#MexCityRP",image:image||"https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1400&q=85",news:false};
-  demoPosts.unshift(post);renderFeed(demoPosts);closeComposer();$("postText").value="";if(media){media.innerHTML="";media.classList.add("hidden");}toast("Publicación creada en tu feed.");
-}
-function renderFeed(posts){
-  const feed=$("feed");if(!feed)return;
-  feed.innerHTML=posts.map((p,i)=>postHTML(p,i)).join("");
-}
-function postHTML(p,i){
-  const registered=isRegistered();
-  const name=esc(p.name||"MexCity News");
-  const isNews=p.news||String(p.tag||"").toUpperCase().includes("NOTICIA");
-  const comments=Number(p.comments??(12-i*2));
-  return `<article class="panel post ${isNews?'news-post':''}" data-search="${esc((p.title+" "+p.text+" "+p.name).toLowerCase())}">
-    <div class="post-head"><div class="avatar">${esc(initials(name))}</div><div class="meta"><b>${name} <span class="online">●</span></b><small>${esc(p.city||"México")} · Hoy</small></div><button class="icon-btn" style="width:34px;height:34px">•••</button></div>
-    ${isNews?`<div class="post-body"><span class="news-label">📰 MEXCITY PERIÓDICO · ACTUALIDAD</span><h3>${esc(p.title)}</h3><p>${esc(p.text)}</p><div class="hashtag">${esc(p.hash||"#MexCityNoticias")}</div></div>`:`<div class="post-media">${p.image?`<img src="${esc(p.image)}" alt="Publicación de ${name}" loading="lazy">`:""}</div><div class="post-body"><span class="tag">${esc(p.tag||"ROL")}</span><h3>${esc(p.title||"Historia en MexCity")}</h3><p>${esc(p.text)}</p><div class="hashtag">${esc(p.hash||"#MexCityRP")}</div></div>`}
-    <div class="post-actions"><button onclick="toggleSpark(this)"><span class="spark">✨</span> <span>${45-i*5}</span></button><button onclick="focusComment(${i})">◯ <span>${comments}</span></button><button>⤴ <span>${3+i}</span></button><button style="margin-left:auto">🔖</button></div>
-    ${registered?`<div class="comment-box"><input id="comment-${i}" placeholder="Escribe un comentario..."><button onclick="sendComment(${i})">Enviar</button></div>`:`<div class="comment-locked">🔒 Completa tu registro de personaje para comentar en las publicaciones.</div>`}
-  </article>`;
-}
-function toggleSpark(btn){btn.classList.toggle("active");const s=btn.querySelector(".spark");if(s)s.classList.toggle("active");}
-function focusComment(i){const e=$("comment-"+i);if(e){e.focus();e.scrollIntoView({behavior:"smooth",block:"center"});}else toast("Completa tu registro para comentar.");}
-function sendComment(i){
-  if(!isRegistered()){toast("Completa tu registro para comentar.");return}
-  const e=$("comment-"+i),t=e?.value.trim();if(!t)return;e.value="";toast("Comentario publicado.");
-}
-function saveRegistrationLocal(){
-  if(!currentUser)return;
-  const complete=!!(($('pName')?.value.trim())&&($('pLast')?.value.trim())&&($('pAge')?.value)&&($('pCity')?.value)&&($('pJob')?.value));
-  localStorage.setItem(`mexcity_registration_${currentUser.id}`,complete?"complete":"incomplete");
-  syncSocialUser();
-}
-const originalSavePlayer=savePlayer;
-savePlayer=async function(){await originalSavePlayer();saveRegistrationLocal();syncSocialUser();toast(isRegistered()?"Perfil sincronizado: nombre, saldo y estado actualizados.":"Registro guardado.");};
-const originalLoadProfile=loadProfile;
-loadProfile=async function(){await originalLoadProfile();const saved=localStorage.getItem(`mexcity_role_status_${currentUser?.id}`);roleOnline=saved==="on";syncSocialUser();};
-function dockTab(tab,btn){document.querySelectorAll(".dock-head button").forEach(x=>x.classList.remove("active"));btn?.classList.add("active");document.querySelectorAll(".dock-pane").forEach(x=>x.classList.remove("active"));$("dock-"+tab)?.classList.add("active");}
-function sendDockGeneral(){const i=$("dockGeneralInput"),t=i.value.trim();if(!t)return;socialState.general.push([playerName(),t]);saveSocial("general");i.value="";toast("Mensaje enviado al chat general.");}
-function sendDockRole(){const i=$("dockRoleInput"),t=i.value.trim();if(!t)return;socialState.rol.push([playerName(),t]);saveSocial("role");i.value="";toast("Mensaje de rol enviado.");}
-function sendDockAdmin(){const i=$("dockAdminInput"),t=i.value.trim();if(!t)return;socialState.admin.push([playerName(),t,"Pendiente"]);saveSocial("admin");i.value="";toast("Mensaje enviado. Queda pendiente de administración.");}
-
-/* Noticias del feed: no se mezclan con Radio */
-const newspaperPosts=[
- {name:"MexCity Periódico",city:"MexCity",tag:"NOTICIA",title:"Actualidad de la ciudad",text:"Las historias, eventos y movimientos más relevantes de la comunidad se concentran aquí para mantener informados a todos los jugadores.",hash:"#MexCityNoticias",image:"https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1400&q=85",news:true},
- {name:"MexCity Periódico",city:"MexCity",tag:"NOTICIA",title:"Agenda de la comunidad",text:"Próximamente se publicarán nuevas actividades, eventos y novedades importantes para la ciudad.",hash:"#AgendaMexCity",image:"https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1400&q=85",news:true}
-];
-const oldInit=init;
-init=async function(){await oldInit();syncSocialUser();renderFeed([...newspaperPosts,...demoPosts]);switchChatTab('general');};
-renderChat=function(){if($("generalChatList"))renderSocialChat("generalChatList",socialState.general);if($("roleChatList"))renderSocialChat("roleChatList",socialState.rol);if($("adminChatList"))renderAdminChat();if($("playerChatList"))renderPlayerThreads();};
-playerName=function(){return profile?.display_name||profile?.character_name||[profile?.first_name,profile?.last_name].filter(Boolean).join(" ")||currentUser?.user_metadata?.character_name||currentUser?.user_metadata?.full_name||currentUser?.email?.split("@")[0]||"Jugador";};
-let activePlayerThread=-1;
-renderPlayerThreads=function(){const el=$("playerChatList");if(!el)return;el.innerHTML=socialState.players.map((x,i)=>`<div class="player-thread" onclick="openPlayerThread(${i})"><div class="avatar">${esc(initials(x[0]))}</div><div class="thread-body"><b>${esc(x[0])} <span class="online">●</span></b><p>${esc(x[1])}</p></div>${x[2]?`<span class="unread">${x[2]}</span>`:""}</div>`).join("");};
-openPlayerThread=function(i){activePlayerThread=i;const x=socialState.players[i],view=$("playerThreadView");if(!view)return;view.classList.remove("hidden");view.innerHTML=`<button class="thread-back" onclick="closePlayerThread()">← Volver a mensajes</button><div class="composer-preview"><div class="avatar">${esc(initials(x[0]))}</div><div><b>${esc(x[0])}</b><small>● En línea</small></div></div><div class="dm-messages"><div class="dm-bubble">${esc(x[1])}</div><div class="dm-bubble mine">Hola, ${esc(x[0].split(" ")[0])}. Nos vemos en MexCity.</div></div><div class="dm-compose"><input id="dmInput" placeholder="Escribe un mensaje..."><button onclick="sendPlayerDM()">➤</button></div>`;};
-closePlayerThread=function(){activePlayerThread=-1;$("playerThreadView")?.classList.add("hidden");};
-sendPlayerDM=function(){if(!isRegistered()){toast("Completa tu registro para enviar mensajes.");return}const i=$("dmInput"),t=i?.value.trim();if(!t||activePlayerThread<0)return;socialState.players[activePlayerThread][1]=t;socialState.players[activePlayerThread][2]=0;openPlayerThread(activePlayerThread);toast("Mensaje enviado.");};
-activateAdminChat=function(response){adminPending=false;socialState.admin.push(["Administración",response||"Tu mensaje ha sido atendido.","Administración"]);saveSocial("admin");renderAdminChat();const state=$("adminChatState");if(state)state.textContent="Conversación activa";const dock=$("dockAdminState");if(dock)dock.textContent="Administración activó tu conversación. Ya puedes continuar.";toast("Administración activó tu conversación.");};
-
-
+// Iniciar aplicación si ya hay sesión local en pruebas
+document.addEventListener("DOMContentLoaded", ()=>{
+  if(localStorage.getItem('mexcity_test_login')){
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    cargarFeedMockup();
+  }
+});
 </script>
-
 </body>
 </html>
