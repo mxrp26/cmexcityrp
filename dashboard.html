@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 :root{
-  --bg:#03070b; --panel:#071017; --panel2:#0a141b; --panel3:#0d1820;
+  --bg:#03070b; --panel:#071017; --panel2:#0a141b; 
   --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.16);
   --text:#f4f5f6; --muted:#89959c; --gold:#d8a52e; --gold2:#f2c85b;
   --green:#16c66b; --red:#ef4444; --purple:#9257df; --blue:#26a9d9;
@@ -21,30 +21,14 @@
 html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% -20%,#17252c 0,#071017 35%,#020406 100%);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
 body{overflow-x:hidden}
 button,input,textarea,select{font:inherit}
-button{cursor:pointer}
+button{cursor:pointer; transition: 0.2s ease;}
 button:disabled{opacity:.55;cursor:not-allowed}
 .hidden{display:none!important}
 .muted{color:var(--muted)}
 a{color:inherit;text-decoration:none}
 
-/* ================= LOGIN ================= */
-#loginScreen{min-height:100vh;display:grid;place-items:center;padding:24px;}
-.login-card{width:min(430px,100%);padding:32px;border:1px solid var(--line2);border-radius:24px;background:rgba(7,16,23,.94);box-shadow:var(--shadow);backdrop-filter:blur(20px)}
-.brand{text-align:center;margin-bottom:25px}
-.crown{font-size:48px;color:var(--gold);line-height:1}
-.brand h1{margin:7px 0 4px;font-size:28px;letter-spacing:2px}
-.brand p{margin:0;color:var(--muted);font-size:12px}
-.field{margin:14px 0}
-.field label{display:block;color:#b8c1c5;font-size:12px;margin-bottom:7px}
-.field input,.field textarea,.field select{width:100%;padding:12px 13px;color:var(--text);background:#050b10;border:1px solid var(--line2);border-radius:11px;outline:none}
-.field input:focus,.field textarea:focus,.field select:focus{border-color:rgba(216,165,46,.65)}
-.btn{border:1px solid transparent;border-radius:11px;padding:11px 16px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#111;font-weight:800;width:100%;text-align:center}
-.btn.secondary{background:#ffffff07;color:#fff;border-color:var(--line2)}
-.btn.danger{background:#42151a;color:#ff9a9a;border-color:#ef444433}
-.login-msg{min-height:20px;margin-top:10px;color:#ff9c9c;font-size:13px}
-
 /* ================= APP DASHBOARD ================= */
-#app{display:none;min-height:100vh}
+#app{display:block;min-height:100vh}
 
 /* BARRA SUPERIOR (Estilo IG/Discord Adaptado) */
 .topbar{
@@ -57,7 +41,7 @@ a{color:inherit;text-decoration:none}
 .nav-icons{display:flex;gap:16px;align-items:center;overflow-x:auto;padding:5px 0}
 .nav-btn{
   background:transparent;border:none;color:#89959c;
-  display:flex;flex-direction:column;align-items:center;font-size:15px;gap:3px;
+  display:flex;flex-direction:column;align-items:center;font-size:16px;gap:4px;
   transition:0.2s;position:relative;cursor:pointer;
 }
 .nav-btn:hover,.nav-btn.active{color:var(--gold2)}
@@ -70,7 +54,7 @@ a{color:inherit;text-decoration:none}
 
 /* ================= LAYOUT PRINCIPAL ================= */
 .shell{
-  display:grid;grid-template-columns:260px minmax(0,1fr) 350px;
+  display:grid;grid-template-columns:280px minmax(0,1fr) 350px;
   gap:16px;max-width:1650px;margin:auto;padding:16px
 }
 .sidebar,.rightbar{min-width:0;position:sticky;top:88px;height:calc(100vh - 100px);overflow:auto}
@@ -80,16 +64,20 @@ a{color:inherit;text-decoration:none}
   border-radius:16px;box-shadow:0 10px 35px rgba(0,0,0,.25)
 }
 .side-card{padding:16px;margin-bottom:14px}
-.side-profile{display:flex;gap:12px;align-items:center;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.side-profile{display:flex;flex-direction:column;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.profile-header{display:flex;gap:12px;align-items:center;}
 .avatar{
-  width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
-  overflow:hidden;flex:none;border:1px solid rgba(216,165,46,.65);
+  width:56px;height:56px;border-radius:50%;display:grid;place-items:center;
+  overflow:hidden;flex:none;border:2px solid var(--gold);
   background:radial-gradient(circle at 35% 30%,#8b6839,#271e10 60%,#090b0c);
-  color:#fff;font-weight:800
+  color:#fff;font-weight:800; position: relative;
 }
 .avatar img{width:100%;height:100%;object-fit:cover}
+.activity-box{background:#050b10;border-radius:8px;padding:8px;border:1px solid var(--line2);}
+.activity-bar{height:6px;background:var(--line2);border-radius:10px;margin-top:5px;overflow:hidden;}
+.activity-fill{height:100%;background:linear-gradient(90deg, var(--gold2), var(--green));width:85%;}
 
-/* NAVEGACIÓN LATERAL Y BANCO */
+/* NAVEGACIÓN LATERAL */
 .nav{margin-top:14px}
 .nav button{
   width:100%;display:flex;align-items:center;gap:12px;
@@ -100,15 +88,17 @@ a{color:inherit;text-decoration:none}
   color:#fff;background:rgba(216,165,46,.08);
   border-color:rgba(216,165,46,.3)
 }
-.bank-card{
-  padding:16px;border:1px solid rgba(22,198,107,.18);
-  background:#061a12;border-radius:14px;margin-bottom:14px
-}
-.bank-card .green{color:#17c56c;font-size:11px;font-weight:800}
-.bank-card strong{display:block;font-size:22px;margin:6px 0 10px}
 
 /* ================= CONTENIDO Y FEED ================= */
 .main{min-width:0}
+.radio-banner{
+  background:linear-gradient(90deg, rgba(216,165,46,0.1), rgba(22,198,107,0.1));
+  border:1px solid var(--gold); border-radius:12px; padding:12px 16px;
+  margin-bottom:16px; display:flex; align-items:center; gap:15px;
+}
+.radio-banner i{color:var(--gold); font-size:24px; animation: pulse 2s infinite;}
+@keyframes pulse{0%{opacity:1;}50%{opacity:0.5;}100%{opacity:1;}}
+
 .composer{padding:16px;margin-bottom:14px}
 .composer textarea{
   width:100%;border:1px solid var(--line);background:#050b0f;
@@ -119,416 +109,391 @@ a{color:inherit;text-decoration:none}
   border:1px solid var(--line2);background:#ffffff05;
   color:#b9c1c4;border-radius:10px;padding:8px 12px;font-size:12px;cursor:pointer
 }
-.gold-chip{background:rgba(216,165,46,.1);border-color:rgba(216,165,46,.35);color:#f0c65a}
 .ia-chip{background:rgba(146,87,223,0.1);border-color:rgba(146,87,223,0.5);color:var(--purple)}
+.btn{border:1px solid transparent;border-radius:11px;padding:11px 16px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#111;font-weight:800;text-align:center}
+.btn.secondary{background:#ffffff07;color:#fff;border-color:var(--line2)}
+.btn.danger{background:#42151a;color:#ff9a9a;border-color:#ef444433}
+
 .feed{display:flex;flex-direction:column;gap:14px}
 .post{overflow:hidden}
 .post-head{display:flex;align-items:center;gap:12px;padding:14px}
-.post-head .meta{flex:1}
 .post-media{width:100%;background:#081116;overflow:hidden}
-.post-media img,.post-media video{width:100%;max-height:450px;object-fit:cover}
+.post-media img,.post-media video{width:100%;max-height:550px;object-fit:cover}
 .post-body{padding:14px 16px}
-.tag{
-  display:inline-block;padding:5px 9px;border-radius:20px;
-  background:rgba(13,92,56,.16);border:1px solid rgba(22,183,104,.32);
-  color:#3edb91;font-size:10px;font-weight:800
-}
-.post h3{margin:8px 0 6px;font-size:18px}
-.post p{color:var(--muted);font-size:13px;line-height:1.5;margin:0}
 .post-actions{
   display:flex;gap:20px;border-top:1px solid var(--line);
   padding:12px 16px;color:#aeb8bd
 }
-.post-actions button{background:none;border:0;color:inherit;padding:0;display:flex;align-items:center;gap:6px;font-size:13px}
-.liked-eagle{color:var(--gold2)!important}
-.liked-crown{color:var(--purple)!important}
+.post-actions button{background:none;border:0;color:inherit;padding:0;display:flex;align-items:center;gap:6px;font-size:14px}
+.liked-crown{color:var(--gold2)!important; transform: scale(1.1);}
 
-/* ================= COMPONENTES GENERALES ================= */
-.panel{padding:18px;margin-bottom:14px}
+/* ================= FORMULARIOS ================= */
 .page{display:none}
 .page.active{display:block}
-.page-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-end;margin:10px 0 16px}
-.page-head h2{margin:0;font-size:24px}
+.page-head{margin:10px 0 16px}
+.page-head h2{margin:0;font-size:24px;color:var(--gold2)}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .full{grid-column:1/-1}
+.field{margin-bottom:10px;}
+.field label{display:block;color:#b8c1c5;font-size:12px;margin-bottom:7px}
+.field input,.field textarea,.field select{width:100%;padding:10px 12px;color:var(--text);background:#050b10;border:1px solid var(--line2);border-radius:8px;outline:none}
+.file-upload{border:1px dashed var(--line2); padding:20px; text-align:center; border-radius:8px; color:var(--muted); cursor:pointer;}
 
-/* ================= DERECHA: DISCORD STYLE CHAT & NOTICIAS ================= */
+/* ================= CHATS LATERALES (DISCORD STYLE) ================= */
 .discord-panel{display:flex;flex-direction:column;height:100%}
-.chat-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:6px 0 12px}
-.chat-tab{border:0;background:transparent;color:#8f9aa0;padding:8px 4px;border-radius:8px;font-size:11px;cursor:pointer;font-weight:700}
-.chat-tab.active{background:#5865f220;color:#fff}
-.chat-pane{display:none;flex-direction:column;height:380px}
+.chat-tabs{display:flex; gap:5px; padding:6px 0 12px; overflow-x:auto;}
+.chat-tab{border:0;background:transparent;color:#8f9aa0;padding:8px 12px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:700; white-space:nowrap;}
+.chat-tab.active{background:#5865f233;color:#fff; border-bottom:2px solid #5865f2;}
+.chat-pane{display:none;flex-direction:column;flex:1;min-height:350px;}
 .chat-pane.active{display:flex}
-.chat-list{flex:1;overflow:auto;padding-right:4px}
-.message{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
-.message p{margin:3px 0 0;font-size:12px;color:#c6cdd0}
-.chat-input{display:flex;gap:6px;margin-top:10px}
+.chat-list{flex:1;overflow:auto;padding-right:4px; display:flex; flex-direction:column; gap:8px;}
+.message{display:flex;gap:10px;padding:8px; border-radius:8px; background:rgba(255,255,255,0.02);}
+.message.far-away{opacity: 0.4;} /* Efecto de lejanía en rol */
+.message p{margin:3px 0 0;font-size:12px;color:#c6cdd0; word-break: break-word;}
+.chat-input{display:flex;gap:6px;margin-top:10px; align-items:center;}
 .chat-input input{flex:1;background:#050b0f;border:1px solid var(--line2);border-radius:10px;color:#fff;padding:10px;outline:none;font-size:12px}
 
 /* ================= RESPONSIVE ================= */
 @media(max-width:1200px){
   .shell{grid-template-columns:230px minmax(0,1fr)}
-  .rightbar{display:none}
+  .rightbar{display:none} /* En tablet se oculta el panel derecho fijo, habría que abrirlo con botón */
 }
 @media(max-width:850px){
-  .topbar{height:65px;padding:0 12px}
-  .nav-icons{gap:10px}
-  .nav-btn span{display:none}
   .shell{display:block;padding:10px 10px 75px}
   .sidebar{display:none}
   .form-grid{grid-template-columns:1fr}
-  .post-media img,.post-media video{max-height:300px}
+  .nav-btn span{display:none}
 }
 </style>
 </head>
 <body>
 
-<!-- ================= LOGIN ================= -->
-<section id="loginScreen">
-  <div class="login-card">
-    <div class="brand">
-      <div class="crown">♛</div>
-      <h1>MEXCITY RP</h1>
-      <p>LA CIUDAD DONDE TU HISTORIA COMIENZA</p>
-    </div>
-    <div class="field">
-      <label>Correo electrónico</label>
-      <input id="loginEmail" type="email" placeholder="correo@ejemplo.com">
-    </div>
-    <div class="field">
-      <label>Contraseña</label>
-      <input id="loginPassword" type="password" onkeydown="if(event.key==='Enter') login()">
-    </div>
-    <button class="btn" onclick="login()">INICIAR SESIÓN</button>
-    <div id="loginMsg" class="login-msg"></div>
-  </div>
-</section>
-
-<!-- ================= DASHBOARD APP ================= -->
 <div id="app">
-
-  <!-- NAVEGACIÓN SUPERIOR POR ICONOS -->
+  <!-- ================= TOPBAR ================= -->
   <header class="topbar">
     <div class="brand-small" onclick="showPage('inicio')">
-      <div class="crown" style="font-size:24px;margin-right:2px">♛</div>
+      <div style="font-size:24px;color:var(--gold);">♛</div>
       <strong style="font-size:16px;letter-spacing:1px">MXRP</strong>
     </div>
     <div class="nav-icons">
-      <button class="nav-btn" onclick="showPage('finanzas')" title="BANCOMEXRP">
-        <i class="fa-solid fa-building-columns"></i><span>Banco</span>
-      </button>
-      <button class="nav-btn" onclick="showPage('jugador')" title="Jugador / Perfil">
-        <i class="fa-solid fa-id-card"></i><span>Jugador</span>
-      </button>
-      <button class="nav-btn" onclick="showPage('empresas')" title="Empresas y Servicios">
-        <i class="fa-solid fa-briefcase"></i><span>Empresas</span>
-      </button>
-      <button class="nav-btn" onclick="showPage('empleos')" title="Empleos">
-        <i class="fa-solid fa-user-tie"></i><span>Empleos</span>
-      </button>
-      <button class="nav-btn" onclick="showPage('mensajes')" title="Mensajes">
-        <i class="fa-solid fa-envelope"></i><span>Mensajes</span><div class="badge">3</div>
-      </button>
-      <button class="nav-btn" onclick="showPage('asistenteia')" title="Asistente IA">
-        <i class="fa-solid fa-robot" style="color:var(--purple)"></i><span style="color:var(--purple)">IA</span>
-      </button>
-      <button class="nav-btn" onclick="showPage('historial')" title="Historial">
-        <i class="fa-solid fa-clock-rotate-left"></i><span>Historial</span>
-      </button>
-      <button class="nav-btn active" onclick="showPage('inicio')" title="Feed">
-        <i class="fa-solid fa-newspaper"></i><span>Feed</span>
-      </button>
-      <button class="nav-btn" onclick="showPage('radio')" title="Radio">
-        <i class="fa-solid fa-radio"></i><span>Radio</span>
-      </button>
-      <button class="nav-btn" onclick="showPage('notificaciones')" title="Notificaciones">
-        <i class="fa-solid fa-bell"></i><span>Alertas</span><div class="badge">5</div>
-      </button>
-      <button class="nav-btn" onclick="showPage('jugador')" title="Foto de Perfil" style="border-left:1px solid var(--line);padding-left:10px">
-        <div class="avatar" style="width:32px;height:32px;font-size:12px" id="topAvatar">C</div>
-      </button>
+      <button class="nav-btn" onclick="showPage('finanzas')"><i class="fa-solid fa-building-columns"></i><span>Banco</span></button>
+      <button class="nav-btn" onclick="showPage('empresas')"><i class="fa-solid fa-briefcase"></i><span>Empresas</span></button>
+      <button class="nav-btn" onclick="showPage('noticias')"><i class="fa-solid fa-newspaper"></i><span>Noticias</span></button>
+      <button class="nav-btn" onclick="showPage('mensajes')"><i class="fa-solid fa-envelope"></i><span>Mensajes</span><div class="badge">2</div></button>
+      <button class="nav-btn" onclick="showPage('historial')"><i class="fa-solid fa-clock-rotate-left"></i><span>Historial</span></button>
+      <button class="nav-btn active" onclick="showPage('inicio')"><i class="fa-solid fa-house"></i><span>Inicio</span></button>
+      <button class="nav-btn" onclick="logout()" style="color:var(--red)"><i class="fa-solid fa-right-from-bracket"></i><span>Salir</span></button>
     </div>
   </header>
 
   <div class="shell">
-
     <!-- ================= SIDEBAR IZQUIERDA ================= -->
     <aside class="sidebar">
       <div class="side-card">
         <div class="side-profile">
-          <div class="avatar" id="sideAvatar">C</div>
-          <div>
-            <b id="sideName" style="font-size:14px">Cartsh</b>
-            <small id="sideCity" class="muted">CDMX</small>
-            <div style="font-size:11px;margin-top:3px;font-weight:bold" id="rolStatusText">⚪ OFF ROL</div>
+          <div class="profile-header">
+            <div class="avatar" id="sideAvatar"><img src="https://i.pravatar.cc/150?img=47" alt="Perfil"></div>
+            <div>
+              <b id="sideName" style="font-size:15px">Cartsh</b>
+              <small id="sideCity" class="muted" style="display:block">CDMX</small>
+              <small style="color:var(--gold2); font-size:11px;">ID: MX-CRT-8821</small>
+            </div>
+          </div>
+          <div class="activity-box">
+            <div style="display:flex; justify-content:space-between; font-size:10px; font-weight:bold;">
+              <span>NIVEL DE ACTIVIDAD RP</span> <span style="color:var(--green)">85%</span>
+            </div>
+            <div class="activity-bar"><div class="activity-fill"></div></div>
           </div>
         </div>
         <div class="nav">
-          <button onclick="toggleRolStatus()" style="background:var(--green);color:#071017;justify-content:center;font-weight:900" id="btnToggleRol">🟢 ACTIVAR ON ROL</button>
+          <button onclick="showPage('jugador')"><i class="fa-solid fa-id-card"></i> Identidad Jugador</button>
           <button onclick="showPage('hogar')"><i class="fa-solid fa-house"></i> Registro de Hogar</button>
-          <button onclick="showPage('transporte')"><i class="fa-solid fa-car"></i> Registro de Transporte</button>
-          <button onclick="showPage('familia')"><i class="fa-solid fa-users"></i> Familia y Menores</button>
-          <button onclick="showPage('organizacion')"><i class="fa-solid fa-shield-cat"></i> Pandilla u Organización</button>
+          <button onclick="showPage('transporte')"><i class="fa-solid fa-car"></i> Registro Transporte</button>
+          <button onclick="showPage('familia')"><i class="fa-solid fa-users"></i> Registro de Familia</button>
+          <button onclick="showPage('empresa_registro')"><i class="fa-solid fa-file-signature"></i> Alta de Empresas</button>
         </div>
       </div>
-
-      <div class="bank-card">
-        <div class="green">BANCOMEXRP</div>
-        <strong id="bankBalanceSidebar">$1,250,000 RP</strong>
-        <small style="display:block;margin-bottom:10px;color:var(--muted)">CB: 001-992-883-MX</small>
-        <button class="btn secondary" onclick="showPage('finanzas')">Ver Finanzas</button>
-      </div>
-
-      <button class="btn danger" onclick="logout()">↪ Cerrar sesión</button>
     </aside>
 
     <!-- ================= CONTENIDO CENTRAL ================= -->
     <main class="main">
+      
+      <!-- RADIO ONLINE BANNER -->
+      <div class="radio-banner" id="radioBanner">
+        <i class="fa-solid fa-satellite-dish"></i>
+        <div style="flex:1">
+          <b style="font-size:14px; color:var(--gold2)">MEXCITY RADIO ONLINE 📻</b>
+          <marquee scrollamount="5" style="font-size:12px; color:var(--text); margin-top:3px;">
+            [ALERTA] Fuerte movilización en el centro de la ciudad — Sonando ahora: Karol G - TQG — ¡Pide tu canción en el chat!
+          </marquee>
+        </div>
+      </div>
 
-      <!-- FEED -->
+      <!-- FEED INICIO -->
       <section id="page-inicio" class="page active">
         <div class="panel composer">
-          <textarea id="postText" rows="3" placeholder="¿Qué estás roleando hoy? (Usa #lugar //transporte /servicio)"></textarea>
+          <textarea id="postText" rows="3" placeholder="¿Qué sucede en tu entorno? (Sube fotos, videos o usa IA)"></textarea>
           <div class="composer-actions">
-            <button class="chip" onclick="alert('Selecciona archivo de imagen o video.')"><i class="fa-solid fa-image"></i> Imagen / Video</button>
-            <button class="chip ia-chip" onclick="alert('Generador de video cinematográfico IA (Mín. 4 minutos) vinculado con los participantes.')"><i class="fa-solid fa-wand-magic-sparkles"></i> Crear Video con IA</button>
-            <button class="btn" style="margin-left:auto;width:auto" onclick="publishFeed()">Publicar Rol</button>
+            <button class="chip"><i class="fa-solid fa-image"></i> Foto / Video</button>
+            <button class="chip ia-chip" onclick="generarVideoIA()"><i class="fa-solid fa-wand-magic-sparkles"></i> IA: Generar Video (4 min) de Chat Rol</button>
+            <button class="btn" style="margin-left:auto;width:auto" onclick="publishFeed()">Publicar</button>
           </div>
         </div>
-        <div id="feed" class="feed"></div>
+        <div id="feed" class="feed">
+          <!-- Post Estilo IG -->
+          <div class="panel post">
+            <div class="post-head">
+              <div class="avatar" style="width:40px;height:40px"><img src="https://i.pravatar.cc/150?img=11"></div>
+              <div><b>Apolo_RMEX</b><br><small class="muted">Hace 10 min · Centro Comercial</small></div>
+            </div>
+            <div class="post-media">
+              <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=800&q=80" alt="Auto">
+            </div>
+            <div class="post-body">
+              <p>Estrenando el nuevo juguete por las calles de MexCity. #Lujo #Ferrari</p>
+            </div>
+            <div class="post-actions">
+              <button onclick="this.classList.toggle('liked-crown')"><i class="fa-solid fa-crown"></i> <span>124</span></button>
+              <button><i class="fa-solid fa-comment"></i> <span>15</span></button>
+              <button><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- REGISTRO JUGADOR -->
+      <section id="page-jugador" class="page">
+        <div class="page-head"><h2>Ficha de Identidad (ID)</h2><p class="muted">Completa tu registro ciudadano.</p></div>
+        <div class="panel">
+          <div class="file-upload" onclick="alert('Seleccionando archivo del dispositivo...')">
+            <i class="fa-solid fa-camera fa-2x"></i><br>Subir Foto de Avatar
+          </div>
+          <div class="form-grid" style="margin-top:15px">
+            <div class="field"><label>Nombre Completo</label><input type="text" id="jNombre" placeholder="Ej. Cartsh"></div>
+            <div class="field">
+              <label>Edad</label>
+              <select id="jEdad">
+                <option>18-25 años</option><option>26-35 años</option><option>36+ años</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Ciudad</label>
+              <select id="jCiudad"><option>Ciudad de México (CDMX)</option><option>Guadalajara</option><option>Monterrey</option><option>Tijuana</option></select>
+            </div>
+            <div class="field">
+              <label>Sexo</label><select id="jSexo"><option>Femenino</option><option>Masculino</option><option>Intersexual</option></select>
+            </div>
+            <div class="field">
+              <label>Tipo de Sangre</label><select id="jSangre"><option>O+</option><option>A+</option><option>B+</option><option>AB+</option><option>O-</option></select>
+            </div>
+            <div class="field"><label>ID Ciudadano (Automático)</label><input type="text" id="jId" readonly></div>
+          </div>
+          <button class="btn full" style="margin-top:15px" onclick="guardarJugador()">Guardar Información (Generar Ficha Oficial)</button>
+          
+          <div style="margin-top:30px; border-top:1px solid var(--red); padding-top:15px;">
+            <b style="color:var(--red)">¿Falleció tu personaje?</b>
+            <p class="muted" style="font-size:12px">Al declarar muerte (CK), se reiniciará tu registro para crear un nuevo personaje.</p>
+            <button class="btn danger" onclick="morirPersonaje()">Declarar Muerte de Personaje</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- REGISTRO HOGAR -->
+      <section id="page-hogar" class="page">
+        <div class="page-head"><h2>Registro de Hogar</h2></div>
+        <div class="panel">
+          <div class="file-upload" onclick="alert('Seleccionando imagen de la casa...')">
+            <i class="fa-solid fa-house fa-2x"></i><br>Subir Foto de Fachada
+          </div>
+          <div class="form-grid" style="margin-top:15px">
+            <div class="field full"><label>Domicilio (Generado Automáticamente)</label><input type="text" id="hDomicilio" readonly></div>
+            <div class="field">
+              <label>Tipo de Casa</label>
+              <select id="hTipo" onchange="calcularPrecioCasa()">
+                <option value="500000">Casa Estandar</option>
+                <option value="350000">Departamento</option>
+                <option value="5000000">Mansión</option>
+                <option value="2500000">Rancho</option>
+                <option value="1500000">Villa</option>
+                <option value="0">Otro</option>
+              </select>
+            </div>
+            <div class="field"><label>Valor Evaluado ($RP)</label><input type="text" id="hValor" readonly value="$500,000 RP"></div>
+          </div>
+          <button class="btn" style="margin-top:15px">Registrar Propiedad</button>
+        </div>
+      </section>
+
+      <!-- REGISTRO TRANSPORTE -->
+      <section id="page-transporte" class="page">
+        <div class="page-head"><h2>Registro de Transporte</h2></div>
+        <div class="panel">
+          <div class="file-upload" onclick="alert('Seleccionando imagen del vehículo...')">
+            <i class="fa-solid fa-car fa-2x"></i><br>Subir Foto del Vehículo
+          </div>
+          <div class="form-grid" style="margin-top:15px">
+            <div class="field">
+              <label>Tipo de Transporte</label>
+              <select id="tTipo" onchange="actualizarModelos()">
+                <option value="auto">Automóvil Deportivo (Ej. Ferrari)</option>
+                <option value="suv">Camioneta / SUV</option>
+                <option value="moto">Motocicleta</option>
+                <option value="pie">A pie 🚶</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Modelo (Opciones según tipo)</label>
+              <select id="tModelo"><option>Ferrari Portofino</option><option>Porsche 911</option></select>
+            </div>
+            <div class="field">
+              <label>Color</label><select id="tColor"><option>Dorado Intenso</option><option>Negro Ónix</option><option>Blanco</option></select>
+            </div>
+            <div class="field"><label>Placas (Automático)</label><input type="text" id="tPlacas" readonly></div>
+          </div>
+          <button class="btn" style="margin-top:15px" onclick="generarPlacas()">Solicitar Placas y Registrar</button>
+        </div>
+      </section>
+
+      <!-- REGISTRO EMPRESA -->
+      <section id="page-empresa_registro" class="page">
+        <div class="page-head"><h2>Alta de Empresas y Empleos</h2></div>
+        <div class="panel form-grid">
+          <div class="field full"><label>Nombre de la Empresa / Institución</label><input type="text" placeholder="Ej. Agencia R-MEX Models"></div>
+          <div class="field">
+            <label>Giro / Tipo</label>
+            <select id="eGiro" onchange="toggleEmpresaGiro()">
+              <option value="privada">Oficio / Privado (Moda, Taller, Club)</option>
+              <option value="gobierno">Gobierno (Hospital, Policía, Militar, Juzgado, Servicios)</option>
+              <option value="presidente">Presidente de la República (ÚNICO)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Tu Cargo</label>
+            <select id="eCargo" onchange="toggleEmpresaCargo()">
+              <option value="propietario">Propietario / Dueño</option>
+              <option value="empleado">Empleado</option>
+            </select>
+          </div>
+
+          <!-- Solo si es Propietario Privado -->
+          <div id="boxPropietario" class="full form-grid">
+            <div class="field"><label>Pago a Empleados (Monto)</label><input type="number" placeholder="$RP"></div>
+            <div class="field"><label>Frecuencia de Pago</label><select><option>Semanal</option><option>Quincenal</option></select></div>
+            <div class="field"><label>Horario Apertura</label><input type="time"></div>
+            <div class="field"><label>Horario Cierre</label><input type="time"></div>
+            <div class="field full"><label>¿Vincular Empleados? Selecciona Ciudadano:</label><select><option>Daniela Golden</option><option>Nyx</option><option>Apolo</option></select></div>
+          </div>
+
+          <!-- Solo si es Gobierno -->
+          <div id="boxGobierno" class="full form-grid hidden">
+            <div class="field full"><label>Cargo Gubernamental</label><select><option>Médico General</option><option>Oficial de Policía</option><option>Militar Rango Alto</option><option>Técnico de Luz/Agua</option></select></div>
+            <div class="field full"><label>Salario Base (Automático / Quincena)</label><input type="text" readonly value="$25,000 RP Quincenales"></div>
+          </div>
+
+          <button class="btn full" style="margin-top:15px">Registrar Cargo Oficial</button>
+        </div>
       </section>
 
       <!-- BANCO -->
       <section id="page-finanzas" class="page">
-        <div class="page-head"><div><h2>BANCOMEXRP</h2><p>Centro financiero, créditos y control de patrimonio.</p></div></div>
-        <div class="panel">
-          <div style="text-align:center;margin-bottom:20px">
-            <small style="color:var(--green);font-weight:bold">SALDO DISPONIBLE</small>
-            <h1 id="bankBalanceMain" style="font-size:38px;margin:5px 0">$1,250,000 RP</h1>
-            <small class="muted">Cuenta Bancaria: BANCOMEXRP26 | CB: 001-992-883-MX</small>
-          </div>
-          <div class="form-grid">
-            <button class="btn secondary" onclick="bancoEnviar()"><i class="fa-solid fa-paper-plane"></i> 💸 Enviar Dinero</button>
-            <button class="btn secondary" onclick="bancoServicios()"><i class="fa-solid fa-file-invoice-dollar"></i> 💡 Pago de Servicios</button>
-            <button class="btn secondary" onclick="bancoPrestamo()"><i class="fa-solid fa-hand-holding-dollar"></i> 💰 Pedir Préstamo</button>
-            <button class="btn secondary" onclick="alert('Selecciona tu propiedad o transporte para tramitar la venta autorizada.')"><i class="fa-solid fa-house-circle-xmark"></i> 🏷️ Vender Propiedad / Transporte</button>
-          </div>
-        </div>
-        <div class="panel">
-          <h3>Historial Bancario y Movimientos</h3>
-          <div style="margin-top:10px;border-top:1px solid var(--line);padding-top:10px" id="bancoHistorial">
-            <div style="display:flex;justify-content:space-between;margin-bottom:10px;font-size:13px">
-              <div><b>🟢 +$50,000 RP — Nómina Automática</b><small class="muted" style="display:block">Depósito por asistencia y rol del Gobierno</small></div>
-              <span class="muted">Hoy</span>
+        <div class="page-head"><h2>BANCOMEXRP</h2></div>
+        <div class="panel" style="text-align:center;">
+          <small style="color:var(--green);font-weight:bold">SALDO ACTUAL</small>
+          <h1 style="font-size:38px;margin:5px 0">$1,500,000 RP</h1>
+          
+          <div class="form-grid" style="margin-top:20px; text-align:left;">
+            <div class="panel" style="background:var(--panel2)">
+              <h3 style="margin-top:0">Enviar Dinero</h3>
+              <div class="field"><label>Seleccionar Jugador</label><select><option>Gina</option><option>Josefina</option><option>Apolo</option></select></div>
+              <div class="field"><label>Cantidad</label><input type="number" placeholder="$RP"></div>
+              <button class="btn full">Transferir</button>
             </div>
-            <div style="display:flex;justify-content:space-between;font-size:13px">
-              <div><b>🔴 -$1,200 RP — Pago de Luz</b><small class="muted" style="display:block">Servicio residencial saldado</small></div>
-              <span class="muted">Ayer</span>
+            <div class="panel" style="background:var(--panel2)">
+              <h3 style="margin-top:0">Pedir Préstamo</h3>
+              <div class="field"><label>Motivo</label><input type="text" placeholder="Inversión en negocio..."></div>
+              <div class="field"><label>Cantidad (Máx. $900,000 RP)</label><input type="number" id="prestamoCant" placeholder="Monto"></div>
+              <button class="btn full" onclick="solicitarPrestamo()">Solicitar al Banco</button>
             </div>
           </div>
         </div>
       </section>
-
-      <!-- JUGADOR / FICHA -->
-      <section id="page-jugador" class="page">
-        <div class="page-head"><div><h2>Ficha de Identidad del Personaje</h2><p>Registro oficial protegido por el sistema de la ciudad.</p></div></div>
-        <div class="panel">
-          <div class="form-grid">
-            <div class="field"><label>Nombre del Personaje</label><input id="pName" placeholder="Ej. Carlos Santana"></div>
-            <div class="field"><label>Edad</label><input id="pAge" type="number" placeholder="25"></div>
-            <div class="field">
-              <label>Ciudad (República Mexicana)</label>
-              <select id="pCity"><option>Ciudad de México, CDMX</option><option>Monterrey, Nuevo León</option><option>Guadalajara, Jalisco</option><option>Tijuana, Baja California</option></select>
-            </div>
-            <div class="field">
-              <label>Ocupación</label>
-              <select id="pJob"><option>Comerciante</option><option>Empresario</option><option>Médico</option><option>Abogado</option><option>Presidenta (Único)</option><option>Director de Gobierno (Único)</option></select>
-            </div>
-            <div class="field"><label>Género Sexual</label><select id="pGender"><option>Masculino</option><option>Femenino</option><option>No binario</option></select></div>
-            <div class="field"><label>Discapacidad</label><select id="pDisability"><option>Ninguna</option><option>Motriz</option><option>Auditiva</option><option>Visual</option></select></div>
-            <div class="field"><label>Tipo de Sangre</label><select id="pBlood"><option>O+</option><option>O-</option><option>A+</option><option>A-</option><option>B+</option><option>AB+</option></select></div>
-            <div class="field"><label>ID Ciudadano (Automático)</label><input id="pId" readonly value="MXRP-26-88912"></div>
-          </div>
-          <button class="btn" style="margin-top:15px" onclick="saveCharacter()">Guardar Identidad y Ficha</button>
-        </div>
-      </section>
-
-      <!-- HOGAR -->
-      <section id="page-hogar" class="page">
-        <div class="page-head"><div><h2>Registro de Hogar</h2><p>Propiedad y evaluación automatizada en RP.</p></div></div>
-        <div class="panel">
-          <div class="form-grid">
-            <div class="field"><label>Tipo de Hogar</label><select id="hType"><option>Casa</option><option>Departamento</option><option>Mansión</option><option>Rancho</option><option>Villa</option></select></div>
-            <div class="field"><label>Ciudad</label><select id="hCity"><option>Ciudad de México, CDMX</option><option>Monterrey, Nuevo León</option></select></div>
-            <div class="field full"><label>Domicilio (Automático)</label><input id="hAddress" readonly value="Av. Paseo de la Reforma #402, CDMX"></div>
-            <div class="field"><label>Valor Estimado en RP</label><input id="hValue" readonly value="$2,500,000 RP"></div>
-          </div>
-          <button class="btn" style="margin-top:15px" onclick="alert('Hogar registrado correctamente.')">Registrar Propiedad</button>
-        </div>
-      </section>
-
-      <!-- TRANSPORTE -->
-      <section id="page-transporte" class="page">
-        <div class="page-head"><div><h2>Registro de Transporte</h2><p>Vehículo asignado al personaje o a pie.</p></div></div>
-        <div class="panel">
-          <div class="form-grid">
-            <div class="field"><label>Tipo de Movilidad</label><select id="vType"><option>Automóvil</option><option>SUV</option><option>Deportivo</option><option>Motocicleta</option><option>A pie 🚶</option></select></div>
-            <div class="field"><label>Modelo / Marca</label><input id="vModel" placeholder="Ej. BMW X5 o Nissan Sentra"></div>
-            <div class="field"><label>Color</label><select id="vColor"><option>Negro Ónix</option><option>Blanco Perlado</option><option>Rojo Escarlata</option><option>Azul Metálico</option></select></div>
-            <div class="field"><label>Placas (Automáticas)</label><input id="vPlate" readonly value="MXR-992-A"></div>
-          </div>
-          <button class="btn" style="margin-top:15px" onclick="alert('Transporte registrado.')">Guardar Transporte</button>
-        </div>
-      </section>
-
-      <!-- FAMILIA -->
-      <section id="page-familia" class="page">
-        <div class="page-head"><div><h2>Familia y Menores</h2><p>Vínculos familiares, hijos y bebes en MexCity.</p></div></div>
-        <div class="panel">
-          <div class="field"><label>¿Tienes familia registrada?</label><select id="hasFam"><option>No</option><option>Sí</option></select></div>
-          <div class="form-grid" style="margin-top:15px">
-            <div class="field"><label>Nombre de Familia</label><input placeholder="Ej. Familia Hemingway"></div>
-            <div class="field"><label>Registrar Menor / Bebé</label><button class="btn secondary" onclick="alert('Formulario de menor desplegado.')">Añadir Menor de Edad</button></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- EMPRESAS -->
-      <section id="page-empresas" class="page">
-        <div class="page-head"><div><h2>Empresas y Servicios Activos</h2><p>Hospitales, locales y comercios en tiempo real.</p></div></div>
-        <div class="panel">
-          <div id="servicesList">
-            <div class="message" style="justify-content:space-between;align-items:center;padding:12px 0">
-              <div><b>🏥 Hospital General MexCity</b><small class="muted" style="display:block">Horario: 08:00 — 22:00 · Estado: <span style="color:var(--green)">ACTIVO</span></small></div>
-              <button class="btn" style="width:auto;padding:8px 14px" onclick="alert('Solicitud enviada al Hospital. Se notificó al personal activo.')">Solicitar Servicio</button>
-            </div>
-            <div class="message" style="justify-content:space-between;align-items:center;padding:12px 0">
-              <div><b>🔧 Taller Mecánico Los Santos</b><small class="muted" style="display:block">Horario: 24 Horas · Estado: <span style="color:var(--green)">ACTIVO</span></small></div>
-              <button class="btn" style="width:auto;padding:8px 14px" onclick="alert('Solicitud enviada al taller mecánico.')">Solicitar Servicio</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- EMPLEOS -->
-      <section id="page-empleos" class="page">
-        <div class="page-head"><div><h2>Bolsa de Empleo</h2><p>Postúlate y asiste a entrevistas con empresarios.</p></div></div>
-        <div class="panel">
-          <div class="message" style="justify-content:space-between;align-items:center;padding:12px 0">
-            <div><b>🚕 Conductor Ejecutivo</b><small class="muted" style="display:block">Empresa: Transportes CDMX · Vacantes: <b>2</b></small></div>
-            <button class="btn" style="width:auto;padding:8px 14px" onclick="alert('Postulación enviada. Espera la entrevista en el chat de rol.')">Postularme</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ORGANIZACIÓN / PANDILLA -->
-      <section id="page-organizacion" class="page">
-        <div class="page-head"><div><h2>Pandillas y Organizaciones</h2><p>Control de facciones y oficinas privadas.</p></div></div>
-        <div class="panel">
-          <p class="muted">Indica si perteneces a una pandilla u organización para desplegar sus rangos, salarios y domicilios secretos protegidos por cifrado.</p>
-          <div class="field"><label>Pertenencia</label><select><option>Ninguna</option><option>Pandilla</option><option>Organización</option></select></div>
-        </div>
-      </section>
-
-      <!-- MENSAJES -->
-      <section id="page-mensajes" class="page">
-        <div class="page-head"><div><h2>Centro de Mensajes</h2><p>Notificaciones categorizadas y canales privados.</p></div></div>
-        <div class="panel">
-          <div style="display:flex;flex-direction:column;gap:10px">
-            <div style="padding:12px;border-radius:10px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3)">
-              <b style="color:var(--red)">🔴 ADMINISTRACIÓN</b>
-              <p style="margin:4px 0 0;font-size:13px">Tu rol ha sido aprobado satisfactoriamente por el equipo moderador.</p>
-            </div>
-            <div style="padding:12px;border-radius:10px;background:rgba(216,165,46,0.1);border:1px solid rgba(216,165,46,0.3)">
-              <b style="color:var(--gold)">🟡 BANCOMEXRP</b>
-              <p style="margin:4px 0 0;font-size:13px">Tienes una cuota pendiente de servicios básicos por cubrir.</p>
-            </div>
-            <div style="padding:12px;border-radius:10px;background:rgba(22,198,107,0.1);border:1px solid rgba(22,198,107,0.3)">
-              <b style="color:var(--green)">🟢 EMPLEO Y HORARIO</b>
-              <p style="margin:4px 0 0;font-size:13px">Tu turno laboral en gobierno inicia en 30 minutos.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ASISTENTE IA (CON PROTECCIÓN ESTRICTA) -->
-      <section id="page-asistenteia" class="page">
-        <div class="page-head"><div><h2>Asistente IA Protegido</h2><p>Generación de arte, avatares, historias y escenas de rol.</p></div></div>
-        <div class="panel">
-          <div class="field"><textarea id="aiPrompt" rows="3" placeholder="Escribe tu solicitud (ej: Fotografía de un auto Ferrari dorado en la CDMX o redacción de escena)..."></textarea></div>
-          <button class="btn" onclick="sendAIPrompt()">Generar con IA</button>
-          <div id="aiResponse" style="margin-top:15px;padding:12px;background:#050b10;border-radius:10px;font-size:13px;color:var(--muted)">La respuesta del asistente aparecerá aquí...</div>
-        </div>
-      </section>
-
-      <!-- HISTORIAL DE PERSONAJE Y MUERTE -->
+      
       <section id="page-historial" class="page">
-        <div class="page-head"><div><h2>Historial de Vida del Personaje</h2><p>Desde el ingreso hasta el fallecimiento y nuevo ciclo.</p></div></div>
+        <div class="page-head"><h2>Historial del Personaje</h2></div>
         <div class="panel">
-          <div style="border-left:2px solid var(--gold);padding-left:15px;display:flex;flex-direction:column;gap:15px">
-            <div><b style="color:var(--gold)">Ingreso a MexCity RP</b><small class="muted" style="display:block">Registro de identidad civil inicial</small></div>
-            <div><b style="color:var(--green)">Primer Rol Exitoso</b><small class="muted" style="display:block">Establecimiento de negocios y vivienda</small></div>
+          <p class="muted">Tus fichas y acciones oficiales se registran aquí.</p>
+          <div style="padding:10px; border-left:3px solid var(--gold2); background:var(--panel2); margin-bottom:10px;">
+            <b>ID Oficial Generada</b> - <i>Cartsh (MX-CRT-8821)</i> - Ficha almacenada.
           </div>
-          <button class="btn danger" style="margin-top:25px" onclick="triggerCharacterDeath()">Simular Fallecimiento del Personaje</button>
-        </div>
-      </section>
-
-      <!-- RADIO ONLINE -->
-      <section id="page-radio" class="page">
-        <div class="page-head"><div><h2>MexCity Radio Online</h2><p>Emisora oficial, locutores y peticiones musicales.</p></div></div>
-        <div class="panel" style="text-align:center;padding:30px">
-          <i class="fa-solid fa-microphone-lines fa-3x" style="color:var(--gold);margin-bottom:15px"></i>
-          <h3>TRANSMISIÓN EN VIVO — LOCUTOR ALEX MORGAN</h3>
-          <p class="muted">Escuchando actualidad, eventos y avisos de la ciudad.</p>
-          <div class="form-grid" style="margin-top:20px">
-            <div class="field"><input id="songArtist" placeholder="Artista deseado"></div>
-            <div class="field"><input id="songName" placeholder="Nombre de la canción"></div>
+          <div style="padding:10px; border-left:3px solid var(--green); background:var(--panel2);">
+            <b>Alta de Empresa</b> - <i>Agencia R-MEX Models</i> - Propietaria.
           </div>
-          <button class="btn" style="margin-top:10px" onclick="alert('Canción solicitada al locutor con éxito.')">Pedir Canción o Saludos</button>
         </div>
-      </section>
-
-      <section id="page-notificaciones" class="page">
-        <div class="page-head"><h2>Alertas del Sistema</h2></div>
-        <div class="panel"><p class="muted">No hay alertas nuevas pendientes de lectura.</p></div>
       </section>
 
     </main>
 
-    <!-- ================= RIGHTBAR: DISCORD CHAT ================= -->
+    <!-- ================= RIGHTBAR: DISCORD / IG CHATS ================= -->
     <aside class="rightbar">
       <div class="panel discord-panel" style="height:calc(100vh - 120px)">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;border-bottom:1px solid var(--line)">
-          <div style="display:flex;align-items:center;gap:8px"><span style="width:9px;height:9px;background:#5865f2;border-radius:50%"></span><b>COMUNIDAD MEXCITY</b></div>
-          <small id="roleStatusSummary" style="color:var(--muted)">OFF ROL</small>
-        </div>
         <div class="chat-tabs">
-          <button class="chat-tab active" onclick="switchChat('general',this)">💬 General</button>
-          <button class="chat-tab" onclick="switchChat('rol',this)">🎭 Rol</button>
-          <button class="chat-tab" onclick="switchChat('admin',this)">🛡 Admin</button>
-          <button class="chat-tab" onclick="switchChat('jugadores',this)">👥 DM</button>
+          <button class="chat-tab active" onclick="switchChat('general',this)">🌐 General</button>
+          <button class="chat-tab" onclick="switchChat('rol',this)">🎭 Rol On/Off</button>
+          <button class="chat-tab" onclick="switchChat('dm',this)">💬 DMs</button>
+          <button class="chat-tab" style="color:var(--red)" onclick="switchChat('admin',this)">🛡️ Admin</button>
         </div>
+        
+        <!-- Chat General (IG Style) -->
         <div id="chatPaneGeneral" class="chat-pane active">
-          <div class="chat-list" id="generalChatList">
-            <div class="message"><div class="avatar" style="width:30px;height:30px;font-size:10px">V</div><div><b>Vlad</b><p>¡Buenas noches a toda la ciudad!</p></div></div>
+          <div class="chat-list" id="generalList">
+            <div class="message"><div class="avatar" style="width:28px;height:28px;font-size:10px">T</div><div><b>Tlatoani</b><p>¿Quién activo para salir a dar una vuelta? 😎</p></div></div>
           </div>
-          <div class="chat-input"><input id="generalInput" placeholder="Conversa con la comunidad..." onkeydown="if(event.key==='Enter')sendGeneralChat()"><button class="btn" style="width:auto;padding:0 12px" onclick="sendGeneralChat()">➤</button></div>
+          <div class="chat-input">
+            <button class="chip" style="padding:8px"><i class="fa-regular fa-face-smile"></i></button>
+            <input type="text" placeholder="Escribe un mensaje..." id="genInput" onkeydown="if(event.key==='Enter') sendChat('general')">
+            <button class="btn" style="padding:8px 12px" onclick="sendChat('general')"><i class="fa-solid fa-paper-plane"></i></button>
+          </div>
         </div>
+
+        <!-- Chat de Rol (Discord Style con Comandos) -->
         <div id="chatPaneRol" class="chat-pane">
-          <div class="chat-list" id="rolChatList">
-            <div class="message"><div class="avatar" style="width:30px;height:30px;font-size:10px">D</div><div><b>Daniela</b><p># Hospital General — CDMX</p></div></div>
+          <div style="font-size:10px; color:var(--gold); margin-bottom:5px; text-align:center;">
+            Comandos: *acción* | #lugar | -transporte- | (auto-acción) | //dirigirse | _tiempo_
           </div>
-          <div class="chat-input"><input id="rolInput" placeholder="Usa #lugar //transporte /servicio..." onkeydown="if(event.key==='Enter')sendRolChat()"><button class="btn" style="width:auto;padding:0 12px" onclick="sendRolChat()">➤</button></div>
+          <div class="chat-list" id="rolList">
+            <div class="message far-away"><div class="avatar" style="width:28px;height:28px;font-size:10px">N</div><div><b>Nyx</b><p>#Hospital _llegada en 5 min_ *(se subiría a la ambulancia)*</p></div></div>
+            <div class="message"><div class="avatar" style="width:28px;height:28px;font-size:10px">C</div><div><b>Chetees</b><p>*Pasa la tarjeta por el lector* //Centro Comercial</p></div></div>
+          </div>
+          <div class="chat-input">
+            <input type="text" placeholder="On Rol..." id="rolInput" onkeydown="if(event.key==='Enter') sendChat('rol')">
+            <button class="btn" style="padding:8px 12px" onclick="sendChat('rol')"><i class="fa-solid fa-play"></i></button>
+          </div>
         </div>
+        
+        <!-- DMs -->
+        <div id="chatPaneDm" class="chat-pane">
+          <select style="background:var(--panel2); color:white; border:none; padding:5px; margin-bottom:10px;"><option>Chat con: Daniela Golden</option><option>Chat con: Apolo</option></select>
+          <div class="chat-list" id="dmList">
+            <div class="message"><div class="avatar" style="width:28px;height:28px;font-size:10px">D</div><div><b>Daniela Golden</b><p>🎵 (Audio 0:15s)</p></div></div>
+          </div>
+          <div class="chat-input">
+            <button class="chip"><i class="fa-solid fa-microphone"></i></button>
+            <input type="text" placeholder="Mensaje privado..." id="dmInput" onkeydown="if(event.key==='Enter') sendChat('dm')">
+          </div>
+        </div>
+
+        <!-- Admin Chat -->
         <div id="chatPaneAdmin" class="chat-pane">
-          <div class="chat-list" id="adminChatList">
-            <div class="message"><div class="avatar" style="width:30px;height:30px;font-size:10px;background:var(--red)">AD</div><div><b>Administración</b><p>¿En qué podemos ayudarte hoy?</p></div></div>
+          <div style="font-size:10px; text-align:center; color:var(--red); margin-bottom:5px;">Atendido por Administrador: SOPORTE_01</div>
+          <div class="chat-list" id="adminList">
+            <div class="message"><div class="avatar" style="width:28px;height:28px;font-size:10px; background:var(--red);">A</div><div><b style="color:var(--red)">Admin</b><p>📝 [Transcripción de Audio]: "Revisaremos la solicitud de tu empresa en breve, Cartsh."</p></div></div>
           </div>
-          <div class="chat-input"><input id="adminInput" placeholder="Mensaje privado a Admin..." onkeydown="if(event.key==='Enter')sendAdminChat()"><button class="btn" style="width:auto;padding:0 12px" onclick="sendAdminChat()">➤</button></div>
+          <div class="chat-input">
+            <input type="text" placeholder="Dudas o reportes..." id="adminInput" onkeydown="if(event.key==='Enter') sendChat('admin')">
+          </div>
         </div>
-        <div id="chatPaneJugadores" class="chat-pane">
-          <div class="chat-list"><div class="muted" style="padding:10px;font-size:12px">Selecciona un ciudadano en línea para iniciar DM.</div></div>
-        </div>
+
       </div>
     </aside>
 
@@ -536,242 +501,132 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <script>
-// ==========================================
-// CONFIGURACIÓN Y ESTADO
-// ==========================================
-const SUPABASE_URL = "https://ogiupysmhnzvizesqcxr.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_QZ1vQjZQ-7vbkBJLmouMzQ_PUmI8U2c";
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-let currentUser = null;
-let profile = null;
-let isRolOn = false;
-let aiStrikes = parseInt(localStorage.getItem('mexcity_ai_strikes') || '0');
-let aiBlockedUntil = parseInt(localStorage.getItem('mexcity_ai_block') || '0');
-
-function $(id){ return document.getElementById(id); }
-
-async function init(){
-  const {data:{session}} = await supabaseClient.auth.getSession();
-  if(session){
-    openApp(session.user);
-  }else{
-    showLogin();
-  }
-}
-
-function showLogin(){
-  $('loginScreen').style.display = 'grid';
-  $('app').style.display = 'none';
-}
-
-async function login(){
-  const email = $('loginEmail').value.trim();
-  const password = $('loginPassword').value;
-  if(!email || !password){ $('loginMsg').textContent = "Introduce correo y contraseña."; return; }
-  
-  const {data, error} = await supabaseClient.auth.signInWithPassword({email, password});
-  if(error){ $('loginMsg').textContent = error.message; return; }
-  openApp(data.user);
-}
-
-async function openApp(user){
-  currentUser = user;
-  $('loginScreen').style.display = 'none';
-  $('app').style.display = 'block';
-  
-  // Cargar Perfil y datos simulados del feed
-  renderFeed();
-}
-
-function showPage(name){
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const target = $('page-' + name);
-  if(target) target.classList.add('active');
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-
-// ==========================================
-// ESTADO ON / OFF ROL
-// ==========================================
-function toggleRolStatus(){
-  isRolOn = !isRolOn;
-  const btn = $('btnToggleRol');
-  const txt = $('rolStatusText');
-  const sum = $('roleStatusSummary');
-  
-  if(isRolOn){
-    btn.textContent = "🔴 DESACTIVAR ROL";
-    btn.style.background = "var(--red)";
-    txt.textContent = "🟢 ON ROL";
-    sum.textContent = "ON ROL";
-    alert("Has activado tu estado ON ROL. Ubicación inicial: Casa / CDMX.");
-  }else{
-    btn.textContent = "🟢 ACTIVAR ON ROL";
-    btn.style.background = "var(--green)";
-    txt.textContent = "⚪ OFF ROL";
-    sum.textContent = "OFF ROL";
-    alert("Has pasado a OFF ROL. El personaje regresa automáticamente a su domicilio a descansar.");
-  }
-}
-
-// ==========================================
-// ASISTENTE IA CON PROTECCIÓN Y BLOQUEO
-// ==========================================
-function sendAIPrompt(){
-  const now = Date.now();
-  const responseBox = $('aiResponse');
-  
-  if(now < aiBlockedUntil){
-    const daysLeft = Math.ceil((aiBlockedUntil - now) / (1000 * 60 * 60 * 24));
-    responseBox.innerHTML = `<b style="color:var(--red)">⚠️ ASISTENCIA IA SUSPENDIDA</b><p>Tu acceso al asistente se encuentra bloqueado por violación de seguridad. Faltan ${daysLeft} días para su reactivación.</p>`;
-    return;
+  // Navegación principal
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    const target = document.getElementById('page-' + pageId);
+    if(target) target.classList.add('active');
+    // Para marcar botón superior (opcional)
+    event.currentTarget.classList?.add('active');
   }
 
-  const prompt = $('aiPrompt').value.trim().toLowerCase();
-  if(!prompt) return;
+  // Chats Tabs
+  function switchChat(tab, btnElement) {
+    document.querySelectorAll('.chat-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('chatPane' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+    btnElement.classList.add('active');
+  }
 
-  // Palabras prohibidas para proteger la seguridad y privacidad
-  const forbiddenWords = ['contraseña', 'password', 'correo', 'admin', 'credenciales', 'privacidad de otros jugadores', 'token', 'secret'];
-  const isViolation = forbiddenWords.some(word => prompt.includes(word));
+  // Enviar mensajes en chats
+  function sendChat(type) {
+    let inputId = type === 'general' ? 'genInput' : type === 'rol' ? 'rolInput' : type === 'dm' ? 'dmInput' : 'adminInput';
+    let input = document.getElementById(inputId);
+    let text = input.value.trim();
+    if(!text) return;
 
-  if(isViolation){
-    aiStrikes++;
-    if(aiStrikes >= 2){
-      // Bloquear por 1 mes (30 días)
-      aiBlockedUntil = now + (30 * 24 * 60 * 60 * 1000);
-      localStorage.setItem('mexcity_ai_block', aiBlockedUntil);
-      localStorage.setItem('mexcity_ai_strikes', aiStrikes);
-      responseBox.innerHTML = `<b style="color:var(--red)">⚠️ ADVERTENCIA CRÍTICA — ACCESO BLOQUEADO</b><p>Has intentado extraer información confidencial protegida en repetidas ocasiones. Asistencia IA suspendida durante 30 días.</p>`;
-    }else{
-      localStorage.setItem('mexcity_ai_strikes', aiStrikes);
-      responseBox.innerHTML = `<b style="color:var(--red)">⚠️ ADVERTENCIA DE SEGURIDAD</b><p>Esta información está protegida y no puede ser proporcionada por el asistente. Si insistes, tu acceso será suspendido por un mes.</p>`;
+    let listId = type + 'List';
+    let list = document.getElementById(listId);
+    
+    // Simulación de opacidad en Rol (si menciona # lugar diferente)
+    let extraClass = (type === 'rol' && text.includes('#') && !text.includes('#Agencia')) ? 'far-away' : '';
+    
+    let html = `<div class="message ${extraClass}"><div class="avatar" style="width:28px;height:28px;font-size:10px; border-color:var(--gold2)">C</div><div><b style="color:var(--gold2)">Cartsh (Tú)</b><p>${text}</p></div></div>`;
+    
+    list.innerHTML += html;
+    input.value = '';
+    list.scrollTop = list.scrollHeight;
+  }
+
+  // Generador IA 4 min
+  function generarVideoIA() {
+    let promptMsg = confirm("¿Deseas que la IA analice tu último chat de rol y genere un video renderizado de 4 minutos para publicarlo?");
+    if(promptMsg) {
+      alert("Procesando texto de rol... La IA está generando el entorno 3D. El video se publicará automáticamente en el feed cuando esté listo.");
     }
-    return;
   }
 
-  // Respuesta normal si es un prompt válido de rol, imágenes o vehículos
-  responseBox.innerHTML = `<b style="color:var(--green)">✨ Asistente IA procesando solicitud...</b><p>Generando contenido adaptado para: "${prompt}". Tu material estará listo en breve para integrarse al Feed.</p>`;
-  $('aiPrompt').value = '';
-}
-
-// ==========================================
-// MUERTE Y REINICIO DE PERSONAJE
-// ==========================================
-function triggerCharacterDeath(){
-  if(confirm("¿Estás seguro de declarar el fallecimiento de tu personaje actual? Esto archivará su historia y reiniciará su ciclo.")){
-    alert("📜 FINAL DE LA HISTORIA GENERADO.\nEl personaje ha fallecido. Se ha publicado el parte oficial en el Feed y tu cuenta bancaria junto con tu identidad han sido restablecidas para un nuevo registro.");
-    showPage('jugador');
+  // Generador de ID Ciudadano
+  function guardarJugador() {
+    let nombre = document.getElementById('jNombre').value.substring(0,3).toUpperCase();
+    let rand = Math.floor(1000 + Math.random() * 9000);
+    let curp = `MX-${nombre || 'USR'}-${rand}`;
+    document.getElementById('jId').value = curp;
+    alert("Identidad Oficial guardada en el Historial.\nID de Ciudadano: " + curp);
   }
-}
 
-// ==========================================
-// FEED E INTERACCIÓN
-// ==========================================
-function renderFeed(){
-  const feed = $('feed');
-  if(!feed) return;
-  
-  feed.innerHTML = `
-    <div class="panel post">
-      <div class="post-head">
-        <div class="avatar">VH</div>
-        <div class="meta">
-          <b>Vlad Hemingway <span style="color:var(--green)">●</span></b>
-          <small class="muted">Tijuana, México · Hoy</small>
-        </div>
-      </div>
-      <div class="post-media">
-        <img src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1200&q=80" alt="Rol">
-      </div>
-      <div class="post-body">
-        <span class="tag">ROL — NEGOCIOS</span>
-        <h3>Nuevos horizontes en la frontera</h3>
-        <p>Cerrando tratos importantes en el distrito financiero de MexCity. La ciudad sigue creciendo sin descanso.</p>
-      </div>
-      <div class="post-actions">
-        <button onclick="this.classList.toggle('liked-eagle')"><i class="fa-solid fa-feather-bird"></i> <span>42 🦅 Águilas</span></button>
-        <button><i class="fa-solid fa-comment"></i> <span>8 Comentarios</span></button>
-      </div>
-    </div>
-  `;
-}
-
-function publishFeed(){
-  const text = $('postText').value.trim();
-  if(!text){ alert("Escribe algo para publicar."); return; }
-  alert("Publicación enviada al Feed correctamente.");
-  $('postText').value = '';
-}
-
-// ==========================================
-// CHAT TABS (DISCORD STYLE)
-// ==========================================
-function switchChat(tab, btn){
-  document.querySelectorAll('.chat-pane').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
-  
-  const pane = $('chatPane' + tab.charAt(0).toUpperCase() + tab.slice(1));
-  if(pane) pane.classList.add('active');
-  if(btn) btn.classList.add('active');
-}
-
-function sendGeneralChat(){
-  const input = $('generalInput');
-  if(!input.value.trim()) return;
-  const list = $('generalChatList');
-  list.innerHTML += `<div class="message"><div class="avatar" style="width:30px;height:30px;font-size:10px">C</div><div><b>Cartsh</b><p>${input.value}</p></div></div>`;
-  input.value = '';
-  list.scrollTop = list.scrollHeight;
-}
-
-function sendRolChat(){
-  const input = $('rolInput');
-  if(!input.value.trim()) return;
-  const list = $('rolChatList');
-  list.innerHTML += `<div class="message"><div class="avatar" style="width:30px;height:30px;font-size:10px">C</div><div><b>Cartsh</b><p style="color:var(--gold)">${input.value}</p></div></div>`;
-  input.value = '';
-  list.scrollTop = list.scrollHeight;
-}
-
-function sendAdminChat(){
-  const input = $('adminInput');
-  if(!input.value.trim()) return;
-  const list = $('adminChatList');
-  list.innerHTML += `<div class="message"><div class="avatar" style="width:30px;height:30px;font-size:10px;background:var(--green)">C</div><div><b>Cartsh (Tú)</b><p>${input.value}</p></div></div>`;
-  input.value = '';
-  list.scrollTop = list.scrollHeight;
-}
-
-function bancoEnviar(){
-  const dest = prompt("Ingresa el número de cuenta o CB del destinatario:");
-  if(!dest) return;
-  const cant = parseFloat(prompt("Ingresa la cantidad en $RP a transferir (Se validará tu saldo actual):"));
-  if(!cant || cant <= 0) return;
-  alert(`Solicitud procesada por el servidor.\nEnviando $${cant.toLocaleString()} RP a la cuenta ${dest}.`);
-}
-
-function bancoServicios(){
-  alert("Servicios pendientes:\n- 💧 Agua: $450 RP\n- ⚡ Luz: $1,200 RP\n- 🌐 Internet: $890 RP\n\nPuedes saldarlos directamente con un clic.");
-}
-
-function bancoPrestamo(){
-  const motivo = prompt("Indica el motivo del préstamo (Mínimo $900,000 RP, Máximo $1,000,000 RP):");
-  if(!motivo) return;
-  const monto = parseInt(prompt("Cantidad solicitada ($RP):"));
-  if(!monto || monto < 900000 || monto > 1000000){
-    alert("❌ La cantidad debe estar estrictamente entre $900,000 RP y $1,000,000 RP.");
-    return;
+  // Muerte de personaje (Reset)
+  function morirPersonaje() {
+    if(confirm("⚠ ATENCIÓN: Al confirmar el CK (Fallecimiento), se anunciará en la radio y perderás el acceso a las propiedades de este personaje. ¿Continuar?")) {
+      alert("El personaje ha sido declarado muerto. El locutor de la radio ha recibido la noticia. Redirigiendo a creación de nuevo personaje...");
+      document.getElementById('jNombre').value = '';
+      document.getElementById('jId').value = '';
+    }
   }
-  alert("🟡 Préstamo enviado a revisión. Queda pendiente de aprobación por parte de la Administración.");
-}
 
-async function logout(){
-  await supabaseClient.auth.signOut();
-  showLogin();
-}
+  // Lógica de Hogar y Transporte
+  function calcularPrecioCasa() {
+    let val = document.getElementById('hTipo').value;
+    document.getElementById('hValor').value = val == 0 ? "Por evaluar" : `$${parseInt(val).toLocaleString()} RP`;
+    document.getElementById('hDomicilio').value = "Av. MexCity #" + Math.floor(Math.random()*999) + ", Sector Norte";
+  }
 
-document.addEventListener('DOMContentLoaded', init);
+  function actualizarModelos() {
+    let tipo = document.getElementById('tTipo').value;
+    let modelos = document.getElementById('tModelo');
+    if(tipo === 'auto') modelos.innerHTML = '<option>Ferrari Portofino</option><option>Porsche 911</option>';
+    if(tipo === 'suv') modelos.innerHTML = '<option>Range Rover</option><option>G-Wagon</option>';
+    if(tipo === 'pie') modelos.innerHTML = '<option>Ninguno (A pie)</option>';
+  }
+
+  function generarPlacas() {
+    if(document.getElementById('tTipo').value === 'pie') {
+      document.getElementById('tPlacas').value = "N/A";
+      return alert("Registro a pie guardado.");
+    }
+    let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let pl = chars.charAt(Math.floor(Math.random()*26)) + chars.charAt(Math.floor(Math.random()*26)) + chars.charAt(Math.floor(Math.random()*26)) + "-" + Math.floor(100+Math.random()*899);
+    document.getElementById('tPlacas').value = pl;
+    alert("Vehículo registrado con éxito. Placas asignadas: " + pl);
+  }
+
+  // Lógica de Empresas
+  function toggleEmpresaGiro() {
+    let giro = document.getElementById('eGiro').value;
+    if(giro === 'presidente') {
+      alert("⚠️ Aviso: Este cargo es ÚNICO y desaparecerá para otros usuarios una vez confirmado.");
+      document.getElementById('eCargo').value = 'propietario';
+      toggleEmpresaCargo();
+    } else if (giro === 'gobierno') {
+      document.getElementById('boxGobierno').classList.remove('hidden');
+      document.getElementById('boxPropietario').classList.add('hidden');
+    } else {
+      document.getElementById('boxGobierno').classList.add('hidden');
+      toggleEmpresaCargo();
+    }
+  }
+
+  function toggleEmpresaCargo() {
+    let cargo = document.getElementById('eCargo').value;
+    let giro = document.getElementById('eGiro').value;
+    if(giro === 'gobierno') return; // Gobierno usa su propia caja
+    if(cargo === 'propietario') {
+      document.getElementById('boxPropietario').classList.remove('hidden');
+    } else {
+      document.getElementById('boxPropietario').classList.add('hidden');
+    }
+  }
+
+  // Préstamo Banco
+  function solicitarPrestamo() {
+    let monto = parseFloat(document.getElementById('prestamoCant').value);
+    if(monto > 900000) {
+      alert("❌ El banco solo autoriza préstamos hasta un máximo de $900,000 RP.");
+    } else if(monto > 0) {
+      alert("✅ Solicitud de préstamo enviada a revisión administrativa.");
+    }
+  }
 </script>
 </body>
 </html>
