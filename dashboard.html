@@ -1,632 +1,138 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#03070b">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>MEXCITY RP — Dashboard Oficial</title>
-<!-- Supabase Client -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<!-- FontAwesome Icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <style>
-:root{
-  --bg:#03070b; --panel:#071017; --panel2:#0a141b; 
-  --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.16);
-  --text:#f4f5f6; --muted:#89959c; --gold:#d8a52e; --gold2:#f2c85b;
-  --green:#16c66b; --red:#ef4444; --purple:#9257df; --blue:#26a9d9;
-  --shadow:0 20px 60px rgba(0,0,0,.38);
-}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% -20%,#17252c 0,#071017 35%,#020406 100%);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
-body{overflow-x:hidden}
-button,input,textarea,select{font:inherit}
-button{cursor:pointer; transition: 0.2s ease;}
-button:disabled{opacity:.55;cursor:not-allowed}
-.hidden{display:none!important}
-.muted{color:var(--muted)}
-a{color:inherit;text-decoration:none}
-
-/* ================= APP DASHBOARD ================= */
-#app{display:block;min-height:100vh}
-
-/* BARRA SUPERIOR (Estilo IG/Discord Adaptado) */
-.topbar{
-  height:72px;position:sticky;top:0;z-index:50;
-  display:flex;justify-content:space-between;align-items:center;padding:0 20px;
-  border-bottom:1px solid var(--line);
-  background:rgba(3,8,12,.92);backdrop-filter:blur(22px)
-}
-.brand-small{display:flex;align-items:center;gap:10px;cursor:pointer}
-.nav-icons{display:flex;gap:16px;align-items:center;overflow-x:auto;padding:5px 0}
-.nav-btn{
-  background:transparent;border:none;color:#89959c;
-  display:flex;flex-direction:column;align-items:center;font-size:16px;gap:4px;
-  transition:0.2s;position:relative;cursor:pointer;
-}
-.nav-btn:hover,.nav-btn.active{color:var(--gold2)}
-.nav-btn span{font-size:9px;font-weight:bold;text-transform:uppercase;white-space:nowrap}
-.badge{
-  position:absolute;top:-4px;right:-4px;
-  min-width:16px;height:16px;padding:1px 4px;border-radius:20px;
-  background:var(--red);color:#fff;font-size:9px;font-weight:900;text-align:center
-}
-
-/* ================= LAYOUT PRINCIPAL ================= */
-.shell{
-  display:grid;grid-template-columns:280px minmax(0,1fr) 350px;
-  gap:16px;max-width:1650px;margin:auto;padding:16px
-}
-.sidebar,.rightbar{min-width:0;position:sticky;top:88px;height:calc(100vh - 100px);overflow:auto}
-.side-card,.panel{
-  border:1px solid var(--line);
-  background:linear-gradient(180deg,rgba(9,18,24,.94),rgba(5,11,15,.94));
-  border-radius:16px;box-shadow:0 10px 35px rgba(0,0,0,.25)
-}
-.side-card{padding:16px;margin-bottom:14px}
-.side-profile{display:flex;flex-direction:column;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--line)}
-.profile-header{display:flex;gap:12px;align-items:center;}
-.avatar{
-  width:56px;height:56px;border-radius:50%;display:grid;place-items:center;
-  overflow:hidden;flex:none;border:2px solid var(--gold);
-  background:radial-gradient(circle at 35% 30%,#8b6839,#271e10 60%,#090b0c);
-  color:#fff;font-weight:800; position: relative;
-}
-.avatar img{width:100%;height:100%;object-fit:cover}
-.activity-box{background:#050b10;border-radius:8px;padding:8px;border:1px solid var(--line2);}
-.activity-bar{height:6px;background:var(--line2);border-radius:10px;margin-top:5px;overflow:hidden;}
-.activity-fill{height:100%;background:linear-gradient(90deg, var(--gold2), var(--green));width:85%;}
-
-/* NAVEGACIÓN LATERAL */
-.nav{margin-top:14px}
-.nav button{
-  width:100%;display:flex;align-items:center;gap:12px;
-  text-align:left;background:transparent;border:1px solid transparent;
-  color:#aeb8bd;padding:11px 12px;border-radius:11px;margin:4px 0;font-size:13px
-}
-.nav button:hover,.nav button.active{
-  color:#fff;background:rgba(216,165,46,.08);
-  border-color:rgba(216,165,46,.3)
-}
-
-/* ================= CONTENIDO Y FEED ================= */
-.main{min-width:0}
-.radio-banner{
-  background:linear-gradient(90deg, rgba(216,165,46,0.1), rgba(22,198,107,0.1));
-  border:1px solid var(--gold); border-radius:12px; padding:12px 16px;
-  margin-bottom:16px; display:flex; align-items:center; gap:15px;
-}
-.radio-banner i{color:var(--gold); font-size:24px; animation: pulse 2s infinite;}
-@keyframes pulse{0%{opacity:1;}50%{opacity:0.5;}100%{opacity:1;}}
-
-.composer{padding:16px;margin-bottom:14px}
-.composer textarea{
-  width:100%;border:1px solid var(--line);background:#050b0f;
-  color:#fff;border-radius:12px;padding:14px;outline:none;margin-bottom:10px;resize:vertical
-}
-.composer-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.chip{
-  border:1px solid var(--line2);background:#ffffff05;
-  color:#b9c1c4;border-radius:10px;padding:8px 12px;font-size:12px;cursor:pointer
-}
-.ia-chip{background:rgba(146,87,223,0.1);border-color:rgba(146,87,223,0.5);color:var(--purple)}
-.btn{border:1px solid transparent;border-radius:11px;padding:11px 16px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#111;font-weight:800;text-align:center}
-.btn.secondary{background:#ffffff07;color:#fff;border-color:var(--line2)}
-.btn.danger{background:#42151a;color:#ff9a9a;border-color:#ef444433}
-
-.feed{display:flex;flex-direction:column;gap:14px}
-.post{overflow:hidden}
-.post-head{display:flex;align-items:center;gap:12px;padding:14px}
-.post-media{width:100%;background:#081116;overflow:hidden}
-.post-media img,.post-media video{width:100%;max-height:550px;object-fit:cover}
-.post-body{padding:14px 16px}
-.post-actions{
-  display:flex;gap:20px;border-top:1px solid var(--line);
-  padding:12px 16px;color:#aeb8bd
-}
-.post-actions button{background:none;border:0;color:inherit;padding:0;display:flex;align-items:center;gap:6px;font-size:14px}
-.liked-crown{color:var(--gold2)!important; transform: scale(1.1);}
-
-/* ================= FORMULARIOS ================= */
-.page{display:none}
-.page.active{display:block}
-.page-head{margin:10px 0 16px}
-.page-head h2{margin:0;font-size:24px;color:var(--gold2)}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.full{grid-column:1/-1}
-.field{margin-bottom:10px;}
-.field label{display:block;color:#b8c1c5;font-size:12px;margin-bottom:7px}
-.field input,.field textarea,.field select{width:100%;padding:10px 12px;color:var(--text);background:#050b10;border:1px solid var(--line2);border-radius:8px;outline:none}
-.file-upload{border:1px dashed var(--line2); padding:20px; text-align:center; border-radius:8px; color:var(--muted); cursor:pointer;}
-
-/* ================= CHATS LATERALES (DISCORD STYLE) ================= */
-.discord-panel{display:flex;flex-direction:column;height:100%}
-.chat-tabs{display:flex; gap:5px; padding:6px 0 12px; overflow-x:auto;}
-.chat-tab{border:0;background:transparent;color:#8f9aa0;padding:8px 12px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:700; white-space:nowrap;}
-.chat-tab.active{background:#5865f233;color:#fff; border-bottom:2px solid #5865f2;}
-.chat-pane{display:none;flex-direction:column;flex:1;min-height:350px;}
-.chat-pane.active{display:flex}
-.chat-list{flex:1;overflow:auto;padding-right:4px; display:flex; flex-direction:column; gap:8px;}
-.message{display:flex;gap:10px;padding:8px; border-radius:8px; background:rgba(255,255,255,0.02);}
-.message.far-away{opacity: 0.4;} /* Efecto de lejanía en rol */
-.message p{margin:3px 0 0;font-size:12px;color:#c6cdd0; word-break: break-word;}
-.chat-input{display:flex;gap:6px;margin-top:10px; align-items:center;}
-.chat-input input{flex:1;background:#050b0f;border:1px solid var(--line2);border-radius:10px;color:#fff;padding:10px;outline:none;font-size:12px}
-
-/* ================= RESPONSIVE ================= */
-@media(max-width:1200px){
-  .shell{grid-template-columns:230px minmax(0,1fr)}
-  .rightbar{display:none} /* En tablet se oculta el panel derecho fijo, habría que abrirlo con botón */
-}
-@media(max-width:850px){
-  .shell{display:block;padding:10px 10px 75px}
-  .sidebar{display:none}
-  .form-grid{grid-template-columns:1fr}
-  .nav-btn span{display:none}
-}
+:root{--bg:#03070b;--p:#081117;--p2:#0d171e;--line:#ffffff16;--gold:#e2b63e;--green:#16c66b;--red:#ef4444;--purple:#9b63e8;--text:#f5f6f7;--muted:#8d999f}
+*{box-sizing:border-box}html,body{margin:0;background:radial-gradient(circle at 50% -20%,#17252c,#071017 38%,#020406);color:var(--text);font:14px Inter,Segoe UI,Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.top{height:70px;position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;padding:0 16px;background:#03080cf0;backdrop-filter:blur(20px);border-bottom:1px solid var(--line)}
+.logo{width:145px;font-weight:900;font-size:17px;letter-spacing:1px}.logo b{color:var(--red)}.logo small{display:block;color:var(--gold);font-size:8px}
+.nav{display:flex;gap:4px;overflow:auto;flex:1;scrollbar-width:none}.nav button{min-width:62px;border:0;background:none;color:#9ba6ab;padding:6px;display:flex;flex-direction:column;align-items:center;gap:3px}.nav button:hover,.nav button.active{color:var(--gold)}.nav i{font-size:17px}.nav span{font-size:8px;font-weight:800;white-space:nowrap}.badge{position:absolute;margin:-5px 0 0 28px;background:var(--red);border-radius:20px;font-size:8px;padding:2px 5px;color:#fff}
+.user{display:flex;align-items:center;gap:8px}.avatar{width:42px;height:42px;border-radius:50%;overflow:hidden;border:2px solid var(--gold);background:#182128;display:grid;place-items:center;font-weight:900}.avatar img{width:100%;height:100%;object-fit:cover}.on{color:var(--green);font-size:10px;font-weight:900}
+.layout{max-width:1650px;margin:auto;padding:14px;display:grid;grid-template-columns:260px minmax(0,1fr) 330px;gap:14px}.sticky{position:sticky;top:84px;max-height:calc(100vh - 100px);overflow:auto}.card{background:linear-gradient(180deg,#0b151bf5,#050b10f5);border:1px solid var(--line);border-radius:15px;box-shadow:0 10px 35px #0006}.pad{padding:14px}.profile{display:flex;gap:10px;align-items:center}.side-menu button{width:100%;display:flex;gap:10px;align-items:center;text-align:left;background:none;color:#aeb8bd;border:1px solid transparent;padding:10px;border-radius:9px}.side-menu button:hover{background:#e2b63e12;color:#fff;border-color:#e2b63e44}
+.money{font-size:26px;font-weight:900;color:var(--green)}.bar{height:6px;background:#ffffff15;border-radius:10px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--green))}
+.page{display:none}.page.active{display:block}.head h2{margin:3px 0;color:var(--gold)}.head p{margin:4px 0 14px;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.field{margin:9px 0}.field label{display:block;font-size:11px;color:#aeb8bd;font-weight:800;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;padding:10px;background:#050b10;color:#fff;border:1px solid #ffffff25;border-radius:9px;outline:0}.field textarea{min-height:100px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:#e2b63e88}
+.btn{border:0;border-radius:9px;padding:10px 14px;background:linear-gradient(135deg,#f3cc65,#d09a1d);color:#111;font-weight:900}.btn.secondary{background:#ffffff08;color:#fff;border:1px solid #ffffff25}.btn.danger{background:#4b151b;color:#ffb1b1;border:1px solid #ef444455}.btn.full{width:100%}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.toolbar .btn:last-child{margin-left:auto}
+.hero{height:185px;border-radius:15px;background:linear-gradient(90deg,#05080ccc,#05080c22),url('https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1500&q=80') center/cover;display:flex;align-items:end;padding:20px;margin-bottom:12px}.hero h1{font-size:43px;margin:2px 0;letter-spacing:2px}
+.post{overflow:hidden}.posthead{display:flex;align-items:center;gap:10px;padding:12px}.postmedia img{width:100%;max-height:520px;object-fit:cover;display:block}.postbody{padding:12px}.actions{display:flex;gap:20px;border-top:1px solid var(--line);padding:10px 12px}.actions button{border:0;background:none;color:#aeb8bd}.actions button:hover{color:var(--gold)}
+.list{display:flex;flex-direction:column;gap:8px}.row{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);border-radius:10px;background:#ffffff03}.grow{flex:1}.pill{border-radius:99px;padding:4px 8px;font-size:9px;font-weight:900}.green{color:#63e9a1;background:#16c66b18}.red{color:#ff9d9d;background:#ef444418}.yellow{color:#f1cd72;background:#e2b63e18}.purple{color:#c9a6ff;background:#9b63e818}.blue{color:#83d8f5;background:#35b6e818}
+.icon-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:12px 0}.iconbox{border:1px solid var(--line);background:#ffffff04;border-radius:11px;padding:14px 7px;color:#fff}.iconbox i{display:block;color:var(--gold);font-size:21px;margin-bottom:6px}.iconbox b{font-size:10px}
+.chat{height:600px;display:flex;flex-direction:column}.chat-tabs{display:flex;gap:5px;padding:8px;overflow:auto;border-bottom:1px solid var(--line)}.chat-tabs button{border:0;background:#ffffff07;color:#9ba5aa;border-radius:8px;padding:8px 10px;white-space:nowrap}.chat-tabs button.active{background:#5865f233;color:#fff}.chat-list{flex:1;overflow:auto;padding:10px}.msg{display:flex;gap:8px;margin:8px 0}.bubble{max-width:82%;padding:8px;border:1px solid var(--line);border-radius:10px;background:#ffffff06}.bubble small{color:var(--gold)}.chat-input{display:flex;gap:7px;padding:8px;border-top:1px solid var(--line)}.chat-input input{flex:1;background:#050b10;color:#fff;border:1px solid #ffffff25;border-radius:9px;padding:10px}
+.radio{padding:16px;border-radius:15px;border:1px solid #ef444455;background:#ef44440b}.wave{height:50px;margin:12px 0;background:repeating-linear-gradient(90deg,#ef4444 0 2px,transparent 2px 7px);opacity:.65}
+.mobile{display:none}
+@media(max-width:1200px){.layout{grid-template-columns:220px minmax(0,1fr)}.right{display:none}.grid3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){.top{height:62px;padding:0 8px}.logo{width:auto}.logo small{display:none}.user div{display:none}.layout{display:block;padding:8px 8px 75px}.side{display:none}.grid,.grid3{grid-template-columns:1fr}.icon-grid{grid-template-columns:repeat(3,1fr)}.hero{height:145px}.hero h1{font-size:31px}.mobile{position:fixed;display:flex;bottom:0;left:0;right:0;z-index:80;justify-content:space-around;background:#050b10f5;border-top:1px solid var(--line);padding:7px}.mobile button{background:none;border:0;color:#9ba5aa;font-size:9px}.mobile i{display:block;font-size:17px;margin-bottom:2px}.mobile .active{color:var(--gold)}}
 </style>
 </head>
 <body>
+<header class="top">
+  <button class="navbtn" style="border:0;background:none;color:#9ba5aa" onclick="go('inicio')"><i class="fa-solid fa-house"></i></button>
+  <div class="logo">MEX<span>CITY</span> <b>RP</b><small>ROLEPLAY PLATFORM</small></div>
+  <nav class="nav" id="nav"></nav>
+  <div class="user"><div><b id="topName">Cartsh</b><br><span class="on">● ON</span></div><div class="avatar"><img id="topAvatar" src="https://i.pravatar.cc/100?img=47"></div></div>
+</header>
 
-<div id="app">
-  <!-- ================= TOPBAR ================= -->
-  <header class="topbar">
-    <div class="brand-small" onclick="showPage('inicio')">
-      <div style="font-size:24px;color:var(--gold);">♛</div>
-      <strong style="font-size:16px;letter-spacing:1px">MXRP</strong>
-    </div>
-    <div class="nav-icons">
-      <button class="nav-btn" onclick="showPage('finanzas')"><i class="fa-solid fa-building-columns"></i><span>Banco</span></button>
-      <button class="nav-btn" onclick="showPage('empresas')"><i class="fa-solid fa-briefcase"></i><span>Empresas</span></button>
-      <button class="nav-btn" onclick="showPage('noticias')"><i class="fa-solid fa-newspaper"></i><span>Noticias</span></button>
-      <button class="nav-btn" onclick="showPage('mensajes')"><i class="fa-solid fa-envelope"></i><span>Mensajes</span><div class="badge">2</div></button>
-      <button class="nav-btn" onclick="showPage('historial')"><i class="fa-solid fa-clock-rotate-left"></i><span>Historial</span></button>
-      <button class="nav-btn active" onclick="showPage('inicio')"><i class="fa-solid fa-house"></i><span>Inicio</span></button>
-      <button class="nav-btn" onclick="logout()" style="color:var(--red)"><i class="fa-solid fa-right-from-bracket"></i><span>Salir</span></button>
-    </div>
-  </header>
+<div class="layout">
+<aside class="side sticky"><div class="card pad">
+  <div class="profile"><div class="avatar"><img id="sideAvatar" src="https://i.pravatar.cc/150?img=47"></div><div><b id="sideName">Cartsh</b><br><span class="on">● ON ROL</span><br><small id="sideCity">Tijuana</small></div></div>
+  <div style="margin-top:12px"><small>ACTIVIDAD DE ROL</small><div style="display:flex;justify-content:space-between"><b id="activity">82%</b></div><div class="bar"><i id="activityBar" style="width:82%"></i></div></div>
+  <div style="margin-top:12px"><small>SALDO ACTUAL</small><div class="money" id="sideBalance">$1,250,000 RP</div><small class="muted" id="sideAccount">CB-RP-0001</small></div>
+  <div class="side-menu" id="sideMenu" style="margin-top:10px"></div>
+</div></aside>
 
-  <div class="shell">
-    <!-- ================= SIDEBAR IZQUIERDA ================= -->
-    <aside class="sidebar">
-      <div class="side-card">
-        <div class="side-profile">
-          <div class="profile-header">
-            <div class="avatar" id="sideAvatar"><img src="https://i.pravatar.cc/150?img=47" alt="Perfil"></div>
-            <div>
-              <b id="sideName" style="font-size:15px">Cartsh</b>
-              <small id="sideCity" class="muted" style="display:block">CDMX</small>
-              <small style="color:var(--gold2); font-size:11px;">ID: MX-CRT-8821</small>
-            </div>
-          </div>
-          <div class="activity-box">
-            <div style="display:flex; justify-content:space-between; font-size:10px; font-weight:bold;">
-              <span>NIVEL DE ACTIVIDAD RP</span> <span style="color:var(--green)">85%</span>
-            </div>
-            <div class="activity-bar"><div class="activity-fill"></div></div>
-          </div>
-        </div>
-        <div class="nav">
-          <button onclick="showPage('jugador')"><i class="fa-solid fa-id-card"></i> Identidad Jugador</button>
-          <button onclick="showPage('hogar')"><i class="fa-solid fa-house"></i> Registro de Hogar</button>
-          <button onclick="showPage('transporte')"><i class="fa-solid fa-car"></i> Registro Transporte</button>
-          <button onclick="showPage('familia')"><i class="fa-solid fa-users"></i> Registro de Familia</button>
-          <button onclick="showPage('empresa_registro')"><i class="fa-solid fa-file-signature"></i> Alta de Empresas</button>
-        </div>
-      </div>
-    </aside>
+<main>
+<section id="inicio" class="page active"><div class="hero"><div><small style="color:var(--red);font-weight:900">BIENVENIDO DE NUEVO</small><h1 id="heroName">CARTSH</h1><div>Tu historia continúa aquí · <span id="heroCity">Tijuana</span></div></div></div>
+<div class="grid"><div><div class="card pad"><textarea id="postText" placeholder="¿Qué sucede en tu entorno? Publica tu rol, imagen o historia."></textarea><div class="toolbar" style="margin-top:8px"><button class="btn secondary" onclick="document.getElementById('postFile').click()">📷 Foto/video</button><input id="postFile" type="file" accept="image/*,video/*" hidden><button class="btn secondary" onclick="go('ia')">🤖 IA</button><button class="btn" onclick="publish()">Publicar</button></div></div><div id="feed" class="list" style="margin-top:12px"></div></div>
+<div><div class="card pad"><b>📻 RADIO MEXCITY RP <span class="pill red" style="float:right">ON AIR</span></b><div class="wave"></div><small>Noticias, servicios, empleos, eventos, campañas y saludos.</small><button class="btn secondary full" style="margin-top:10px" onclick="go('radio')">Abrir radio</button></div><div class="card pad" style="margin-top:12px"><b>🔔 MENSAJES RECIENTES</b><div id="recent" class="list" style="margin-top:8px"></div></div></div></div></section>
 
-    <!-- ================= CONTENIDO CENTRAL ================= -->
-    <main class="main">
-      
-      <!-- RADIO ONLINE BANNER -->
-      <div class="radio-banner" id="radioBanner">
-        <i class="fa-solid fa-satellite-dish"></i>
-        <div style="flex:1">
-          <b style="font-size:14px; color:var(--gold2)">MEXCITY RADIO ONLINE 📻</b>
-          <marquee scrollamount="5" style="font-size:12px; color:var(--text); margin-top:3px;">
-            [ALERTA] Fuerte movilización en el centro de la ciudad — Sonando ahora: Karol G - TQG — ¡Pide tu canción en el chat!
-          </marquee>
-        </div>
-      </div>
+<section id="banco" class="page"><div class="head"><h2>BANCOMCRP</h2><p>Saldo, transferencias, servicios, préstamos, nómina, historial y ventas.</p></div><div class="card pad"><div class="grid3"><div><small>SALDO</small><div class="money" id="bankBalance">$1,250,000 RP</div></div><div><small>CUENTA</small><h3 id="bankAccount">CB-RP-0001</h3></div><div><small>ESTADO</small><h3><span class="pill green">ACTIVA</span></h3></div></div></div><div class="icon-grid">
+<button class="iconbox" onclick="bank('send')"><i class="fa-solid fa-money-bill-transfer"></i><b>Enviar</b></button><button class="iconbox" onclick="bank('services')"><i class="fa-solid fa-file-invoice-dollar"></i><b>Servicios</b></button><button class="iconbox" onclick="bank('loan')"><i class="fa-solid fa-hand-holding-dollar"></i><b>Préstamo</b></button><button class="iconbox" onclick="bank('payroll')"><i class="fa-solid fa-wallet"></i><b>Nómina</b></button><button class="iconbox" onclick="bank('history')"><i class="fa-solid fa-clock-rotate-left"></i><b>Historial</b></button><button class="iconbox" onclick="go('tickets')"><i class="fa-solid fa-ticket"></i><b>Tickets</b></button><button class="iconbox" onclick="bank('sell')"><i class="fa-solid fa-house-circle-check"></i><b>Vender</b></button>
+</div><div id="bankContent"></div></section>
 
-      <!-- FEED INICIO -->
-      <section id="page-inicio" class="page active">
-        <div class="panel composer">
-          <textarea id="postText" rows="3" placeholder="¿Qué sucede en tu entorno? (Sube fotos, videos o usa IA)"></textarea>
-          <div class="composer-actions">
-            <button class="chip"><i class="fa-solid fa-image"></i> Foto / Video</button>
-            <button class="chip ia-chip" onclick="generarVideoIA()"><i class="fa-solid fa-wand-magic-sparkles"></i> IA: Generar Video (4 min) de Chat Rol</button>
-            <button class="btn" style="margin-left:auto;width:auto" onclick="publishFeed()">Publicar</button>
-          </div>
-        </div>
-        <div id="feed" class="feed">
-          <!-- Post Estilo IG -->
-          <div class="panel post">
-            <div class="post-head">
-              <div class="avatar" style="width:40px;height:40px"><img src="https://i.pravatar.cc/150?img=11"></div>
-              <div><b>Apolo_RMEX</b><br><small class="muted">Hace 10 min · Centro Comercial</small></div>
-            </div>
-            <div class="post-media">
-              <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=800&q=80" alt="Auto">
-            </div>
-            <div class="post-body">
-              <p>Estrenando el nuevo juguete por las calles de MexCity. #Lujo #Ferrari</p>
-            </div>
-            <div class="post-actions">
-              <button onclick="this.classList.toggle('liked-crown')"><i class="fa-solid fa-crown"></i> <span>124</span></button>
-              <button><i class="fa-solid fa-comment"></i> <span>15</span></button>
-              <button><i class="fa-solid fa-paper-plane"></i></button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- REGISTRO JUGADOR -->
-      <section id="page-jugador" class="page">
-        <div class="page-head"><h2>Ficha de Identidad (ID)</h2><p class="muted">Completa tu registro ciudadano.</p></div>
-        <div class="panel">
-          <div class="file-upload" onclick="alert('Seleccionando archivo del dispositivo...')">
-            <i class="fa-solid fa-camera fa-2x"></i><br>Subir Foto de Avatar
-          </div>
-          <div class="form-grid" style="margin-top:15px">
-            <div class="field"><label>Nombre Completo</label><input type="text" id="jNombre" placeholder="Ej. Cartsh"></div>
-            <div class="field">
-              <label>Edad</label>
-              <select id="jEdad">
-                <option>18-25 años</option><option>26-35 años</option><option>36+ años</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Ciudad</label>
-              <select id="jCiudad"><option>Ciudad de México (CDMX)</option><option>Guadalajara</option><option>Monterrey</option><option>Tijuana</option></select>
-            </div>
-            <div class="field">
-              <label>Sexo</label><select id="jSexo"><option>Femenino</option><option>Masculino</option><option>Intersexual</option></select>
-            </div>
-            <div class="field">
-              <label>Tipo de Sangre</label><select id="jSangre"><option>O+</option><option>A+</option><option>B+</option><option>AB+</option><option>O-</option></select>
-            </div>
-            <div class="field"><label>ID Ciudadano (Automático)</label><input type="text" id="jId" readonly></div>
-          </div>
-          <button class="btn full" style="margin-top:15px" onclick="guardarJugador()">Guardar Información (Generar Ficha Oficial)</button>
-          
-          <div style="margin-top:30px; border-top:1px solid var(--red); padding-top:15px;">
-            <b style="color:var(--red)">¿Falleció tu personaje?</b>
-            <p class="muted" style="font-size:12px">Al declarar muerte (CK), se reiniciará tu registro para crear un nuevo personaje.</p>
-            <button class="btn danger" onclick="morirPersonaje()">Declarar Muerte de Personaje</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- REGISTRO HOGAR -->
-      <section id="page-hogar" class="page">
-        <div class="page-head"><h2>Registro de Hogar</h2></div>
-        <div class="panel">
-          <div class="file-upload" onclick="alert('Seleccionando imagen de la casa...')">
-            <i class="fa-solid fa-house fa-2x"></i><br>Subir Foto de Fachada
-          </div>
-          <div class="form-grid" style="margin-top:15px">
-            <div class="field full"><label>Domicilio (Generado Automáticamente)</label><input type="text" id="hDomicilio" readonly></div>
-            <div class="field">
-              <label>Tipo de Casa</label>
-              <select id="hTipo" onchange="calcularPrecioCasa()">
-                <option value="500000">Casa Estandar</option>
-                <option value="350000">Departamento</option>
-                <option value="5000000">Mansión</option>
-                <option value="2500000">Rancho</option>
-                <option value="1500000">Villa</option>
-                <option value="0">Otro</option>
-              </select>
-            </div>
-            <div class="field"><label>Valor Evaluado ($RP)</label><input type="text" id="hValor" readonly value="$500,000 RP"></div>
-          </div>
-          <button class="btn" style="margin-top:15px">Registrar Propiedad</button>
-        </div>
-      </section>
-
-      <!-- REGISTRO TRANSPORTE -->
-      <section id="page-transporte" class="page">
-        <div class="page-head"><h2>Registro de Transporte</h2></div>
-        <div class="panel">
-          <div class="file-upload" onclick="alert('Seleccionando imagen del vehículo...')">
-            <i class="fa-solid fa-car fa-2x"></i><br>Subir Foto del Vehículo
-          </div>
-          <div class="form-grid" style="margin-top:15px">
-            <div class="field">
-              <label>Tipo de Transporte</label>
-              <select id="tTipo" onchange="actualizarModelos()">
-                <option value="auto">Automóvil Deportivo (Ej. Ferrari)</option>
-                <option value="suv">Camioneta / SUV</option>
-                <option value="moto">Motocicleta</option>
-                <option value="pie">A pie 🚶</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Modelo (Opciones según tipo)</label>
-              <select id="tModelo"><option>Ferrari Portofino</option><option>Porsche 911</option></select>
-            </div>
-            <div class="field">
-              <label>Color</label><select id="tColor"><option>Dorado Intenso</option><option>Negro Ónix</option><option>Blanco</option></select>
-            </div>
-            <div class="field"><label>Placas (Automático)</label><input type="text" id="tPlacas" readonly></div>
-          </div>
-          <button class="btn" style="margin-top:15px" onclick="generarPlacas()">Solicitar Placas y Registrar</button>
-        </div>
-      </section>
-
-      <!-- REGISTRO EMPRESA -->
-      <section id="page-empresa_registro" class="page">
-        <div class="page-head"><h2>Alta de Empresas y Empleos</h2></div>
-        <div class="panel form-grid">
-          <div class="field full"><label>Nombre de la Empresa / Institución</label><input type="text" placeholder="Ej. Agencia R-MEX Models"></div>
-          <div class="field">
-            <label>Giro / Tipo</label>
-            <select id="eGiro" onchange="toggleEmpresaGiro()">
-              <option value="privada">Oficio / Privado (Moda, Taller, Club)</option>
-              <option value="gobierno">Gobierno (Hospital, Policía, Militar, Juzgado, Servicios)</option>
-              <option value="presidente">Presidente de la República (ÚNICO)</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Tu Cargo</label>
-            <select id="eCargo" onchange="toggleEmpresaCargo()">
-              <option value="propietario">Propietario / Dueño</option>
-              <option value="empleado">Empleado</option>
-            </select>
-          </div>
-
-          <!-- Solo si es Propietario Privado -->
-          <div id="boxPropietario" class="full form-grid">
-            <div class="field"><label>Pago a Empleados (Monto)</label><input type="number" placeholder="$RP"></div>
-            <div class="field"><label>Frecuencia de Pago</label><select><option>Semanal</option><option>Quincenal</option></select></div>
-            <div class="field"><label>Horario Apertura</label><input type="time"></div>
-            <div class="field"><label>Horario Cierre</label><input type="time"></div>
-            <div class="field full"><label>¿Vincular Empleados? Selecciona Ciudadano:</label><select><option>Daniela Golden</option><option>Nyx</option><option>Apolo</option></select></div>
-          </div>
-
-          <!-- Solo si es Gobierno -->
-          <div id="boxGobierno" class="full form-grid hidden">
-            <div class="field full"><label>Cargo Gubernamental</label><select><option>Médico General</option><option>Oficial de Policía</option><option>Militar Rango Alto</option><option>Técnico de Luz/Agua</option></select></div>
-            <div class="field full"><label>Salario Base (Automático / Quincena)</label><input type="text" readonly value="$25,000 RP Quincenales"></div>
-          </div>
-
-          <button class="btn full" style="margin-top:15px">Registrar Cargo Oficial</button>
-        </div>
-      </section>
-
-      <!-- BANCO -->
-      <section id="page-finanzas" class="page">
-        <div class="page-head"><h2>BANCOMEXRP</h2></div>
-        <div class="panel" style="text-align:center;">
-          <small style="color:var(--green);font-weight:bold">SALDO ACTUAL</small>
-          <h1 style="font-size:38px;margin:5px 0">$1,500,000 RP</h1>
-          
-          <div class="form-grid" style="margin-top:20px; text-align:left;">
-            <div class="panel" style="background:var(--panel2)">
-              <h3 style="margin-top:0">Enviar Dinero</h3>
-              <div class="field"><label>Seleccionar Jugador</label><select><option>Gina</option><option>Josefina</option><option>Apolo</option></select></div>
-              <div class="field"><label>Cantidad</label><input type="number" placeholder="$RP"></div>
-              <button class="btn full">Transferir</button>
-            </div>
-            <div class="panel" style="background:var(--panel2)">
-              <h3 style="margin-top:0">Pedir Préstamo</h3>
-              <div class="field"><label>Motivo</label><input type="text" placeholder="Inversión en negocio..."></div>
-              <div class="field"><label>Cantidad (Máx. $900,000 RP)</label><input type="number" id="prestamoCant" placeholder="Monto"></div>
-              <button class="btn full" onclick="solicitarPrestamo()">Solicitar al Banco</button>
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      <section id="page-historial" class="page">
-        <div class="page-head"><h2>Historial del Personaje</h2></div>
-        <div class="panel">
-          <p class="muted">Tus fichas y acciones oficiales se registran aquí.</p>
-          <div style="padding:10px; border-left:3px solid var(--gold2); background:var(--panel2); margin-bottom:10px;">
-            <b>ID Oficial Generada</b> - <i>Cartsh (MX-CRT-8821)</i> - Ficha almacenada.
-          </div>
-          <div style="padding:10px; border-left:3px solid var(--green); background:var(--panel2);">
-            <b>Alta de Empresa</b> - <i>Agencia R-MEX Models</i> - Propietaria.
-          </div>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- ================= RIGHTBAR: DISCORD / IG CHATS ================= -->
-    <aside class="rightbar">
-      <div class="panel discord-panel" style="height:calc(100vh - 120px)">
-        <div class="chat-tabs">
-          <button class="chat-tab active" onclick="switchChat('general',this)">🌐 General</button>
-          <button class="chat-tab" onclick="switchChat('rol',this)">🎭 Rol On/Off</button>
-          <button class="chat-tab" onclick="switchChat('dm',this)">💬 DMs</button>
-          <button class="chat-tab" style="color:var(--red)" onclick="switchChat('admin',this)">🛡️ Admin</button>
-        </div>
-        
-        <!-- Chat General (IG Style) -->
-        <div id="chatPaneGeneral" class="chat-pane active">
-          <div class="chat-list" id="generalList">
-            <div class="message"><div class="avatar" style="width:28px;height:28px;font-size:10px">T</div><div><b>Tlatoani</b><p>¿Quién activo para salir a dar una vuelta? 😎</p></div></div>
-          </div>
-          <div class="chat-input">
-            <button class="chip" style="padding:8px"><i class="fa-regular fa-face-smile"></i></button>
-            <input type="text" placeholder="Escribe un mensaje..." id="genInput" onkeydown="if(event.key==='Enter') sendChat('general')">
-            <button class="btn" style="padding:8px 12px" onclick="sendChat('general')"><i class="fa-solid fa-paper-plane"></i></button>
-          </div>
-        </div>
-
-        <!-- Chat de Rol (Discord Style con Comandos) -->
-        <div id="chatPaneRol" class="chat-pane">
-          <div style="font-size:10px; color:var(--gold); margin-bottom:5px; text-align:center;">
-            Comandos: *acción* | #lugar | -transporte- | (auto-acción) | //dirigirse | _tiempo_
-          </div>
-          <div class="chat-list" id="rolList">
-            <div class="message far-away"><div class="avatar" style="width:28px;height:28px;font-size:10px">N</div><div><b>Nyx</b><p>#Hospital _llegada en 5 min_ *(se subiría a la ambulancia)*</p></div></div>
-            <div class="message"><div class="avatar" style="width:28px;height:28px;font-size:10px">C</div><div><b>Chetees</b><p>*Pasa la tarjeta por el lector* //Centro Comercial</p></div></div>
-          </div>
-          <div class="chat-input">
-            <input type="text" placeholder="On Rol..." id="rolInput" onkeydown="if(event.key==='Enter') sendChat('rol')">
-            <button class="btn" style="padding:8px 12px" onclick="sendChat('rol')"><i class="fa-solid fa-play"></i></button>
-          </div>
-        </div>
-        
-        <!-- DMs -->
-        <div id="chatPaneDm" class="chat-pane">
-          <select style="background:var(--panel2); color:white; border:none; padding:5px; margin-bottom:10px;"><option>Chat con: Daniela Golden</option><option>Chat con: Apolo</option></select>
-          <div class="chat-list" id="dmList">
-            <div class="message"><div class="avatar" style="width:28px;height:28px;font-size:10px">D</div><div><b>Daniela Golden</b><p>🎵 (Audio 0:15s)</p></div></div>
-          </div>
-          <div class="chat-input">
-            <button class="chip"><i class="fa-solid fa-microphone"></i></button>
-            <input type="text" placeholder="Mensaje privado..." id="dmInput" onkeydown="if(event.key==='Enter') sendChat('dm')">
-          </div>
-        </div>
-
-        <!-- Admin Chat -->
-        <div id="chatPaneAdmin" class="chat-pane">
-          <div style="font-size:10px; text-align:center; color:var(--red); margin-bottom:5px;">Atendido por Administrador: SOPORTE_01</div>
-          <div class="chat-list" id="adminList">
-            <div class="message"><div class="avatar" style="width:28px;height:28px;font-size:10px; background:var(--red);">A</div><div><b style="color:var(--red)">Admin</b><p>📝 [Transcripción de Audio]: "Revisaremos la solicitud de tu empresa en breve, Cartsh."</p></div></div>
-          </div>
-          <div class="chat-input">
-            <input type="text" placeholder="Dudas o reportes..." id="adminInput" onkeydown="if(event.key==='Enter') sendChat('admin')">
-          </div>
-        </div>
-
-      </div>
-    </aside>
-
-  </div>
-</div>
+<section id="empresas" class="page"><div class="head"><h2>EMPRESAS / SERVICIOS</h2><p>Solo servicios activos según horario. El proveedor recibe la solicitud si está ON.</p></div><div id="businesses" class="list"></div></section>
+<section id="empleos" class="page"><div class="head"><h2>EMPLEOS</h2><p>Vacantes, postulaciones y entrevistas.</p></div><div id="jobs" class="list"></div></section>
+<section id="mensajes" class="page"><div class="head"><h2>MENSAJES</h2><p>Administración, banco, deudas, horarios, citas, servicios y actividad.</p></div><div id="messages" class="list"></div></section>
+<section id="ia" class="page"><div class="head"><h2>ASISTENTE IA</h2><p>Herramientas creativas para rol. No revela credenciales, contraseñas, datos privados ni información de seguridad.</p></div><div class="card pad"><div class="notice red"><b>Protección:</b> solicitudes de información privada o credenciales serán rechazadas. La suspensión de asistencia debe aplicarse desde backend.</div><div class="field"><label>DESCRIBE LO QUE NECESITAS</label><textarea id="aiPrompt" placeholder="Crea una historia cinematográfica de mi rol..."></textarea></div><div class="toolbar"><button class="btn" onclick="ai('historia')">Historia RP</button><button class="btn secondary" onclick="ai('imagen')">Prompt imagen</button><button class="btn secondary" onclick="ai('video')">Plan video 4+ min</button><button class="btn secondary" onclick="ai('avatar')">Avatar</button><button class="btn secondary" onclick="ai('cartel')">Cartel</button></div><div id="aiResult" class="card pad" style="margin-top:10px">Resultado de IA.</div></div></section>
+<section id="historial" class="page"><div class="head"><h2>HISTORIAL</h2><p>Eventos del personaje desde ingreso hasta final de vida. No se borran movimientos oficiales.</p></div><div id="history" class="list"></div></section>
+<section id="jugador" class="page"><div class="head"><h2>JUGADOR · FICHA DE IDENTIDAD</h2></div><div class="card pad"><div class="grid"><div><label class="file" style="display:block;text-align:center;padding:20px;border:1px dashed #ffffff35;border-radius:10px">📷 Subir foto<input id="avatarFile" type="file" accept="image/*" hidden></label><img id="avatarPreview" style="display:none;width:100%;max-height:230px;object-fit:cover;border-radius:10px;margin-top:8px"></div><div><div class="field"><label>ID CIUDADANO</label><input id="pId" readonly></div><div class="field"><label>NOMBRE</label><input id="pName"></div><div class="field"><label>EDAD</label><input id="pAge" type="number"></div></div></div><div class="grid"><div class="field"><label>CIUDAD</label><select id="pCity"></select></div><div class="field"><label>OCUPACIÓN</label><select id="pJob"></select></div><div class="field"><label>GÉNERO</label><select><option>Mujer</option><option>Hombre</option><option>No binario</option><option>Prefiero no especificar</option></select></div><div class="field"><label>DISCAPACIDAD</label><select><option>Ninguna</option><option>Visual</option><option>Auditiva</option><option>Motriz</option><option>Otra</option></select></div><div class="field"><label>TIPO DE SANGRE</label><select><option>O+</option><option>O-</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option></select></div><div class="field"><label>DOMICILIO AUTOMÁTICO</label><input id="pAddress" readonly></div></div><button class="btn full" onclick="saveProfile()">Guardar ficha oficial</button></div></section>
+<section id="hogar" class="page"><div class="head"><h2>HOGAR</h2></div><div class="card pad"><div class="grid"><div class="field"><label>CIUDAD</label><select id="hCity"></select></div><div class="field"><label>TIPO DE HOGAR</label><select id="hType" onchange="home()"><option value="350000">Departamento</option><option value="650000">Casa</option><option value="1500000">Villa</option><option value="2500000">Rancho</option><option value="5000000">Mansión</option></select></div><div class="field"><label>DOMICILIO</label><input id="hAddress" readonly></div><div class="field"><label>VALORACIÓN $RP</label><input id="hValue" readonly></div></div><label class="file" style="display:block;text-align:center;padding:20px;border:1px dashed #ffffff35;border-radius:10px">Subir imagen<input type="file" accept="image/*" hidden></label><button class="btn full" onclick="save('Hogar registrado')">Guardar hogar</button></div></section>
+<section id="transporte" class="page"><div class="head"><h2>TRANSPORTE</h2></div><div class="card pad"><div class="grid"><div class="field"><label>TIPO</label><select id="tType" onchange="models()"><option>Automóvil</option><option>SUV</option><option>Motocicleta</option><option>Camión</option><option>Avión</option><option>Helicóptero</option><option>Embarcación</option><option>A pie</option></select></div><div class="field"><label>MODELO</label><select id="tModel"></select></div><div class="field"><label>COLOR</label><select><option>Negro</option><option>Blanco</option><option>Rojo</option><option>Azul</option><option>Dorado</option><option>Gris</option></select></div><div class="field"><label>PLACAS</label><input id="plate" readonly></div></div><label class="file" style="display:block;text-align:center;padding:20px;border:1px dashed #ffffff35;border-radius:10px">Subir imagen<input type="file" accept="image/*" hidden></label><button class="btn full" onclick="registerTransport()">Registrar transporte</button></div></section>
+<section id="familia" class="page"><div class="head"><h2>FAMILIA / MENORES</h2></div><div class="card pad"><div class="field"><label>¿TIENES FAMILIA?</label><select onchange="toggle('family',this.value==='Sí')"><option>No</option><option>Sí</option></select></div><div id="family" class="hidden"><div class="field"><label>NOMBRE DE FAMILIA</label><input></div><div class="field"><label>JUGADOR REGISTRADO</label><select id="familyPlayer"></select></div><div class="field"><label>ROL</label><select><option>Padre/Madre</option><option>Hijo/a</option><option>Hermano/a</option><option>Pareja</option><option>Otro</option></select></div></div><div class="field"><label>¿REGISTRAR MENOR?</label><select onchange="toggle('minor',this.value==='Sí')"><option>No</option><option>Sí</option></select></div><div id="minor" class="hidden"><div class="field"><label>NOMBRE</label><input></div><div class="grid"><div class="field"><label>EDAD</label><input type="number"></div><div class="field"><label>UNIDAD</label><select><option>Días</option><option>Meses</option><option>Años</option></select></div></div><div class="field"><label>PADRE/MADRE JUGADOR</label><select id="minorPlayer"></select></div></div><button class="btn full" onclick="save('Registro familiar enviado a revisión')">Guardar</button></div></section>
+<section id="organizaciones" class="page"><div class="head"><h2>ORGANIZACIONES / PANDILLAS</h2></div><div class="card pad"><div class="grid"><div class="field"><label>PERTENECES A</label><select onchange="toggle('org',this.value!=='Ninguna')"><option>Ninguna</option><option>Pandilla</option><option>Organización</option></select></div><div class="field"><label>ALIAS</label><input></div></div><div id="org" class="hidden"><div class="grid"><div class="field"><label>NOMBRE</label><input></div><div class="field"><label>CARGO</label><select><option>Miembro</option><option>Operativo</option><option>Coordinador</option><option>Director</option><option>Líder</option></select></div><div class="field"><label>SUELDO $RP</label><input type="number"></div></div></div><button class="btn full" onclick="save('Organización enviada a revisión')">Guardar</button></div></section>
+<section id="empresa_registro" class="page"><div class="head"><h2>EMPRESA / TRABAJO</h2></div><div class="card pad"><div class="grid"><div class="field"><label>NOMBRE</label><input></div><div class="field"><label>GIRO</label><select><option>Comercio</option><option>Restaurante</option><option>Hospital</option><option>Policía</option><option>Militar</option><option>Juzgado</option><option>Gobierno</option><option>Servicios</option><option>Transporte</option><option>Moda</option><option>Entretenimiento</option><option>Otro</option></select></div><div class="field"><label>APERTURA</label><input type="time"></div><div class="field"><label>CIERRE</label><input type="time"></div><div class="field"><label>SALARIO $RP</label><input type="number"></div><div class="field"><label>PAGO</label><select><option>Semanal</option><option>Quincenal</option></select></div></div><div class="field"><label>ARTÍCULOS / SERVICIOS / PRECIOS</label><textarea></textarea></div><label class="file" style="display:block;text-align:center;padding:20px;border:1px dashed #ffffff35;border-radius:10px">Subir logo<input type="file" accept="image/*" hidden></label><button class="btn full" onclick="save('Empresa enviada a revisión')">Enviar registro</button></div></section>
+<section id="tickets" class="page"><div class="head"><h2>TICKETS</h2></div><div class="card pad"><div class="grid"><div class="field"><label>TIPO</label><select><option>Cuenta</option><option>Transferencia</option><option>Saldo</option><option>Movimiento</option><option>Rol</option><option>Otro</option></select></div><div class="field"><label>PRIORIDAD</label><select><option>Normal</option><option>Alta</option></select></div></div><div class="field"><label>ASUNTO</label><input id="ticketSubject"></div><div class="field"><label>DESCRIPCIÓN</label><textarea id="ticketDesc"></textarea></div><button class="btn full" onclick="ticket()">Crear ticket</button></div></section>
+<section id="feedpage" class="page"><div class="head"><h2>FEED</h2></div><div id="feed2" class="list"></div></section>
+<section id="chats" class="page"><div class="head"><h2>CHATS</h2><p>General OFF ROL, Rol ON/OFF, DM y Administración.</p></div><div class="card chat"><div class="chat-tabs"><button class="active" onclick="chatTab('general',this)">General</button><button onclick="chatTab('rol',this)">Rol ON/OFF</button><button onclick="chatTab('dm',this)">DM</button><button onclick="chatTab('admin',this)">Administración</button></div><div id="chatList" class="chat-list"></div><div class="chat-input"><input id="chatInput" placeholder="Escribe un mensaje..."><button class="btn" onclick="sendChat()">Enviar</button></div></div></section>
+<section id="radio" class="page"><div class="head"><h2>RADIO MEXCITY RP</h2></div><div class="radio"><b>🔴 ON AIR · LOCUTOR/A</b><div class="wave"></div><p>Noticias, actualidad, servicios, empleos, empresas, eventos, campañas, situaciones del feed y fallecimientos oficiales.</p><div class="grid"><div class="field"><label>PEDIR CANCIÓN</label><input id="song"></div><div class="field"><label>SALUDO A PERSONAJE</label><input id="salute"></div></div><button class="btn" onclick="radioRequest()">Enviar solicitud</button></div></section>
+</main></div>
+<nav class="mobile"><button onclick="go('inicio')"><i class="fa-solid fa-house"></i>Inicio</button><button onclick="go('banco')"><i class="fa-solid fa-building-columns"></i>Banco</button><button onclick="go('jugador')"><i class="fa-solid fa-id-card"></i>Jugador</button><button onclick="go('mensajes')"><i class="fa-solid fa-envelope"></i>Mensajes</button><button onclick="go('chats')"><i class="fa-solid fa-comments"></i>Chats</button><button onclick="go('ia')"><i class="fa-solid fa-robot"></i>IA</button></nav>
 
 <script>
-  // Navegación principal
-  function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-    const target = document.getElementById('page-' + pageId);
-    if(target) target.classList.add('active');
-    // Para marcar botón superior (opcional)
-    event.currentTarget.classList?.add('active');
-  }
+/* CONFIGURA SOLO URL + ANON KEY. NUNCA pongas service_role_key en este archivo. */
+const SUPABASE_URL="REEMPLAZA_CON_TU_SUPABASE_URL";
+const SUPABASE_ANON_KEY="REEMPLAZA_CON_TU_SUPABASE_ANON_KEY";
+const AI_ENDPOINT="";
+const sb=(window.supabase&&SUPABASE_URL.startsWith("http")&&!SUPABASE_ANON_KEY.startsWith("REEMPLAZA"))?window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;
 
-  // Chats Tabs
-  function switchChat(tab, btnElement) {
-    document.querySelectorAll('.chat-pane').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('chatPane' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
-    btnElement.classList.add('active');
-  }
+const S={profile:{name:"Cartsh",city:"Tijuana",id:"MX-CRT-8821",activity:82,address:"Av. MexCity #284, Tijuana",avatar:"https://i.pravatar.cc/150?img=47"},balance:1250000,account:"CB-RP-0001",
+players:["Daniela Golden","Vlad Hemingway","Raven Black","Apolo","Nyx","Fleur Morgan"],
+posts:[["Vlad Hemingway","Tijuana","Llegada a la ciudad de Tijuana. Después de un largo viaje, por fin llegué a la ciudad.","https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1200&q=80",142,28],["Daniela Golden","Guadalajara","Noche en Black Diamond. Las mejores historias empiezan sin plan.","https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1200&q=80",98,16]],
+messages:[["Administración","Aviso importante sobre el próximo evento.","red"],["BancomCRP","Recordatorio de pago de servicios.","yellow"],["Deudas BancomCRP","Tienes una deuda pendiente.","red"],["Servicios","Nueva solicitud de servicio.","blue"],["Likes y comentarios","Nueva interacción.","green"]],
+history:["Ingreso del personaje a la ciudad","Ficha de identidad guardada","Hogar registrado","Transporte registrado","Rol aprobado","Publicación aprobada"],
+chat:{general:["Tlatoani|¿Quién está activo? 😎"],rol:["Nyx|#Hospital · llegada en 5 min"],dm:["Daniela Golden|¿Nos vemos para el rol?"],admin:["Administración|Tu solicitud está en revisión."]}};
+const NAV=[["banco","fa-building-columns","Banco"],["jugador","fa-id-card","Jugador"],["empresas","fa-building","Empresas"],["empleos","fa-briefcase","Empleos"],["mensajes","fa-envelope","Mensajes"],["ia","fa-robot","IA"],["historial","fa-clock-rotate-left","Historial"],["hogar","fa-house","Hogar"],["transporte","fa-car","Transporte"],["familia","fa-users","Familia"],["organizaciones","fa-sitemap","Organizaciones"],["feedpage","fa-newspaper","Feed"],["chats","fa-comments","Chats"],["radio","fa-radio","Radio"],["tickets","fa-ticket","Tickets"],["empresa_registro","fa-file-signature","Empresa"]];
 
-  // Enviar mensajes en chats
-  function sendChat(type) {
-    let inputId = type === 'general' ? 'genInput' : type === 'rol' ? 'rolInput' : type === 'dm' ? 'dmInput' : 'adminInput';
-    let input = document.getElementById(inputId);
-    let text = input.value.trim();
-    if(!text) return;
-
-    let listId = type + 'List';
-    let list = document.getElementById(listId);
-    
-    // Simulación de opacidad en Rol (si menciona # lugar diferente)
-    let extraClass = (type === 'rol' && text.includes('#') && !text.includes('#Agencia')) ? 'far-away' : '';
-    
-    let html = `<div class="message ${extraClass}"><div class="avatar" style="width:28px;height:28px;font-size:10px; border-color:var(--gold2)">C</div><div><b style="color:var(--gold2)">Cartsh (Tú)</b><p>${text}</p></div></div>`;
-    
-    list.innerHTML += html;
-    input.value = '';
-    list.scrollTop = list.scrollHeight;
-  }
-
-  // Generador IA 4 min
-  function generarVideoIA() {
-    let promptMsg = confirm("¿Deseas que la IA analice tu último chat de rol y genere un video renderizado de 4 minutos para publicarlo?");
-    if(promptMsg) {
-      alert("Procesando texto de rol... La IA está generando el entorno 3D. El video se publicará automáticamente en el feed cuando esté listo.");
-    }
-  }
-
-  // Generador de ID Ciudadano
-  function guardarJugador() {
-    let nombre = document.getElementById('jNombre').value.substring(0,3).toUpperCase();
-    let rand = Math.floor(1000 + Math.random() * 9000);
-    let curp = `MX-${nombre || 'USR'}-${rand}`;
-    document.getElementById('jId').value = curp;
-    alert("Identidad Oficial guardada en el Historial.\nID de Ciudadano: " + curp);
-  }
-
-  // Muerte de personaje (Reset)
-  function morirPersonaje() {
-    if(confirm("⚠ ATENCIÓN: Al confirmar el CK (Fallecimiento), se anunciará en la radio y perderás el acceso a las propiedades de este personaje. ¿Continuar?")) {
-      alert("El personaje ha sido declarado muerto. El locutor de la radio ha recibido la noticia. Redirigiendo a creación de nuevo personaje...");
-      document.getElementById('jNombre').value = '';
-      document.getElementById('jId').value = '';
-    }
-  }
-
-  // Lógica de Hogar y Transporte
-  function calcularPrecioCasa() {
-    let val = document.getElementById('hTipo').value;
-    document.getElementById('hValor').value = val == 0 ? "Por evaluar" : `$${parseInt(val).toLocaleString()} RP`;
-    document.getElementById('hDomicilio').value = "Av. MexCity #" + Math.floor(Math.random()*999) + ", Sector Norte";
-  }
-
-  function actualizarModelos() {
-    let tipo = document.getElementById('tTipo').value;
-    let modelos = document.getElementById('tModelo');
-    if(tipo === 'auto') modelos.innerHTML = '<option>Ferrari Portofino</option><option>Porsche 911</option>';
-    if(tipo === 'suv') modelos.innerHTML = '<option>Range Rover</option><option>G-Wagon</option>';
-    if(tipo === 'pie') modelos.innerHTML = '<option>Ninguno (A pie)</option>';
-  }
-
-  function generarPlacas() {
-    if(document.getElementById('tTipo').value === 'pie') {
-      document.getElementById('tPlacas').value = "N/A";
-      return alert("Registro a pie guardado.");
-    }
-    let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let pl = chars.charAt(Math.floor(Math.random()*26)) + chars.charAt(Math.floor(Math.random()*26)) + chars.charAt(Math.floor(Math.random()*26)) + "-" + Math.floor(100+Math.random()*899);
-    document.getElementById('tPlacas').value = pl;
-    alert("Vehículo registrado con éxito. Placas asignadas: " + pl);
-  }
-
-  // Lógica de Empresas
-  function toggleEmpresaGiro() {
-    let giro = document.getElementById('eGiro').value;
-    if(giro === 'presidente') {
-      alert("⚠️ Aviso: Este cargo es ÚNICO y desaparecerá para otros usuarios una vez confirmado.");
-      document.getElementById('eCargo').value = 'propietario';
-      toggleEmpresaCargo();
-    } else if (giro === 'gobierno') {
-      document.getElementById('boxGobierno').classList.remove('hidden');
-      document.getElementById('boxPropietario').classList.add('hidden');
-    } else {
-      document.getElementById('boxGobierno').classList.add('hidden');
-      toggleEmpresaCargo();
-    }
-  }
-
-  function toggleEmpresaCargo() {
-    let cargo = document.getElementById('eCargo').value;
-    let giro = document.getElementById('eGiro').value;
-    if(giro === 'gobierno') return; // Gobierno usa su propia caja
-    if(cargo === 'propietario') {
-      document.getElementById('boxPropietario').classList.remove('hidden');
-    } else {
-      document.getElementById('boxPropietario').classList.add('hidden');
-    }
-  }
-
-  // Préstamo Banco
-  function solicitarPrestamo() {
-    let monto = parseFloat(document.getElementById('prestamoCant').value);
-    if(monto > 900000) {
-      alert("❌ El banco solo autoriza préstamos hasta un máximo de $900,000 RP.");
-    } else if(monto > 0) {
-      alert("✅ Solicitud de préstamo enviada a revisión administrativa.");
-    }
-  }
+function esc(x){return String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function money(x){return "$"+Number(x).toLocaleString("es-MX")+" RP"}
+function go(id){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById(id)?.classList.add("active");window.scrollTo({top:0,behavior:"smooth"})}
+function toast(t){const x=document.createElement("div");x.textContent=t;x.style.cssText="position:fixed;right:15px;bottom:20px;z-index:999;background:#0b151c;border:1px solid #e2b63e66;color:#fff;padding:12px 15px;border-radius:10px;box-shadow:0 15px 40px #0009";document.body.appendChild(x);setTimeout(()=>x.remove(),2500)}
+function navRender(){document.getElementById("nav").innerHTML=NAV.map(n=>`<button onclick="go('${n[0]}')"><i class="fa-solid ${n[1]}"></i><span>${n[2]}</span></button>`).join("");document.getElementById("sideMenu").innerHTML=NAV.map(n=>`<button onclick="go('${n[0]}')"><i class="fa-solid ${n[1]}"></i>${n[2]}</button>`).join("")}
+function sync(){const p=S.profile;["topName","sideName"].forEach(id=>document.getElementById(id).textContent=p.name);["topAvatar","sideAvatar"].forEach(id=>document.getElementById(id).src=p.avatar);document.getElementById("sideCity").textContent=p.city;document.getElementById("heroName").textContent=p.name.toUpperCase();document.getElementById("heroCity").textContent=p.city;document.getElementById("activity").textContent=p.activity+"%";document.getElementById("activityBar").style.width=p.activity+"%";document.getElementById("sideBalance").textContent=money(S.balance);document.getElementById("bankBalance").textContent=money(S.balance);document.getElementById("bankAccount").textContent=S.account;document.getElementById("sideAccount").textContent=S.account}
+function feed(target="feed"){document.getElementById(target).innerHTML=S.posts.map((p,i)=>`<article class="card post"><div class="posthead"><div class="avatar" style="width:38px;height:38px"><span>${p[0][0]}</span></div><div><b>${esc(p[0])}</b><br><small>${esc(p[1])} · hace ${i+1} h</small></div></div><div class="postmedia"><img src="${p[3]}" alt=""></div><div class="postbody"><b>${esc(p[2])}</b><p class="muted">#MexCityRP #Roleplay</p></div><div class="actions"><button onclick="like(${i})">🦅 ${p[4]}</button><button>💬 ${p[5]}</button><button>↗ Compartir</button></div></article>`).join("")}
+function publish(){const t=document.getElementById("postText").value.trim();if(!t)return toast("Escribe una historia.");S.posts.unshift([S.profile.name,S.profile.city,t,"https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1200&q=80",0,0]);document.getElementById("postText").value="";feed();feed("feed2");addHistory("Publicación creada");toast("Publicación creada.")}
+function like(i){S.posts[i][4]++;feed();feed("feed2")}
+function addHistory(t){S.history.unshift(new Date().toLocaleString("es-MX")+" · "+t);historyRender()}
+function historyRender(){document.getElementById("history").innerHTML=S.history.map(x=>`<div class="row"><span>◉</span><div class="grow">${esc(x)}</div></div>`).join("")}
+function messagesRender(){document.getElementById("messages").innerHTML=S.messages.map(m=>`<div class="row"><span>🔔</span><div class="grow"><b>${esc(m[0])}</b><br><small>${esc(m[1])}</small></div><span class="pill ${m[2]}">NUEVO</span></div>`).join("");document.getElementById("recent").innerHTML=S.messages.slice(0,4).map(m=>`<div class="row"><div class="grow"><b>${esc(m[0])}</b><br><small>${esc(m[1])}</small></div></div>`).join("")}
+function bank(tab){const e=document.getElementById("bankContent");
+if(tab==="send")e.innerHTML=`<div class="card pad"><h3>Enviar dinero</h3><div class="field"><label>CIUDADANO</label><select id="sendTo">${S.players.map(x=>`<option>${esc(x)}</option>`).join("")}</select></div><div class="field"><label>CANTIDAD $RP</label><input id="sendAmount" type="number" min="1" max="${S.balance}"></div><small>Saldo disponible: ${money(S.balance)}</small><button class="btn full" style="margin-top:10px" onclick="transfer()">Transferir</button></div>`;
+if(tab==="services")e.innerHTML=`<div class="card pad"><h3>Pagar servicios</h3><div class="list">${["Agua","Luz","Internet","Otros"].map((x,i)=>`<div class="row"><div class="grow"><b>${x}</b><br><small>Periodo actual · ${money((i+1)*850)}</small></div><button class="btn" onclick="service('${x}',${(i+1)*850})">Pagar</button></div>`).join("")}</div></div>`;
+if(tab==="loan")e.innerHTML=`<div class="card pad"><h3>Préstamo</h3><div class="field"><label>MOTIVO</label><textarea id="loanReason"></textarea></div><div class="field"><label>CANTIDAD · $900,000 A $1,000,000 RP</label><input id="loanAmount" type="number" min="900000" max="1000000"></div><div class="field"><label>PAGO</label><select><option>Semanal</option><option>Quincenal</option><option>Mensual</option><option>Automático</option></select></div><button class="btn full" onclick="loan()">Enviar a Administración</button></div>`;
+if(tab==="payroll")e.innerHTML=`<div class="card pad"><h3>Nómina</h3><div class="grid"><div><small>EMPRESA</small><h3>Empresa vinculada</h3></div><div><small>PUESTO</small><h3>Empleado</h3></div><div><small>SALARIO</small><h3>$25,000 RP</h3></div><div><small>DÍAS ASISTIDOS</small><h3>12</h3></div></div><div class="row">La nómina real debe calcularse en servidor según asistencia y descontarse de la cuenta del empleador.</div></div>`;
+if(tab==="history")e.innerHTML=`<div class="card pad"><h3>Movimientos</h3><div class="list"><div class="row"><div class="grow">Saldo inicial</div><b class="green">${money(1250000)}</b></div><div class="row">Conecta Supabase para mostrar movimientos reales.</div></div></div>`;
+if(tab==="sell")e.innerHTML=`<div class="card pad"><h3>Vender propiedad / transporte</h3><div class="field"><label>ACTIVO</label><select><option>Hogar</option><option>Transporte</option></select></div><div class="field"><label>PRECIO $RP</label><input type="number"></div><button class="btn full" onclick="save('Solicitud de venta enviada')">Enviar solicitud</button></div>`}
+function transfer(){const a=Number(document.getElementById("sendAmount").value);if(!a||a<=0||a>S.balance)return toast("Fondos insuficientes o cantidad inválida.");S.balance-=a;sync();addHistory("Transferencia enviada: "+money(a));toast("Transferencia registrada en modo demo.")}
+function service(n,a){if(a>S.balance)return toast("Fondos insuficientes.");S.balance-=a;sync();addHistory("Pago de servicio: "+n+" · "+money(a));toast("Servicio pagado.");bank("services")}
+function loan(){const a=Number(document.getElementById("loanAmount").value);if(a<900000||a>1000000)return toast("El préstamo debe ser entre $900,000 y $1,000,000 RP.");S.messages.unshift(["BancomCRP","Solicitud de préstamo enviada a Administración.","yellow"]);messagesRender();addHistory("Solicitud de préstamo: "+money(a));toast("Solicitud enviada.")}
+function save(t){addHistory(t);toast(t)}
+function ticket(){const s=document.getElementById("ticketSubject").value.trim(),d=document.getElementById("ticketDesc").value.trim();if(!s||!d)return toast("Completa el ticket.");S.messages.unshift(["Ticket",s,"blue"]);messagesRender();addHistory("Ticket creado");toast("Ticket creado.")}
+function businessRender(){const a=[["Hospital MexCity","Servicios médicos","09:00–18:00"],["Taller Central","Reparación","10:00–20:00"],["Black Diamond","Entretenimiento","18:00–02:00"],["Servicios Urbanos","Agua/Luz","08:00–17:00"]];document.getElementById("businesses").innerHTML=a.map(x=>`<div class="card pad"><div class="row"><div class="grow"><b>${x[0]}</b><br><small>${x[1]} · ${x[2]}</small></div><span class="pill green">ACTIVO</span><button class="btn" onclick="requestService('${x[0]}')">Pedir servicio</button></div></div>`).join("")}
+function requestService(x){S.messages.unshift(["Servicios solicitados","Solicitud enviada a "+x+". El proveedor activo recibirá la notificación.","blue"]);messagesRender();toast("Solicitud enviada.")}
+function jobsRender(){const a=[["Modelo R-MEX","R-MEX Models","$18,000 RP","2"],["Oficial de Policía","Gobierno","$30,000 RP","4"],["Médico General","Hospital","$28,000 RP","1"],["Conductor","Transporte","$20,000 RP","3"]];document.getElementById("jobs").innerHTML=a.map(x=>`<div class="card pad"><div class="row"><div class="grow"><b>${x[0]}</b><br><small>${x[1]} · ${x[2]}</small></div><span class="pill green">${x[3]} vacantes</span><button class="btn" onclick="apply('${x[0]}')">Postularme</button></div></div>`).join("")}
+function apply(x){S.messages.unshift(["Empleo","Postulación enviada para "+x+". El empresario podrá iniciar entrevista.","green"]);messagesRender();toast("Postulación enviada.")}
+let chatType="general";function chatTab(t,b){chatType=t;document.querySelectorAll(".chat-tabs button").forEach(x=>x.classList.remove("active"));b.classList.add("active");chatRender()}
+function chatRender(){document.getElementById("chatList").innerHTML=S.chat[chatType].map(x=>{const [a,b]=x.split("|");return `<div class="msg"><div class="avatar" style="width:30px;height:30px">${a[0]}</div><div class="bubble"><small>${esc(a)}</small><div>${esc(b)}</div></div></div>`}).join("")}
+function sendChat(){const i=document.getElementById("chatInput"),t=i.value.trim();if(!t)return;S.chat[chatType].push(S.profile.name+"|"+t);i.value="";chatRender();addHistory("Mensaje en "+chatType)}
+function radioRequest(){S.messages.unshift(["Radio MexCity RP","Solicitud de canción/saludo enviada al locutor.","purple"]);messagesRender();toast("Solicitud enviada.")}
+function toggle(id,show){document.getElementById(id).classList.toggle("hidden",!show)}
+function home(){document.getElementById("hValue").value=money(document.getElementById("hType").value);document.getElementById("hAddress").value=S.profile.address}
+function models(){const t=document.getElementById("tType").value,m={Automóvil:["Porsche 911","Ferrari Portofino","BMW Serie 5"],SUV:["Range Rover","G-Wagon"],Motocicleta:["BMW S1000RR","Harley-Davidson"],Camión:["Kenworth","Freightliner"],Avión:["Cessna","Gulfstream"],Helicóptero:["Bell 429","Airbus H125"],Embarcación:["Yate","Lancha"],"A pie":["Ninguno"]};document.getElementById("tModel").innerHTML=(m[t]||["Ninguno"]).map(x=>`<option>${x}</option>`).join("")}
+function registerTransport(){const t=document.getElementById("tType").value;document.getElementById("plate").value=t==="A pie"?"N/A":"MX-"+Math.random().toString(36).slice(2,6).toUpperCase()+"-"+Math.floor(100+Math.random()*900);addHistory("Transporte registrado");toast("Transporte registrado en modo demo.")}
+function saveProfile(){S.profile.name=document.getElementById("pName").value.trim()||S.profile.name;S.profile.city=document.getElementById("pCity").value;sync();addHistory("Ficha de identidad actualizada");toast("Ficha guardada.")}
+function ai(mode){const p=document.getElementById("aiPrompt").value.trim(),o=document.getElementById("aiResult");if(!p)return toast("Describe lo que necesitas.");if(/contraseña|password|service_role|token|clave|credencial|dato privado|información privada/i.test(p)){o.innerHTML="<b style='color:var(--red)'>ADVERTENCIA:</b> No puedo proporcionar credenciales, contraseñas, datos privados ni información de seguridad.";return}o.innerHTML="<b>Modo "+mode+".</b><br>"+esc(mode==="video"?"Plan cinematográfico de 4+ minutos: escenas, continuidad, cámara, iluminación, acciones, objetos, audio y montaje. Conecta tu backend/Edge Function para generación real.":mode==="imagen"?"Prompt: fotografía cinematográfica hiperrealista de MexCity RP, continuidad visual del personaje, iluminación urbana y composición editorial.":mode==="avatar"?"Prompt de edición: conservar identidad del avatar y modificar vestuario, entorno e iluminación sin revelar datos privados.":mode==="cartel"?"Prompt de cartel oficial MexCity RP, información clara, diseño social y sin datos privados.":"Historia RP basada en: "+p)}
+document.getElementById("avatarFile").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;const u=URL.createObjectURL(f);S.profile.avatar=u;document.getElementById("avatarPreview").src=u;document.getElementById("avatarPreview").style.display="block";sync()});
+const cities=["Ciudad de México","Tijuana","Guadalajara","Monterrey","Cancún","Chihuahua","Sonora","Michoacán","Baja California","Puebla","Mérida","Querétaro","Oaxaca","Veracruz","Acapulco"];
+document.getElementById("pCity").innerHTML=cities.map(x=>`<option>${x}</option>`).join("");document.getElementById("hCity").innerHTML=cities.map(x=>`<option>${x}</option>`).join("");document.getElementById("pJob").innerHTML=["Empresario","Empleado","Médico","Policía","Militar","Abogado","Juez","Comerciante","Modelo","Conductor","Mecánico","Chef","Periodista","Artista","Estudiante","Desempleado","Otro"].map(x=>`<option>${x}</option>`).join("");
+document.getElementById("pId").value=S.profile.id;document.getElementById("pName").value=S.profile.name;document.getElementById("pAddress").value=S.profile.address;
+document.getElementById("familyPlayer").innerHTML=S.players.map(x=>`<option>${x}</option>`).join("");document.getElementById("minorPlayer").innerHTML=S.players.map(x=>`<option>${x}</option>`).join("");
+navRender();sync();feed();feed("feed2");messagesRender();historyRender();businessRender();jobsRender();chatRender();home();models();bank("send");
+if(sb){sb.channel("mexcity-live").on("postgres_changes",{event:"*",schema:"public",table:"notifications"},()=>loadRealtime()).on("postgres_changes",{event:"*",schema:"public",table:"feed_posts"},()=>loadRealtime()).on("postgres_changes",{event:"*",schema:"public",table:"chat_messages"},()=>loadRealtime()).subscribe()}
+async function loadRealtime(){if(!sb)return;try{const {data}=await sb.from("notifications").select("title,body,color").order("created_at",{ascending:false}).limit(10);if(data){S.messages=data.map(x=>[x.title,x.body,x.color||"blue"]);messagesRender()}}catch(e){}}
 </script>
 </body>
 </html>
