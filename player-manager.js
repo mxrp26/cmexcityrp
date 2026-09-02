@@ -1,13 +1,15 @@
 /**
- * SISTEMA DE GESTIÓN DE JUGADORES
+ * SISTEMA DE GESTIÓN DE JUGADORES - CORREGIDO
  * Flujo en cascada: Jugador → Hogar → Empresa → Transporte → Familia → Organización
+ * - Ciudades escritas manualmente por el jugador
+ * - Vista previa de imágenes antes de cargar
  */
 
 class PlayerManager {
   constructor() {
     this.supabase = null;
     this.currentPlayer = null;
-    this.registrationStep = 'player'; // player, home, business, transport, family, organization
+    this.registrationStep = 'player';
     this.init();
   }
 
@@ -17,26 +19,31 @@ class PlayerManager {
   }
 
   // ========================================
-  // PASO 1: REGISTRO DE JUGADOR
+  // PASO 1: REGISTRO DE JUGADOR/CIUDADANO
   // ========================================
   async registerPlayer(playerData) {
     try {
       const user = authManager.getCurrentUser();
       if (!user) throw new Error('Usuario no autenticado');
 
-      // Generar dirección ficticia automática
-      const address = this.generateFictionalAddress(playerData.city);
+      // Validar edad
+      if (playerData.age < 18 || playerData.age > 120) {
+        return { success: false, error: 'La edad debe estar entre 18 y 120 años' };
+      }
+
+      // Generar dirección ficticia automática basada en datos del jugador
+      const address = this.generateFictionalAddress(playerData.city, playerData.characterName);
 
       const { data: player, error } = await this.supabase
         .from('players')
         .insert([{
           user_id: user.id,
           character_name: playerData.characterName,
-          age: playerData.age,
+          age: parseInt(playerData.age),
           gender: playerData.gender,
           blood_type: playerData.bloodType,
-          city: playerData.city,
-          address: address,
+          city: playerData.city, // Ciudad escrita por el jugador
+          address: address, // Domicilio generado automáticamente
           occupation: playerData.occupation,
           avatar_url: playerData.avatarUrl || 'https://i.pravatar.cc/150?img=60',
           is_alive: true,
@@ -54,7 +61,7 @@ class PlayerManager {
         success: true,
         player,
         nextStep: 'home',
-        message: '✅ Ficha de jugador creada. Ahora registra tu hogar.'
+        message: '✅ Ficha de ciudadano creada exitosamente. Ahora registra tu hogar.'
       };
     } catch (error) {
       console.error('Error en registro de jugador:', error);
@@ -70,7 +77,7 @@ class PlayerManager {
       if (!this.currentPlayer) throw new Error('No hay jugador activo');
 
       const value = APP_CONFIG.prices.homeTypes[homeData.type] || 350000;
-      const address = this.generateHomeAddress(this.currentPlayer.city, homeData.type);
+      const address = this.generateHomeAddress(this.currentPlayer.city, homeData.type, this.currentPlayer.character_name);
 
       const { data: home, error } = await this.supabase
         .from('homes')
@@ -78,8 +85,8 @@ class PlayerManager {
           player_id: this.currentPlayer.id,
           type: homeData.type,
           city: this.currentPlayer.city,
-          address: address,
-          value: value,
+          address: address, // Domicilio ficticio generado automáticamente
+          value: value, // Precio automático según tipo
           image_url: homeData.imageUrl || null
         }])
         .select()
@@ -91,7 +98,7 @@ class PlayerManager {
         success: true,
         home,
         nextStep: 'business',
-        message: '✅ Hogar registrado. ¿Tienes empresa?'
+        message: `✅ ${homeData.type} registrado en ${this.currentPlayer.city}. ¿Tienes empresa?`
       };
     } catch (error) {
       console.error('Error en registro de hogar:', error);
@@ -110,9 +117,11 @@ class PlayerManager {
       if (businessData.salary > APP_CONFIG.prices.maxSalary) {
         return {
           success: false,
-          error: `El salario no puede exceder $${APP_CONFIG.prices.maxSalary}`
+          error: `El salario no puede exceder $${APP_CONFIG.prices.maxSalary.toLocaleString()}`
         };
       }
+
+      const openingHours = this.parseWorkDays(businessData.workDays, businessData.workHours);
 
       const { data: business, error } = await this.supabase
         .from('businesses')
@@ -120,11 +129,11 @@ class PlayerManager {
           owner_id: this.currentPlayer.id,
           business_name: businessData.name,
           business_type: businessData.giro,
-          description: businessData.description || '',
+          description: businessData.giro, // Giro de la empresa
           image_url: businessData.imageUrl || null,
           city: this.currentPlayer.city,
           address: this.generateBusinessAddress(this.currentPlayer.city),
-          opening_hours: this.parseWorkDays(businessData.workDays),
+          opening_hours: openingHours,
           is_online: false
         }])
         .select()
@@ -132,10 +141,10 @@ class PlayerManager {
 
       if (error) throw error;
 
-      // Actualizar jugador con empresa
+      // Actualizar ocupación del jugador
       await this.supabase
         .from('players')
-        .update({ occupation: businessData.giro })
+        .update({ occupation: businessData.name })
         .eq('id', this.currentPlayer.id);
 
       return {
@@ -157,7 +166,9 @@ class PlayerManager {
     try {
       if (!this.currentPlayer) throw new Error('No hay jugador activo');
 
+      // Generar placa automática
       const plate = this.generatePlate();
+      const value = this.getTransportValue(transportData.type);
 
       const { data: vehicle, error } = await this.supabase
         .from('vehicles')
@@ -166,8 +177,8 @@ class PlayerManager {
           type: transportData.type,
           model: transportData.model,
           color: transportData.color,
-          plate: plate,
-          value: this.getTransportValue(transportData.type),
+          plate: plate, // Placa generada automáticamente
+          value: value, // Valor según el tipo de transporte
           is_active: true
         }])
         .select()
@@ -180,7 +191,7 @@ class PlayerManager {
         vehicle,
         plate,
         nextStep: 'family',
-        message: '✅ Transporte registrado. ¿Tienes familia?'
+        message: `✅ ${transportData.type} ${transportData.model} registrado con placa ${plate}. ¿Tienes familia?`
       };
     } catch (error) {
       console.error('Error en registro de transporte:', error);
@@ -195,15 +206,25 @@ class PlayerManager {
     try {
       if (!this.currentPlayer) throw new Error('No hay jugador activo');
 
-      // Crear familia si no existe
+      if (!familyData.hasBusiness) {
+        // Si el jugador seleccionó NO tiene familia, pasar al siguiente
+        return {
+          success: true,
+          nextStep: 'organization',
+          message: '✅ Continuando con el registro. ¿Perteneces a una organización?'
+        };
+      }
+
+      // Si tiene familia
       let familyId = familyData.familyId;
 
       if (familyData.isNewFamily) {
+        // Crear nueva familia
         const { data: family, error: familyError } = await this.supabase
           .from('families')
           .insert([{
             family_name: familyData.familyName,
-            description: familyData.description || ''
+            description: `Familia de ${this.currentPlayer.character_name}`
           }])
           .select()
           .single();
@@ -223,7 +244,7 @@ class PlayerManager {
 
       if (memberError) throw memberError;
 
-      // Actualizar jugador
+      // Actualizar jugador con familia
       await this.supabase
         .from('players')
         .update({ family_id: familyId })
@@ -233,7 +254,7 @@ class PlayerManager {
         success: true,
         familyId,
         nextStep: 'organization',
-        message: '✅ Familia registrada. ¿Perteneces a una organización?'
+        message: `✅ Agregado a la familia como ${familyData.familyRole}. ¿Perteneces a una organización?`
       };
     } catch (error) {
       console.error('Error en registro de familia:', error);
@@ -248,17 +269,26 @@ class PlayerManager {
     try {
       if (!this.currentPlayer) throw new Error('No hay jugador activo');
 
+      if (!orgData.isOrganization) {
+        // Si no pertenece a organización, completar registro
+        return {
+          success: true,
+          nextStep: 'complete',
+          message: '✅ ¡Registro de ciudadano completado! Ahora puedes acceder al dashboard.'
+        };
+      }
+
       let organizationId = null;
 
       if (orgData.isLeader) {
-        // Crear nueva organización
+        // ===== CREAR NUEVA ORGANIZACIÓN =====
         const { data: org, error: orgError } = await this.supabase
           .from('organizations')
           .insert([{
             org_name: orgData.orgName,
             alias: orgData.alias || null,
             logo_url: orgData.logoUrl || null,
-            description: orgData.giro || '',
+            description: orgData.description || '',
             giro: orgData.giro,
             leader_id: this.currentPlayer.id,
             is_active: true
@@ -269,19 +299,37 @@ class PlayerManager {
         if (orgError) throw orgError;
         organizationId = org.id;
 
-        // Agregar salarios de cargos (máximo 20)
-        const salaries = orgData.salaries.filter(s => s.cargo && s.salario);
-        for (const salary of salaries) {
-          await this.supabase
-            .from('org_salary_config')
-            .insert([{
-              org_id: organizationId,
-              cargo: salary.cargo,
-              salary: salary.salario
-            }]);
+        // Guardar configuración de salarios (máximo 20 cargos)
+        if (orgData.salaries && orgData.salaries.length > 0) {
+          const validSalaries = orgData.salaries
+            .filter(s => s.cargo && s.salario)
+            .slice(0, 20); // Máximo 20
+
+          for (const salary of validSalaries) {
+            await this.supabase
+              .from('org_salary_config')
+              .insert([{
+                org_id: organizationId,
+                cargo: salary.cargo,
+                salary: parseInt(salary.salario)
+              }])
+              .catch(err => console.warn('Error guardando salario:', err));
+          }
         }
+
+        // Agregar líder como miembro
+        await this.supabase
+          .from('org_members')
+          .insert([{
+            org_id: organizationId,
+            player_id: this.currentPlayer.id,
+            cargo: 'Líder',
+            salary: 0,
+            is_active: true
+          }]);
+
       } else if (orgData.joinOrgId) {
-        // Unirse a organización existente
+        // ===== UNIRSE A ORGANIZACIÓN EXISTENTE =====
         organizationId = orgData.joinOrgId;
 
         const { error: memberError } = await this.supabase
@@ -290,13 +338,14 @@ class PlayerManager {
             org_id: organizationId,
             player_id: this.currentPlayer.id,
             cargo: orgData.cargo,
-            salary: this.getSalaryForCargo(organizationId, orgData.cargo)
+            salary: await this.getSalaryForCargo(organizationId, orgData.cargo),
+            is_active: true
           }]);
 
         if (memberError) throw memberError;
       }
 
-      // Actualizar jugador
+      // Actualizar jugador con organización
       if (organizationId) {
         await this.supabase
           .from('players')
@@ -308,7 +357,7 @@ class PlayerManager {
         success: true,
         organizationId,
         nextStep: 'complete',
-        message: '✅ Organización registrada. ¡Registro completo!'
+        message: '✅ ¡Registro completado! Bienvenido a MexCity RP. Accediendo al dashboard...'
       };
     } catch (error) {
       console.error('Error en registro de organización:', error);
@@ -320,11 +369,14 @@ class PlayerManager {
   // MÉTODOS AUXILIARES
   // ========================================
 
-  generateFictionalAddress(city) {
+  // Generar dirección ficticia con datos del jugador
+  generateFictionalAddress(city, characterName) {
     const streets = [
       'Calle Principal', 'Avenida Central', 'Paseo Reforma',
-      'Boulevard Independencia', 'Carrera 5', 'Diagonal 10'
+      'Boulevard Independencia', 'Carrera 5', 'Diagonal 10',
+      'Calle 1', 'Avenida 2', 'Pasaje 3', 'Vía Rápida'
     ];
+    
     const numbers = Math.floor(Math.random() * 9999) + 1;
     const apt = Math.floor(Math.random() * 500) + 1;
     const street = streets[Math.floor(Math.random() * streets.length)];
@@ -332,30 +384,35 @@ class PlayerManager {
     return `${street} #${numbers}, Apto ${apt}, ${city}`;
   }
 
-  generateHomeAddress(city, type) {
+  // Generar dirección de hogar
+  generateHomeAddress(city, type, playerName) {
     const zones = {
-      'Departamento': 'Zona Residencial',
+      'Departamento': 'Zona Residencial Centro',
       'Casa': 'Área Suburbana',
-      'Rancho': 'Zona Rural',
-      'Villa': 'Zona Exclusiva'
+      'Rancho': 'Zona Rural Alejada',
+      'Villa': 'Zona Exclusiva Premium'
     };
 
     const zone = zones[type] || 'Zona Residencial';
     const number = Math.floor(Math.random() * 9999) + 1;
 
-    return `${zone} - ${city}, Propiedad #${number}`;
+    return `${zone}, ${city} - Propiedad #${number}`;
   }
 
+  // Generar dirección de negocio
   generateBusinessAddress(city) {
-    const areas = ['Centro', 'Zona Comercial', 'Paseo', 'Mercado', 'Plaza'];
+    const areas = ['Centro Comercial', 'Zona Comercial', 'Paseo Mercantil', 'Plaza de Negocios', 'Mercado'];
     const area = areas[Math.floor(Math.random() * areas.length)];
     const number = Math.floor(Math.random() * 9999) + 1;
 
     return `${area}, ${city}, Local #${number}`;
   }
 
+  // Generar placa de vehículo
   generatePlate() {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const state = ['CDMX', 'MICH', 'MXCTY', 'RP', 'MX'];
+    
     const randomLetters = Array.from({ length: 3 }, () =>
       letters[Math.floor(Math.random() * letters.length)]
     ).join('');
@@ -364,20 +421,28 @@ class PlayerManager {
       .toString()
       .padStart(4, '0');
 
-    return `${randomLetters}-${randomNumbers}`;
+    const stateCode = state[Math.floor(Math.random() * state.length)];
+
+    return `${stateCode}-${randomLetters}${randomNumbers}`;
   }
 
-  parseWorkDays(workDaysData) {
+  // Parsear días laborales
+  parseWorkDays(workDaysArray, workHours) {
     const schedule = {};
-    APP_CONFIG.workDays.forEach(day => {
-      schedule[day.toLowerCase()] = {
-        open: '09:00',
-        close: '18:00'
-      };
-    });
+    
+    if (workDaysArray && Array.isArray(workDaysArray)) {
+      workDaysArray.forEach(day => {
+        schedule[day.toLowerCase()] = {
+          open: workHours?.open || '09:00',
+          close: workHours?.close || '18:00'
+        };
+      });
+    }
+    
     return schedule;
   }
 
+  // Obtener valor del transporte
   getTransportValue(type) {
     const values = {
       'A pie': 0,
@@ -391,6 +456,7 @@ class PlayerManager {
     return values[type] || 0;
   }
 
+  // Obtener salario para cargo
   async getSalaryForCargo(orgId, cargo) {
     try {
       const { data } = await this.supabase
@@ -406,12 +472,52 @@ class PlayerManager {
     }
   }
 
-  // Obtener jugador actual
+  // ========================================
+  // UTILIDADES DE IMAGEN
+  // ========================================
+
+  // Convertir archivo a base64 para previsualización
+  async readFileAsDataURL(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = e => resolve(e.target.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Subir imagen a Supabase Storage
+  async uploadImage(file, folder) {
+    try {
+      const fileName = `${Date.now()}-${file.name}`;
+      const filePath = `${folder}/${fileName}`;
+
+      const { error: uploadError } = await this.supabase.storage
+        .from('media')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      // Obtener URL pública
+      const { data } = this.supabase.storage
+        .from('media')
+        .getPublicUrl(filePath);
+
+      return data.publicUrl;
+    } catch (error) {
+      console.error('Error subiendo imagen:', error);
+      return null;
+    }
+  }
+
+  // ========================================
+  // GESTIÓN DE JUGADOR ACTIVO
+  // ========================================
+
   getCurrentPlayer() {
     return this.currentPlayer;
   }
 
-  // Cargar datos del jugador
   async loadPlayer(playerId) {
     try {
       const { data: player, error } = await this.supabase
@@ -432,7 +538,6 @@ class PlayerManager {
     }
   }
 
-  // Actualizar estado de rol
   async updateRoleStatus(isOnRole) {
     try {
       if (!this.currentPlayer) throw new Error('No hay jugador activo');
